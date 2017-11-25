@@ -1,4 +1,6 @@
+;; ------------------
 ;; bootstrap straight
+;; ------------------
 (let ((bootstrap-file (concat user-emacs-directory "straight/bootstrap.el"))
       (bootstrap-version 2))
   (unless (file-exists-p bootstrap-file)
@@ -149,6 +151,67 @@
 ;; better buffer names
 (require 'uniquify)
 
+;; setup cc mode
+(c-add-style "better-cc-style"
+             '("stroustrup"
+               (indent-tabs-mode . nil)        ; use spaces rather than tabs
+               (c-basic-offset . 4)            ; indent by four spaces
+               (tab-width . 4)                 ; better reading of code written with tabs
+               (c-offsets-alist . ((inline-open . 0)  ; custom indentation rules
+                                   (brace-list-open . 0)
+                                   (statement-case-open . +)
+                                   (innamespace 0)))))
+
+(defun --cc-style-setup()
+  (c-set-style "better-cc-style"))
+
+(add-hook 'c-mode-hook '--cc-style-setup)
+(add-hook 'c++-mode-hook '--cc-style-setup)
+
+(defun --set-tab-with()
+  (setq tab-width 4)
+  (setq c-basic-offset 4))
+
+(add-hook 'cmake-mode-hook '--set-tab-with)
+(add-hook 'objc-mode-hook '--set-tab-with)
+
+(setq c-default-style "linux")
+(setq-default indent-tabs-mode nil)
+
+(add-hook 'c++-mode-hook
+      '(lambda()
+        (font-lock-add-keywords
+         nil '(;; complete some fundamental keywords
+           ("\\<\\(void\\|unsigned\\|signed\\|char\\|short\\|bool\\|int\\|long\\|float\\|double\\)\\>" . font-lock-keyword-face)
+           ;; add the new C++11 keywords
+           ("\\<\\(alignof\\|alignas\\|constexpr\\|decltype\\|noexcept\\|nullptr\\|static_assert\\|thread_local\\|override\\|final\\)\\>" . font-lock-keyword-face)
+           ("\\<\\(char[0-9]+_t\\)\\>" . font-lock-keyword-face)
+           ;; PREPROCESSOR_CONSTANT
+           ("\\<[A-Z]+[A-Z_]+\\>" . font-lock-constant-face)
+           ;; hexadecimal numbers
+           ("\\<0[xX][0-9A-Fa-f]+\\>" . font-lock-constant-face)
+           ;; integer/float/scientific numbers
+	   ("\\<[-+]?[0-9]*\\.?[0-9]*\\([uUlL]+\\|[eE][-+]?[0-9]+\\)?[fFlL]?\\>" . font-lock-constant-face)
+           ;; user-types (customize!)
+           ;; ("\\<[A-Za-z_]+[A-Za-z_0-9]*_\\(t\\|type\\|ptr\\)\\>" . font-lock-type-face)
+           ;; ("\\<\\(xstring\\|xchar\\)\\>" . font-lock-type-face)
+           ))
+        ) t)
+
+(defadvice c-lineup-arglist (around my activate)
+  "Improve indentation of continued C++11 lambda function opened as argument."
+  (setq ad-return-value
+        (if (and (equal major-mode 'c++-mode)
+                 (ignore-errors
+                   (save-excursion
+                     (goto-char (c-langelem-pos langelem))
+                     ;; Detect "[...](" or "[...]{". preceded by "," or "(",
+                     ;;   and with unclosed brace.
+                     (looking-at ".*[(,][ \t]*\\[[^]]*\\][ \t]*[({][^}]*$"))))
+            0                           ; no additional indent
+          ad-do-it)))                   ; default behavior
+
+
 ;; --------------
 ;; setup packages
 ;; --------------
@@ -231,6 +294,14 @@
   :config
   (add-hook 'prog-mode-hook 'ws-butler-mode))
 
+(use-package undo-tree
+  :diminish undo-tree-mode
+  :bind
+  (("M-Z" . redo))
+  :config
+  (global-undo-tree-mode 1)
+  (defalias 'redo 'undo-tree-redo))
+
 (defun backward-delete-word (arg)
   "Delete characters backward until encountering the beginning of a word.
 With argument ARG, do this that many times."
@@ -281,10 +352,11 @@ With argument ARG, do this that many times."
   (setq
    helm-quick-update t
    helm-buffers-fuzzy-matching t
-   helm-ff-newfile-prompt-p nil ; do not prompt to create new file
+   helm-ff-newfile-prompt-p nil
    helm-split-window-in-side-p t
    helm-echo-input-in-header-line t
-   helm-mode-handle-completion-in-region nil ; Disable helm in minibuffer region completion (eval-expression for example)
+   ;; Disable helm in minibuffer region completion (eval-expression for example)
+   helm-mode-handle-completion-in-region nil
    helm-moccur-use-ioccur-style-keys nil
    helm-scroll-amount 6)
   (helm-mode))
@@ -321,13 +393,123 @@ With argument ARG, do this that many times."
    :map helm-projectile-projects-map
    ("M-R"     . helm-config--ff-run-helm-ag))
   :config
-  (setq projectile-completion-system 'helm)
-  (helm-projectile-on))
+  (setq projectile-completion-system 'helm))
+(helm-projectile-on)
 
-(use-package undo-tree
-  :diminish undo-tree-mode
-  :bind
-  (("M-Z" . redo))
+(use-package helm-gtags
+  :diminish helm-gtags-mode
   :config
-  (global-undo-tree-mode 1)
-  (defalias 'redo 'undo-tree-redo))
+  (add-hook 'prog-mode-hook 'helm-gtags-mode)
+  (add-hook 'dired-mode-hook 'helm-gtags-mode))
+
+(use-package highlight-symbol
+  :bind
+  ([f7] . highlight-symbol-at-point))
+
+(use-package cmake-mode
+  :config
+  (setq cmake-tab-width 4))
+
+(use-package powerline
+  :config
+  (powerline-default-theme))
+
+(use-package zoom-frm
+  :bind
+  (("C-x C-+" . zoom-in)
+   ("C-x C--" . zoom-out)))
+
+(use-package git-gutter-fringe+
+  :diminish git-gutter-fringe+
+  :config
+  (global-git-gutter+-mode))
+
+(use-package yascroll
+  :config
+  (global-yascroll-bar-mode 1)
+  (setq yascroll:delay-to-hide 0.3))
+
+;; -----------
+;; theme setup
+;; -----------
+
+(let ((directory (or load-file-name
+                     default-directory)))
+  (add-to-list 'custom-theme-load-path (file-name-directory directory)))
+(load-theme 'monokai t)
+
+(set-default-font "Fira Mono-10")
+(add-to-list 'default-frame-alist '(font . "Fira Mono-10"))
+(add-to-list 'default-frame-alist '(cursor-color . "white"))
+
+(menu-bar-mode -1)
+(blink-cursor-mode 0)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+(global-unset-key (kbd "C-z"))
+(normal-erase-is-backspace-mode 1)
+
+(defun git-gutter-fringe--set-faces (frame)
+  (with-selected-frame frame
+    (git-gutter-fr+-minimal)
+    (set-face-attribute 'git-gutter-fr+-added    nil :foreground "gray25")
+    (set-face-attribute 'git-gutter-fr+-deleted  nil :foreground "gray25")
+    (set-face-attribute 'git-gutter-fr+-modified nil :foreground "gray25")))
+
+(eval-after-load 'git-gutter-fringe+
+  '(progn
+     (git-gutter-fringe--set-faces (selected-frame))
+     (add-hook 'after-make-frame-functions 'git-gutter-fringe--set-faces)))
+
+(defun helm--set-faces (frame)
+  (with-selected-frame frame
+    (set-face-attribute 'helm-ff-directory nil :foreground "Cyan" :weight 'bold
+			:background nil)
+    (set-face-attribute 'helm-ff-dotted-directory nil :foreground "White"
+			:background nil)
+    (set-face-attribute 'helm-ff-dotted-symlink-directory nil :foreground "Magenta"
+			:background nil)
+    (set-face-attribute 'helm-ff-executable nil :foreground "Orange"
+			:background nil)
+    (set-face-attribute 'helm-ff-file nil :foreground "White"
+			:background nil)
+    (set-face-attribute 'helm-ff-symlink nil :foreground "Magenta"
+			:background nil)
+    (set-face-attribute 'helm-locate-finish nil :foreground "Black" :weight 'bold
+			:background "Yellow")))
+
+(eval-after-load 'helm
+  '(progn
+     (helm--set-faces (selected-frame))
+     (add-hook 'after-make-frame-functions 'helm--set-faces)))
+
+
+(defun company--set-faces (frame)
+  (with-selected-frame frame
+    (set-face-attribute 'company-echo-common nil :underline t :foreground nil)
+    (set-face-attribute 'company-preview nil :inherit 'shadow :foreground nil :background nil)
+    (set-face-attribute 'company-preview-common nil :inherit 'company-preview :underline t :background "LightSteelBlue3" :foreground "dark slate gray")
+    (set-face-attribute 'company-scrollbar-bg nil :inherit 'company-tooltip :background "SteelBlue3")
+    (set-face-attribute 'company-scrollbar-fg nil :background "DeepSkyBlue4")
+    (set-face-attribute 'company-template-field nil :background "#49483E" :foreground nil)
+    (set-face-attribute 'company-tooltip nil :background "LightSteelBlue1" :foreground "dark slate gray")
+    (set-face-attribute 'company-tooltip-annotation nil :inherit 'company-tooltip :foreground "slate gray")
+    (set-face-attribute 'company-tooltip-common nil :inherit 'company-tooltip :underline t :foreground nil)
+    (set-face-attribute 'company-tooltip-common-selection nil :inherit 'company-tooltip-selection :underline t :foreground nil)
+    (set-face-attribute 'company-tooltip-selection nil :inherit 'company-tooltip :background "LightSteelBlue3")))
+
+(eval-after-load 'company
+  '(progn
+     (company--set-faces (selected-frame))
+     (add-hook 'after-make-frame-functions 'company--set-faces)))
+
+(defun yascroll--set-faces (frame)
+  (with-selected-frame frame
+    (set-face-attribute 'yascroll:thumb-fringe    nil :foreground "gray25" :background "gray25")
+    (set-face-attribute 'yascroll:thumb-text-area nil :background "gray25")))
+
+(eval-after-load 'yascroll
+  '(progn
+     (yascroll--set-faces (selected-frame))
+     (add-hook 'after-make-frame-functions 'yascroll--set-faces)))
