@@ -26,6 +26,7 @@
 (setq ring-bell-function 'ignore)
 
 (require 'cl-lib)
+(require 'cl)
 
 (require 'paren)
 (show-paren-mode)
@@ -212,6 +213,52 @@
           ad-do-it)))                   ; default behavior
 
 
+;; avoid boring buffers
+(defvar boring-buffers
+  '("\\*.*\\*"
+    "COMMIT_EDITMSG")
+  "List of boring buffers regexp")
+
+(defun is-buffer-valid (buffer-name)
+  (let ((valid-buffer t))
+    (loop for boring-buffer in boring-buffers do
+          (when (string-match boring-buffer buffer-name)
+            (setq valid-buffer nil)))
+    valid-buffer))
+
+(defun --contains-valid-buffer (buffer-list)
+  (let ((valid-buffer nil))
+    (loop for buffer in buffer-list do
+          (when (is-buffer-valid (buffer-name buffer))
+            (setq valid-buffer t)))
+    valid-buffer))
+
+(defun skip-temp-buffers (func)
+  (if (--contains-valid-buffer (buffer-list))
+      (while (not (is-buffer-valid (buffer-name)))
+        (funcall func))))
+
+(defun my-next-buffer ()
+  (interactive)
+  (next-buffer)
+  (skip-temp-buffers 'next-buffer))
+
+(defun my-prev-buffer ()
+  (interactive)
+  (previous-buffer)
+  (skip-temp-buffers 'previous-buffer))
+
+(defun kill-this-buffer-avoid-boring ()
+  (interactive)
+  (kill-this-buffer)
+  (when (not (is-buffer-valid (buffer-name)))
+    (skip-temp-buffers 'previous-buffer)))
+
+(global-set-key [remap next-buffer] 'my-next-buffer)
+(global-set-key [remap previous-buffer] 'my-prev-buffer)
+(global-set-key [remap kill-this-buffer] 'kill-this-buffer-avoid-boring)
+
+
 ;; --------------
 ;; setup packages
 ;; --------------
@@ -350,7 +397,6 @@ With argument ARG, do this that many times."
    ([M-backspace] . delete-until-slash))
   :config
   (setq
-   helm-quick-update t
    helm-buffers-fuzzy-matching t
    helm-ff-newfile-prompt-p nil
    helm-split-window-in-side-p t
@@ -358,17 +404,23 @@ With argument ARG, do this that many times."
    ;; Disable helm in minibuffer region completion (eval-expression for example)
    helm-mode-handle-completion-in-region nil
    helm-moccur-use-ioccur-style-keys nil
-   helm-scroll-amount 6)
+   helm-scroll-amount 6
+   helm-moccur-show-buffer-fontification t)
   (helm-mode))
+
+(defun helm-do-ag-on-file-maybe(&optional basename targets)
+  (interactive)
+  (let ((basedir (when basename (file-name-directory basename))))
+    (helm-do-ag basedir targets)))
 
 (defun helm-config--ff-run-helm-ag()
     (interactive)
     (with-helm-alive-p
-      (helm-exit-and-execute-action 'helm-do-ag)))
+      (helm-exit-and-execute-action 'helm-do-ag-on-file-maybe)))
 
 (use-package helm-ag
   :bind
-  (("M-R" . helm-do-ag)
+  (("M-R" . helm-do-ag-on-file-maybe)
    ("M-F" . helm-do-ag-buffers)
    :map helm-find-files-map
    ("M-R" . helm-config--ff-run-helm-ag)))
@@ -513,3 +565,10 @@ With argument ARG, do this that many times."
   '(progn
      (yascroll--set-faces (selected-frame))
      (add-hook 'after-make-frame-functions 'yascroll--set-faces)))
+
+(defun basic--set-faces (frame)
+  (with-selected-frame frame
+    (set-face-attribute 'show-paren-match    nil :background "steelblue3")))
+
+(basic--set-faces (selected-frame))
+(add-hook 'after-make-frame-functions 'basic--set-faces)
