@@ -49,11 +49,13 @@
 (global-set-key (kbd "C-c b") 'pop-tag-mark)
 (global-set-key (kbd "C-q") 'kill-this-buffer)
 (global-set-key [C-backspace] 'delete-backward-char)
+
+;; remove anoying keybindings
 (global-set-key (kbd "C-x DEL") 'ignore)
 (global-unset-key (kbd "C-t"))
 (global-unset-key (kbd "M-t"))
 
-(global-set-key (kbd "M-g") "\C-g")
+(define-key key-translation-map (kbd "M-g") (kbd "C-g"))
 
 (defun kill-region-maybe()
   (interactive)
@@ -93,6 +95,25 @@
 
 (global-set-key (kbd "M-q") nil)
 (global-set-key (kbd "M-q M-c") 'copy-file-name-to-clipboard)
+
+;; moving windows
+(global-set-key (kbd "M-q <left>")  'windmove-left)
+(global-set-key (kbd "M-q <right>") 'windmove-right)
+(global-set-key (kbd "M-q <up>")    'windmove-up)
+(global-set-key (kbd "M-q <down>")  'windmove-down)
+
+(global-set-key (kbd "M-q M-<left>")  'windmove-left)
+(global-set-key (kbd "M-q M-<right>") 'windmove-right)
+(global-set-key (kbd "M-q M-<up>")    'windmove-up)
+(global-set-key (kbd "M-q M-<down>")  'windmove-down)
+
+;; Fix windmove in org-mode
+(add-hook 'org-mode-hook
+          (lambda()
+            (define-key org-mode-map [M-left] 'windmove-left)
+            (define-key org-mode-map [M-right] 'windmove-right)
+            (define-key org-mode-map [M-up] 'windmove-up)
+            (define-key org-mode-map [M-down] 'windmove-down)))
 
 ;; fix some coding systems
 (define-coding-system-alias 'UTF-8 'utf-8)
@@ -243,18 +264,18 @@ With argument ARG, do this that many times."
    ("M-v"         . yank)
    ("<tab>"       . helm-execute-persistent-action)
    ([M-backspace] . backward-delete-word)
-   ;; ("M-<down>"    . helm-scroll-other-window)
-   ;; ("M-<up>"      . helm-scroll-other-window-down)
+   ("<M-down>"    . helm-scroll-other-window)
+   ("<M-up>"      . helm-scroll-other-window-down)
    :map helm-moccur-map
    ("<right>"     . nil)
    ("<left>"      . nil)
-   ;; ("M-<down>"    . helm-scroll-other-window)
-   ;; ("M-<up>"      . helm-scroll-other-window-down)
-   :helm-find-files-map
-   ;; ("M-<down>"    . helm-scroll-other-window)
-   ;; ("M-<up>"      . helm-scroll-other-window-down)
+   ("<M-down>"    . helm-scroll-other-window)
+   ("<M-up>"      . helm-scroll-other-window-down)
+   :map helm-find-files-map
+   ("<M-down>"    . helm-scroll-other-window)
+   ("<M-up>"      . helm-scroll-other-window-down)
    ([M-backspace] . delete-until-slash)
-   :helm-read-file-map
+   :map helm-read-file-map
    ([M-backspace] . delete-until-slash))
   :config
   (setq
@@ -266,20 +287,42 @@ With argument ARG, do this that many times."
    helm-mode-handle-completion-in-region nil ; Disable helm in minibuffer region completion (eval-expression for example)
    helm-moccur-use-ioccur-style-keys nil
    helm-scroll-amount 6)
-  (helm-mode)
-  )
+  (helm-mode))
 
 (defun helm-config--ff-run-helm-ag()
-  (interactive)
-  (with-helm-alive-p
-    (helm-exit-and-execute-action 'helm-do-ag)))
+    (interactive)
+    (with-helm-alive-p
+      (helm-exit-and-execute-action 'helm-do-ag)))
 
 (use-package helm-ag
   :bind
   (("M-R" . helm-do-ag)
    ("M-F" . helm-do-ag-buffers)
-   :map
+   :map helm-find-files-map
    ("M-R" . helm-config--ff-run-helm-ag)))
+
+(setq projectile-keymap-prefix (kbd "M-p"))
+(use-package projectile
+  :config
+  (projectile-global-mode)
+  (setq projectile-enable-caching nil
+        projectile-svn-command projectile-generic-command)
+  (add-hook 'projectile-mode-hook
+            (lambda ()
+              (remove-hook 'find-file-hook #'projectile-cache-files-find-file-hook t)
+              (remove-hook 'find-file-hook #'projectile-visit-project-tags-table t))))
+
+(setq helm-projectile-fuzzy-match nil)
+(use-package helm-projectile
+  :bind
+  (:map helm-projectile-find-file-map
+   ("<right>" . nil)
+   ("<left>"  . nil)
+   :map helm-projectile-projects-map
+   ("M-R"     . helm-config--ff-run-helm-ag))
+  :config
+  (setq projectile-completion-system 'helm)
+  (helm-projectile-on))
 
 (use-package undo-tree
   :diminish undo-tree-mode
