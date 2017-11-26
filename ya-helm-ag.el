@@ -2,16 +2,21 @@
 
 (require 'helm)
 (require 'helm-grep)
+(require 'helm-locate)
 (require 'cl)
 
 (defvar ya-helm-ag-last-cmd-line nil)
 (defvar ya-helm-ag-history nil)
+(defvar ya-helm-ag-mode-line nil)
 
 (defcustom ya-helm-ag-command
   "ag --line-numbers -S --color --nogroup"
   "Command to use"
   :group 'ya-helm-ag
   :type 'string)
+
+(defun ya-helm-ag--reset()
+  (setq ya-helm-ag-mode-line "Searching.."))
 
 (defun ya-helm-ag-prepare-cmd-line (pattern targets)
   "Prepare AG command line to search PATTERN in TARGETS."
@@ -33,6 +38,7 @@
 
 (defun ya-helm-ag-init (targets)
   "Start AG process in TARGETS."
+  (ya-helm-ag--reset)
   (let ((default-directory (or helm-ff-default-directory
                                (helm-default-directory)
                                default-directory))
@@ -57,6 +63,7 @@
                                     " command line was:\n\n "
                                     (propertize ya-helm-ag-last-cmd-line
                                                 'face 'helm-grep-cmd-line)))
+                    (setq ya-helm-ag-mode-line "FINISHED")
                     (setq mode-line-format
                           `(" " mode-line-buffer-identification " "
                             (:eval (format "L%s" (helm-candidate-number-at-point))) " "
@@ -64,7 +71,7 @@
                                     (format
                                      "[%s process finished - (no results)] "
                                      ,(upcase process-name))
-                                    'face 'helm-grep-finish))))))
+                                    'face 'helm-locate-finish))))))
                  ((string= event "finished\n")
                   (helm-log "%s process finished with %s results in %fs"
                               process-name
@@ -72,6 +79,7 @@
                               (- (float-time) start-time))
                   (helm-maybe-show-help-echo)
                   (with-helm-window
+                    (setq ya-helm-ag-mode-line "FINISHED")
                     (setq mode-line-format
                           `(" " mode-line-buffer-identification " "
                             (:eval (format "L%s" (helm-candidate-number-at-point))) " "
@@ -81,7 +89,7 @@
                                      ,(upcase process-name)
                                      ,(- (float-time) start-time)
                                      (helm-get-candidate-number))
-                                    'face 'helm-grep-finish))))
+                                    'face 'helm-locate-finish))))
                     (force-mode-line-update)
                     (when helm-allow-mouse
                       (helm--bind-mouse-for-selection helm-selection-point))))
@@ -98,6 +106,7 @@
    (keymap :initform helm-grep-map)
    (history :initform 'ya-helm-ag-history)
    (help-message :initform 'helm-grep-help-message)
+   (mode-line :initform 'ya-helm-ag-mode-line)
    (filter-one-by-one :initform 'helm-grep-filter-one-by-one)
    (persistent-action :initform 'helm-grep-persistent-action)
    (persistent-help :initform "Jump to line (`C-u' Record in mark ring)")

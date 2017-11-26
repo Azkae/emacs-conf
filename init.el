@@ -45,6 +45,9 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq-default indent-tabs-mode nil)
 
+(setq mouse-wheel-scroll-amount '(0.07))
+(setq mouse-wheel-progressive-speed nil)
+
 ;; basic keybindings
 (global-set-key (kbd "C-f") "\C-a\C-@\C-e")
 (global-set-key (kbd "RET") 'newline-and-indent)
@@ -416,6 +419,8 @@ With argument ARG, do this that many times."
    :map helm-read-file-map
    ([M-backspace] . delete-until-slash)
    :map helm-grep-map
+   ("<M-down>"    . helm-scroll-other-window)
+   ("<M-up>"      . helm-scroll-other-window-down)
    ("<right>"     . nil)
    ("<left>"      . nil))
   :config
@@ -449,6 +454,10 @@ With argument ARG, do this that many times."
 (global-set-key (kbd "M-R") 'ya-helm-do-ag)
 (global-set-key (kbd "M-F") 'ya-helm-do-ag-buffers)
 (define-key helm-find-files-map (kbd "M-R") 'helm-config--ff-run-helm-ag)
+(define-key projectile-mode-map [remap projectile-ag]
+  (lambda ()
+    (interactive)
+    (ya-helm-ag (list (projectile-project-root)))))
 
 (setq projectile-keymap-prefix (kbd "M-p"))
 (use-package projectile
@@ -475,9 +484,13 @@ With argument ARG, do this that many times."
 
 (use-package helm-gtags
   :diminish helm-gtags-mode
+  :bind
+  (:map helm-gtags-mode-map
+   ("M-." . helm-gtags-dwim))
   :config
   (add-hook 'prog-mode-hook 'helm-gtags-mode)
-  (add-hook 'dired-mode-hook 'helm-gtags-mode))
+  (add-hook 'dired-mode-hook 'helm-gtags-mode)
+  (setq helm-gtags-direct-helm-completing t))
 
 (use-package highlight-symbol
   :bind
