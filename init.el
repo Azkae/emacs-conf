@@ -506,6 +506,8 @@ With argument ARG, do this that many times."
   (global-yascroll-bar-mode 1)
   (setq yascroll:delay-to-hide 0.3))
 
+(use-package phi-search)
+
 (use-package multiple-cursors
   :bind
   (("C-j"      . mc/mark-next-like-this)
