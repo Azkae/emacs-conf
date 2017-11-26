@@ -506,6 +506,15 @@ With argument ARG, do this that many times."
   (global-yascroll-bar-mode 1)
   (setq yascroll:delay-to-hide 0.3))
 
+(use-package multiple-cursors
+  :bind
+  (("C-j"      . mc/mark-next-like-this)
+   ("M-j"      . mc/mark-next-symbol-like-this)
+   ("C-n"      . mc/skip-to-next-like-this)
+   ("C-S-n"    . mc/unmark-previous-like-this)
+   :map mc/keymap
+   ("<return>" . nil)))
+
 ;; -----------
 ;; theme setup
 ;; -----------
