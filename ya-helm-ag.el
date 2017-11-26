@@ -14,9 +14,7 @@
   :type 'string)
 
 (defun ya-helm-ag-prepare-cmd-line (pattern targets)
-  "Prepare AG command line to search PATTERN in DIRECTORY.
-When TYPE is specified it is one of what returns `helm-grep-ag-get-types'
-if available with current AG version."
+  "Prepare AG command line to search PATTERN in TARGETS."
   (let* ((base-patterns (split-string pattern))
          (patterns (remove-if (lambda (x) (string-prefix-p "-" x)) base-patterns))
          (options (remove-if-not (lambda (x) (string-prefix-p "-" x)) base-patterns))
@@ -34,7 +32,7 @@ if available with current AG version."
       cmd)))
 
 (defun ya-helm-ag-init (targets)
-  "Start AG process in DIRECTORY maybe searching only files of type TYPE."
+  "Start AG process in TARGETS."
   (let ((default-directory (or helm-ff-default-directory
                                (helm-default-directory)
                                default-directory))
@@ -135,7 +133,6 @@ if available with current AG version."
 
 ;;;###autoload
 (defun ya-helm-do-ag ()
-  "Preconfigured helm for grepping with AG in `default-directory'."
   (interactive)
   (ya-helm-ag (mapcar (lambda (x) (if (not (file-directory-p x))
                                       (file-name-directory x)
