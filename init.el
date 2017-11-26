@@ -454,10 +454,6 @@ With argument ARG, do this that many times."
 (global-set-key (kbd "M-R") 'ya-helm-do-ag)
 (global-set-key (kbd "M-F") 'ya-helm-do-ag-buffers)
 (define-key helm-find-files-map (kbd "M-R") 'helm-config--ff-run-helm-ag)
-(define-key projectile-mode-map [remap projectile-ag]
-  (lambda ()
-    (interactive)
-    (ya-helm-ag (list (projectile-project-root)))))
 
 (setq projectile-keymap-prefix (kbd "M-p"))
 (use-package projectile
@@ -469,6 +465,10 @@ With argument ARG, do this that many times."
             (lambda ()
               (remove-hook 'find-file-hook #'projectile-cache-files-find-file-hook t)
               (remove-hook 'find-file-hook #'projectile-visit-project-tags-table t))))
+(define-key projectile-mode-map [remap projectile-ag]
+  (lambda ()
+    (interactive)
+    (ya-helm-ag (list (projectile-project-root)))))
 
 (setq helm-projectile-fuzzy-match nil)
 (use-package helm-projectile
