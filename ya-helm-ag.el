@@ -129,7 +129,7 @@
         :keymap helm-grep-map
         :history 'ya-helm-ag-history
         :truncate-lines t
-        :buffer "*helm ag*")))
+        :buffer "*helm ag*"))
 
 ;;;###autoload
 (defun ya-helm-do-ag ()
