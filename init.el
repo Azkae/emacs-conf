@@ -15,6 +15,12 @@
 (straight-use-package 'use-package)
 (setq use-package-always-ensure t)
 
+;; set load path
+(let ((directory (or load-file-name
+                     default-directory)))
+  (add-to-list 'custom-theme-load-path (file-name-directory directory))
+  (add-to-list 'load-path (file-name-directory directory)))
+
 ;; -------------------
 ;; base emacs settings
 ;; -------------------
@@ -366,6 +372,20 @@ With argument ARG, do this that many times."
   (delete-slash)
   (insert "/"))
 
+(defun helm-grep-ag-prepare-cmd-line--handle-options (orig-fun pattern directory &optional type)
+  (let* ((patterns (helm-mm-split-pattern pattern))
+        (pattern (mapconcat 'identity
+                            (remove-if (lambda (x) (string-prefix-p "-" x)) patterns)
+                            " "))
+        (helm-grep-ag-pipe-cmd-switches
+         (remove-if-not (lambda (x) (string-prefix-p "-" x)) patterns))
+        (res (apply orig-fun pattern directory type)))
+    (message (format "result: %s" res))
+    res))
+
+(advice-add 'helm-grep-ag-prepare-cmd-line :around
+            #'helm-grep-ag-prepare-cmd-line--handle-options)
+
 (use-package helm
   :diminish helm-mode
   :bind
@@ -394,7 +414,10 @@ With argument ARG, do this that many times."
    ("<M-up>"      . helm-scroll-other-window-down)
    ([M-backspace] . delete-until-slash)
    :map helm-read-file-map
-   ([M-backspace] . delete-until-slash))
+   ([M-backspace] . delete-until-slash)
+   :map helm-grep-map
+   ("<right>"     . nil)
+   ("<left>"      . nil))
   :config
   (setq
    helm-buffers-fuzzy-matching t
@@ -408,22 +431,24 @@ With argument ARG, do this that many times."
    helm-moccur-show-buffer-fontification t)
   (helm-mode))
 
-(defun helm-do-ag-on-file-maybe(&optional basename targets)
+(require 'ya-helm-ag)
+
+(defun ya-helm-do-ag-on-file-maybe(basename)
   (interactive)
-  (let ((basedir (when basename (file-name-directory basename))))
-    (helm-do-ag basedir targets)))
+  (let* ((basename (expand-file-name basename))
+         (basename (if (not (file-directory-p basename))
+                       (file-name-directory basename)
+                     basename)))
+    (ya-helm-ag (list basename))))
 
 (defun helm-config--ff-run-helm-ag()
     (interactive)
     (with-helm-alive-p
-      (helm-exit-and-execute-action 'helm-do-ag-on-file-maybe)))
+      (helm-exit-and-execute-action 'ya-helm-do-ag-on-file-maybe)))
 
-(use-package helm-ag
-  :bind
-  (("M-R" . helm-do-ag-on-file-maybe)
-   ("M-F" . helm-do-ag-buffers)
-   :map helm-find-files-map
-   ("M-R" . helm-config--ff-run-helm-ag)))
+(global-set-key (kbd "M-R") 'ya-helm-do-ag)
+(global-set-key (kbd "M-F") 'ya-helm-do-ag-buffers)
+(define-key helm-find-files-map (kbd "M-R") 'helm-config--ff-run-helm-ag)
 
 (setq projectile-keymap-prefix (kbd "M-p"))
 (use-package projectile
@@ -485,9 +510,6 @@ With argument ARG, do this that many times."
 ;; theme setup
 ;; -----------
 
-(let ((directory (or load-file-name
-                     default-directory)))
-  (add-to-list 'custom-theme-load-path (file-name-directory directory)))
 (load-theme 'monokai t)
 
 (set-default-font "Fira Mono-10")
