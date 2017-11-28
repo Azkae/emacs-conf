@@ -16,10 +16,9 @@
 (setq use-package-always-ensure t)
 
 ;; set load path
-(let ((directory (or load-file-name
-                     default-directory)))
-  (add-to-list 'custom-theme-load-path (file-name-directory directory))
-  (add-to-list 'load-path (file-name-directory directory)))
+(setq conf--base-dir (file-name-directory (or load-file-name default-directory)))
+(add-to-list 'custom-theme-load-path conf--base-dir)
+(add-to-list 'load-path conf--base-dir)
 
 ;; -------------------
 ;; base emacs settings
@@ -529,6 +528,12 @@ With argument ARG, do this that many times."
    ("C-S-n"    . mc/unmark-previous-like-this)
    :map mc/keymap
    ("<return>" . nil)))
+
+(use-package yasnippet
+  :diminish yas-minor-mode
+  :config
+  (setq yas-snippet-dirs (list (format "%s/snippets" conf--base-dir)))
+  (yas-global-mode 1))
 
 (use-package yaml-mode)
 
