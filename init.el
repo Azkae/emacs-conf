@@ -302,8 +302,13 @@
 		 'asm-mode-hook
 		 'emms-tag-editor-mode-hook
 		 'sh-mode-hook
+		 'python-mode-hook
 		 ))
     (add-hook hook 'company-mode))
+  (defun --company-setup ()
+    (setq company-backends (delete '(company-dabbrev-code company-gtags company-etags company-keywords) company-backends))
+    (add-to-list 'company-backends '(company-dabbrev-code company-keywords)))
+  (add-hook 'company-mode-hook '--company-setup)
   ;; remove unwanted (and slow) backends
   (defun cc-company-setup ()
     (setq company-backends (delete 'company-semantic company-backends)))
@@ -325,6 +330,12 @@
     '(progn
        (require 'flycheck-irony)
        (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))))
+
+(use-package flycheck
+  :bind
+  (("C-c i f" . flycheck-mode))
+  :config
+  (add-hook 'python-mode-hook 'flycheck-mode))
 
 (use-package company-irony
   :config
@@ -375,20 +386,6 @@ With argument ARG, do this that many times."
   (delete-slash)
   (insert "/"))
 
-(defun helm-grep-ag-prepare-cmd-line--handle-options (orig-fun pattern directory &optional type)
-  (let* ((patterns (helm-mm-split-pattern pattern))
-        (pattern (mapconcat 'identity
-                            (remove-if (lambda (x) (string-prefix-p "-" x)) patterns)
-                            " "))
-        (helm-grep-ag-pipe-cmd-switches
-         (remove-if-not (lambda (x) (string-prefix-p "-" x)) patterns))
-        (res (apply orig-fun pattern directory type)))
-    (message (format "result: %s" res))
-    res))
-
-(advice-add 'helm-grep-ag-prepare-cmd-line :around
-            #'helm-grep-ag-prepare-cmd-line--handle-options)
-
 (use-package helm
   :diminish helm-mode
   :bind
@@ -433,7 +430,8 @@ With argument ARG, do this that many times."
    helm-mode-handle-completion-in-region nil
    helm-moccur-use-ioccur-style-keys nil
    helm-scroll-amount 6
-   helm-moccur-show-buffer-fontification t)
+   helm-moccur-show-buffer-fontification t
+   helm-find-files-ignore-thing-at-point t)
   (helm-mode))
 
 (require 'ya-helm-ag)
@@ -465,22 +463,21 @@ With argument ARG, do this that many times."
             (lambda ()
               (remove-hook 'find-file-hook #'projectile-cache-files-find-file-hook t)
               (remove-hook 'find-file-hook #'projectile-visit-project-tags-table t))))
-(define-key projectile-mode-map [remap projectile-ag]
-  (lambda ()
-    (interactive)
-    (ya-helm-ag (list (projectile-project-root)))))
 
 (setq helm-projectile-fuzzy-match nil)
 (use-package helm-projectile
   :bind
   (:map helm-projectile-find-file-map
-   ("<right>" . nil)
-   ("<left>"  . nil)
+   ("<right>"     . nil)
+   ("<left>"      . nil)
+   ([M-backspace] . backward-delete-word)
    :map helm-projectile-projects-map
-   ("M-R"     . helm-config--ff-run-helm-ag))
+   ("M-R"         . helm-config--ff-run-helm-ag))
   :config
   (setq projectile-completion-system 'helm))
 (helm-projectile-on)
+;; must be binded after (helm-projectile-on) because it remap projectile keybindings
+(define-key projectile-mode-map [remap projectile-ag] 'ya-helm-do-ag-projectile-project)
 
 (use-package helm-gtags
   :diminish helm-gtags-mode
@@ -510,7 +507,7 @@ With argument ARG, do this that many times."
    ("C-x C--" . zoom-out)))
 
 (use-package git-gutter-fringe+
-  :diminish git-gutter-fringe+
+  :diminish git-gutter+-mode
   :config
   (global-git-gutter+-mode))
 
@@ -529,6 +526,8 @@ With argument ARG, do this that many times."
    ("C-S-n"    . mc/unmark-previous-like-this)
    :map mc/keymap
    ("<return>" . nil)))
+
+(use-package yaml-mode)
 
 ;; -----------
 ;; theme setup

@@ -7,7 +7,7 @@
 
 (defvar ya-helm-ag-last-cmd-line nil)
 (defvar ya-helm-ag-history nil)
-(defvar ya-helm-ag-mode-line nil)
+(defvar ya-helm-ag-status nil)
 
 (defcustom ya-helm-ag-command
   "ag --line-numbers -S --color --nogroup"
@@ -16,7 +16,7 @@
   :type 'string)
 
 (defun ya-helm-ag--reset()
-  (setq ya-helm-ag-mode-line "Searching.."))
+  (setq ya-helm-ag-status "Searching.."))
 
 (defun ya-helm-ag-prepare-cmd-line (pattern targets)
   "Prepare AG command line to search PATTERN in TARGETS."
@@ -63,7 +63,7 @@
                                     " command line was:\n\n "
                                     (propertize ya-helm-ag-last-cmd-line
                                                 'face 'helm-grep-cmd-line)))
-                    (setq ya-helm-ag-mode-line "FINISHED")
+                    (setq ya-helm-ag-status "FINISHED")
                     (setq mode-line-format
                           `(" " mode-line-buffer-identification " "
                             (:eval (format "L%s" (helm-candidate-number-at-point))) " "
@@ -79,7 +79,7 @@
                               (- (float-time) start-time))
                   (helm-maybe-show-help-echo)
                   (with-helm-window
-                    (setq ya-helm-ag-mode-line "FINISHED")
+                    (setq ya-helm-ag-status "FINISHED")
                     (setq mode-line-format
                           `(" " mode-line-buffer-identification " "
                             (:eval (format "L%s" (helm-candidate-number-at-point))) " "
@@ -97,6 +97,13 @@
                      "Error: %s %s"
                      process-name
                      (replace-regexp-in-string "\n" "" event))))))))))
+
+(defun ya-helm-ag-mode-line ()
+  (format "%s: %s" ya-helm-ag-status
+          (mapconcat (lambda (x)
+                       (car (split-string x ":")))
+                     (helm-marked-candidates)
+                     " ")))
 
 (defclass ya-helm-ag-class (helm-source-async)
   ((nohighlight :initform t)
@@ -137,7 +144,7 @@
   (helm :sources 'ya-helm-ag-source
         :keymap helm-grep-map
         :history 'ya-helm-ag-history
-        :truncate-lines t
+        :truncate-lines nil
         :buffer "*helm ag*"))
 
 ;;;###autoload
@@ -158,5 +165,10 @@
                        when (buffer-file-name buf)
                        collect it)))
     (ya-helm-ag bufs)))
+
+;;;###autoload
+(defun ya-helm-do-ag-projectile-project ()
+  (interactive)
+    (ya-helm-ag (list (projectile-project-root))))
 
 (provide 'ya-helm-ag)
