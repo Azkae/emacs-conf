@@ -499,7 +499,10 @@ With argument ARG, do this that many times."
 
 (use-package powerline
   :config
-  (powerline-default-theme))
+  (powerline-default-theme)
+  (setq powerline-display-buffer-size nil
+        powerline-display-mule-info   nil
+        powerline-display-hud         nil))
 
 (use-package zoom-frm
   :bind
@@ -610,6 +613,13 @@ With argument ARG, do this that many times."
   '(progn
      (yascroll--set-faces (selected-frame))
      (add-hook 'after-make-frame-functions 'yascroll--set-faces)))
+
+(defun mode-line--set-faces (frame)
+  (with-selected-frame frame
+    (set-face-attribute 'mode-line    nil :background "OliveDrab3" :foreground "black")))
+
+(mode-line--set-faces (selected-frame))
+(add-hook 'after-make-frame-functions 'mode-line--set-faces)
 
 (defun basic--set-faces (frame)
   (with-selected-frame frame
