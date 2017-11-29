@@ -538,6 +538,8 @@ With argument ARG, do this that many times."
 
 (use-package yaml-mode)
 
+(use-package swift-mode)
+
 ;; -----------
 ;; theme setup
 ;; -----------
