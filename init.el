@@ -79,6 +79,7 @@
 (global-set-key (kbd "M-d") "\C-a\C-@\C-e")
 (global-set-key (kbd "M-s") 'save-buffer)
 (global-set-key (kbd "M-z") 'undo)
+(global-set-key (kbd "M-e") 'recenter)
 
 (defun move-up (amount)
   (condition-case nil
