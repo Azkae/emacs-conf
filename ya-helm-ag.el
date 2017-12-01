@@ -132,13 +132,14 @@
                  (assoc-default 'follow ya-helm-ag-source))
       (setf (slot-value source 'follow) it)))
 
-(defun ya-helm-ag (targets)
+(defun ya-helm-ag (targets &optional target-name)
   "Start helm ag in DIRECTORY."
   (setq ya-helm-ag-source
         (helm-make-source "AG" 'ya-helm-ag-class
           :header-name (lambda (name)
-                         (format "%s [%s]"
-                                 name (mapconcat 'abbreviate-file-name targets " ")))
+                         (format "%s [%s]" name
+                                 (or target-name
+                                     (mapconcat 'abbreviate-file-name targets " "))))
           :candidates-process
           (lambda () (ya-helm-ag-init targets))))
   (helm :sources 'ya-helm-ag-source
@@ -164,7 +165,7 @@
   (let ((bufs (cl-loop for buf in (buffer-list)
                        when (buffer-file-name buf)
                        collect it)))
-    (ya-helm-ag bufs)))
+    (ya-helm-ag bufs "in open buffers")))
 
 ;;;###autoload
 (defun ya-helm-do-ag-projectile-project ()
