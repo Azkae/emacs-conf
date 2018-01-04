@@ -396,6 +396,7 @@ With argument ARG, do this that many times."
    ("M-X"         . helm-M-x)
    ("M-o"         . helm-find-files)
    ("M-O"         . helm-buffers-list)
+   ("C-x c M-y"   . helm-show-kill-ring)
    :map helm-map
    ("<right>"     . nil)
    ("<left>"      . nil)
