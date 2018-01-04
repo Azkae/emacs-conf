@@ -80,6 +80,7 @@
 (global-set-key (kbd "M-s") 'save-buffer)
 (global-set-key (kbd "M-z") 'undo)
 (global-set-key (kbd "M-e") 'recenter)
+(global-set-key (kbd "M-N") 'goto-line)
 
 (defun move-up (amount)
   (condition-case nil
@@ -333,8 +334,11 @@
 
 (use-package flycheck
   :bind
-  (("C-c i f" . flycheck-mode))
+  (("C-c i f" . flycheck-mode)
+   :map flycheck-mode-map
+   ("C-c i l" . flycheck-list-errors))
   :config
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
   (add-hook 'python-mode-hook 'flycheck-mode))
 
 (use-package company-irony
@@ -353,7 +357,7 @@
     '(add-to-list 'company-backends 'company-irony))
   (defun setup-irony-company ()
     (company-irony-setup-begin-commands)
-    (setq company-backends (delete 'company-clang company-backends)))
+    (setq company-backends (delete '(company-dabbrev-code company-keywords) (delete 'company-clang company-backends))))
   (add-hook 'irony-mode-hook 'setup-irony-company))
 
 (use-package ws-butler
