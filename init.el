@@ -464,6 +464,7 @@ With argument ARG, do this that many times."
   (projectile-global-mode)
   (setq projectile-enable-caching nil
         projectile-svn-command projectile-generic-command)
+  (setq projectile-mode-line "Projectile") ;avoid lag in tramp
   (add-hook 'projectile-mode-hook
             (lambda ()
               (remove-hook 'find-file-hook #'projectile-cache-files-find-file-hook t)
@@ -541,15 +542,54 @@ With argument ARG, do this that many times."
   (setq yas-snippet-dirs (list (format "%s/snippets" conf--base-dir)))
   (yas-global-mode 1))
 
-(use-package magit
-  :bind
-  (("C-x g" . magit-status)))
+;; (use-package magit
+;;   :bind
+;;   (("C-x g" . magit-status)))
 
 (use-package git-timemachine)
+
+(use-package popwin)
+
+(use-package quickrun
+  :bind
+  (("M-q r" . quickrun))
+  :config
+  (quickrun-add-command "python"
+                        '((:command . "envpython"))
+                        :override t)
+  (push '("*quickrun*" :tail t) popwin:special-display-config))
 
 (use-package yaml-mode)
 
 (use-package swift-mode)
+
+(use-package cython-mode)
+
+(use-package helm-tramp
+  :bind
+  (("C-c s" . helm-tramp))
+  :config
+  (setq tramp-default-method "ssh")
+  (defun package-installed-p (v) nil))
+
+(use-package glsl-mode)
+
+(use-package fill-column-indicator
+  :config
+  (defvar-local company-fci-mode-on-p nil)
+
+  (defun company-turn-off-fci (&rest ignore)
+    (when (boundp 'fci-mode)
+      (setq company-fci-mode-on-p fci-mode)
+      (when fci-mode (fci-mode -1))))
+
+  (defun company-maybe-turn-on-fci (&rest ignore)
+    (when company-fci-mode-on-p (fci-mode 1)))
+
+  (add-hook 'company-completion-started-hook 'company-turn-off-fci)
+  (add-hook 'company-completion-finished-hook 'company-maybe-turn-on-fci)
+  (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)
+  (setq fci-rule-column 120))
 
 ;; -----------
 ;; theme setup
