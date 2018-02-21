@@ -13,7 +13,7 @@
  ("emacs-quickrun" . "5e3860b2b42e06fc25ff734227c5eb916ca9e5fb")
  ("epkgs" . "01bf7b8f9cdf601fd577536496dfb8c8949da548")
  ("epl" . "78ab7a85c08222cd15582a298a364774e3282ce6")
- ("flycheck" . "1ec9397fdf6c9e8cfc20de9b50f6ac40b95862bf")
+ ("flycheck" . "1d48d51810a06b5812a6f9c6f19a23bbbaf49581")
  ("flycheck-irony" . "34940ae5ab8f4c721d9c1118ebfc3496d7e67a84")
  ("frame-cmds" . "1a3014fd541c5417a71ce19fb032b9074b3d50d3")
  ("frame-fns" . "b675ee568c0133709c2c39a125395486cdf1c610")
