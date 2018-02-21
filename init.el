@@ -13,7 +13,7 @@
   (load bootstrap-file nil 'nomessage))
 
 (straight-use-package 'use-package)
-(setq use-package-always-ensure t)
+(setq straight-use-package-by-default t)
 
 ;; set load path
 (setq conf--base-dir (file-name-directory (or load-file-name default-directory)))
