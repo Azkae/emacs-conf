@@ -548,16 +548,15 @@ With argument ARG, do this that many times."
 
 (use-package git-timemachine)
 
-(use-package popwin)
-
 (use-package quickrun
+  :straight (quickrun :type git :host  github :repo "pickardjoe/emacs-quickrun"
+                      :upstream (:host github :repo "syohex/emacs-quickrun"))
   :bind
   (("M-q r" . quickrun))
   :config
   (quickrun-add-command "python"
                         '((:command . "envpython"))
-                        :override t)
-  (push '("*quickrun*" :tail t) popwin:special-display-config))
+                        :override t))
 
 (use-package yaml-mode)
 
