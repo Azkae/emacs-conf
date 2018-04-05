@@ -308,7 +308,8 @@
     (add-hook hook 'company-mode))
   (defun --company-setup ()
     (setq company-backends (delete '(company-dabbrev-code company-gtags company-etags company-keywords) company-backends))
-    (add-to-list 'company-backends '(company-dabbrev-code company-keywords)))
+    (setq company-backends (delete 'company-dabbrev-code company-backends))
+    (add-to-list 'company-backends '(company-dabbrev-code company-keywords) t))
   (add-hook 'company-mode-hook '--company-setup)
   ;; remove unwanted (and slow) backends
   (defun cc-company-setup ()
@@ -344,21 +345,15 @@
 (use-package company-irony
   :config
   (eval-after-load 'company
-    '(add-to-list 'company-backends 'company-irony))
-  (defun setup-irony-company ()
-    (company-irony-setup-begin-commands)
-    (add-to-list 'company-backends 'company-irony)
-    (setq company-backends (delete 'company-clang company-backends)))
-  (add-hook 'irony-mode-hook 'setup-irony-company))
+    '(progn
+       (add-to-list 'company-backends 'company-irony)
+       ;; company-clang is too slow
+       (setq company-backends (delete 'company-clang company-backends)))))
 
 (use-package company-c-headers
   :config
   (eval-after-load 'company
-    '(add-to-list 'company-backends 'company-irony))
-  (defun setup-irony-company ()
-    (company-irony-setup-begin-commands)
-    (setq company-backends (delete '(company-dabbrev-code company-keywords) (delete 'company-clang company-backends))))
-  (add-hook 'irony-mode-hook 'setup-irony-company))
+    '(add-to-list 'company-backends 'company-c-headers)))
 
 (use-package ws-butler
   :diminish ws-butler-mode
