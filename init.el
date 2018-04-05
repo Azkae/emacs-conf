@@ -308,7 +308,7 @@
     (add-hook hook 'company-mode))
   (defun --company-setup ()
     (setq company-backends (delete '(company-dabbrev-code company-gtags company-etags company-keywords) company-backends))
-    (setq company-backends (delete 'company-dabbrev-code company-backends))
+    (setq company-backends (delete 'company-dabbrev company-backends))
     (add-to-list 'company-backends '(company-dabbrev-code company-keywords) t))
   (add-hook 'company-mode-hook '--company-setup)
   ;; remove unwanted (and slow) backends
