@@ -585,6 +585,10 @@ With argument ARG, do this that many times."
   (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)
   (setq fci-rule-column 120))
 
+(use-package jinja2-mode)
+
 (use-package nhexl-mode)
+
+(use-package dockerfile-mode)
 
 (require 'graphics)
