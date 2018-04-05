@@ -400,7 +400,7 @@ With argument ARG, do this that many times."
    ("<right>"     . nil)
    ("<left>"      . nil)
    ("M-v"         . yank)
-   ("<tab>"       . helm-execute-persistent-action)
+   ("C-i"         . helm-execute-persistent-action) ;tab
    ([M-backspace] . backward-delete-word)
    ("<M-down>"    . helm-scroll-other-window)
    ("<M-up>"      . helm-scroll-other-window-down)
