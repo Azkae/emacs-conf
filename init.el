@@ -590,6 +590,8 @@ With argument ARG, do this that many times."
   (add-hook 'company-completion-cancelled-hook 'company-maybe-turn-on-fci)
   (setq fci-rule-column 120))
 
+(use-package nhexl-mode)
+
 ;; -----------
 ;; theme setup
 ;; -----------
