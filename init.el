@@ -591,4 +591,5 @@ With argument ARG, do this that many times."
 
 (use-package dockerfile-mode)
 
+;; load graphic settings
 (require 'graphics)
