@@ -44,9 +44,6 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq-default indent-tabs-mode nil)
 
-(setq mouse-wheel-scroll-amount '(0.07))
-(setq mouse-wheel-progressive-speed nil)
-
 ;; basic keybindings
 (global-set-key (kbd "C-f") "\C-a\C-@\C-e")
 (global-set-key (kbd "RET") 'newline-and-indent)
@@ -550,8 +547,9 @@ With argument ARG, do this that many times."
   (("M-q r" . quickrun))
   :config
   (quickrun-add-command "python"
-                        '((:command . "envpython"))
-                        :override t))
+                        '((:command . "python"))
+                        :override t)
+  )
 
 (use-package yaml-mode)
 
