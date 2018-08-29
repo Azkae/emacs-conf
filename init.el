@@ -534,9 +534,9 @@ With argument ARG, do this that many times."
   (setq yas-snippet-dirs (list (format "%s/snippets" conf--base-dir)))
   (yas-global-mode 1))
 
-;; (use-package magit
-;;   :bind
-;;   (("C-x g" . magit-status)))
+(use-package magit
+  :bind
+  (("C-x g" . magit-status)))
 
 (use-package git-timemachine)
 
