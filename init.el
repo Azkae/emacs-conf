@@ -516,10 +516,10 @@ With argument ARG, do this that many times."
   :config
   (global-git-gutter+-mode))
 
-(use-package yascroll
-  :config
-  (global-yascroll-bar-mode 1)
-  (setq yascroll:delay-to-hide 0.3))
+;; (use-package yascroll
+;;   :config
+;;   (global-yascroll-bar-mode 1)
+;;   (setq yascroll:delay-to-hide 0.3))
 
 (use-package phi-search)
 
