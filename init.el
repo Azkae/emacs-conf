@@ -65,6 +65,10 @@
 
 (define-key key-translation-map (kbd "M-g") (kbd "C-g"))
 
+(global-set-key (kbd "C-c p b") 'profiler-start)
+(global-set-key (kbd "C-c p r") 'profiler-report)
+(global-set-key (kbd "C-c p e") 'profiler-stop)
+
 (defun kill-region-maybe()
   (interactive)
   (if (use-region-p)
