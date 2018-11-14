@@ -410,6 +410,7 @@ With argument ARG, do this that many times."
    ([M-backspace] . backward-delete-word)
    ("<M-down>"    . helm-scroll-other-window)
    ("<M-up>"      . helm-scroll-other-window-down)
+   ("DEL"         . nil)
    :map helm-moccur-map
    ("<right>"     . nil)
    ("<left>"      . nil)
@@ -418,6 +419,7 @@ With argument ARG, do this that many times."
    :map helm-find-files-map
    ("<M-down>"    . helm-scroll-other-window)
    ("<M-up>"      . helm-scroll-other-window-down)
+   ("DEL"         . nil)
    ([M-backspace] . delete-until-slash)
    :map helm-read-file-map
    ([M-backspace] . delete-until-slash)
@@ -425,7 +427,8 @@ With argument ARG, do this that many times."
    ("<M-down>"    . helm-scroll-other-window)
    ("<M-up>"      . helm-scroll-other-window-down)
    ("<right>"     . nil)
-   ("<left>"      . nil))
+   ("<left>"      . nil)
+   ("DEL"         . nil))
   :config
   (setq
    helm-buffers-fuzzy-matching t
