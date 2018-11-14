@@ -356,6 +356,11 @@
   (eval-after-load 'company
     '(add-to-list 'company-backends 'company-c-headers)))
 
+(use-package company-irony-c-headers
+  :config
+  (eval-after-load 'company
+    '(add-to-list 'company-backends 'company-irony-c-headers)))
+
 (use-package ws-butler
   :diminish ws-butler-mode
   :config
