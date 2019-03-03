@@ -132,7 +132,7 @@
                  (assoc-default 'follow ya-helm-ag-source))
       (setf (slot-value source 'follow) it)))
 
-(defun ya-helm-ag (targets &optional target-name)
+(defun ya-helm-ag (targets &optional target-name default-input)
   "Start helm ag in DIRECTORY."
   (setq ya-helm-ag-source
         (helm-make-source "AG" 'ya-helm-ag-class
@@ -142,11 +142,13 @@
                                      (mapconcat 'abbreviate-file-name targets " "))))
           :candidates-process
           (lambda () (ya-helm-ag-init targets))))
-  (helm :sources 'ya-helm-ag-source
-        :keymap helm-grep-map
-        :history 'ya-helm-ag-history
-        :truncate-lines nil
-        :buffer "*helm ag*"))
+  (helm
+   :input default-input
+   :sources 'ya-helm-ag-source
+   :keymap helm-grep-map
+   :history 'ya-helm-ag-history
+   :truncate-lines nil
+   :buffer "*helm ag*"))
 
 ;;;###autoload
 (defun ya-helm-do-ag ()
@@ -171,5 +173,10 @@
 (defun ya-helm-do-ag-projectile-project ()
   (interactive)
     (ya-helm-ag (list (projectile-project-root))))
+
+;;;###autoload
+(defun ya-helm-do-ag-projectile-project-symbol ()
+  (interactive)
+    (ya-helm-ag (list (projectile-project-root)) (projectile-project-name) (symbol-name (symbol-at-point))))
 
 (provide 'ya-helm-ag)
