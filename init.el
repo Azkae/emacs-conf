@@ -292,21 +292,7 @@
   (setq company-frontends '(company-pseudo-tooltip-frontend
 			    company-preview-if-just-one-frontend
 			    company-echo-metadata-frontend))
-  (dolist (hook (list
-		 'emacs-lisp-mode-hook
-		 'lisp-mode-hook
-		 'lisp-interaction-mode-hook
-		 'scheme-mode-hook
-		 'java-mode-hook
-		 'c-mode-hook
-		 'c++-mode-hook
-		 'haskell-mode-hook
-		 'asm-mode-hook
-		 'emms-tag-editor-mode-hook
-		 'sh-mode-hook
-		 'python-mode-hook
-		 ))
-    (add-hook hook 'company-mode))
+  (add-hook 'after-init-hook 'global-company-mode)
   (defun --company-setup ()
     (setq company-backends (delete '(company-dabbrev-code company-gtags company-etags company-keywords) company-backends))
     (setq company-backends (delete 'company-dabbrev company-backends))
@@ -318,21 +304,21 @@
   (add-hook 'c-mode-hook 'cc-company-setup)
   (add-hook 'c++-mode-hook 'cc-company-setup))
 
-(use-package irony
-  :config
-  (add-hook 'c-mode-hook (lambda ()
-			 (if (not (equal major-mode 'glsl-mode))
-			     (irony-mode))))
-  (add-hook 'c++-mode-hook 'irony-mode)
-  (add-hook 'objc-mode-hook 'irony-mode)
-  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
+;; (use-package irony
+;;   :config
+;;   (add-hook 'c-mode-hook (lambda ()
+;; 			 (if (not (equal major-mode 'glsl-mode))
+;; 			     (irony-mode))))
+;;   (add-hook 'c++-mode-hook 'irony-mode)
+;;   (add-hook 'objc-mode-hook 'irony-mode)
+;;   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
 
-(use-package flycheck-irony
-  :config
-  (eval-after-load 'flycheck
-    '(progn
-       (require 'flycheck-irony)
-       (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))))
+;; (use-package flycheck-irony
+;;   :config
+;;   (eval-after-load 'flycheck
+;;     '(progn
+;;        (require 'flycheck-irony)
+;;        (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))))
 
 (use-package flycheck
   :bind
@@ -341,25 +327,25 @@
    ("C-c i l" . flycheck-list-errors))
   :config
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  (add-hook 'python-mode-hook 'flycheck-mode))
+  (add-hook 'prog-mode-hook 'flycheck-mode))
 
-(use-package company-irony
-  :config
-  (eval-after-load 'company
-    '(progn
-       (add-to-list 'company-backends 'company-irony)
-       ;; company-clang is too slow
-       (setq company-backends (delete 'company-clang company-backends)))))
+;; (use-package company-irony
+;;   :config
+;;   (eval-after-load 'company
+;;     '(progn
+;;        (add-to-list 'company-backends 'company-irony)
+;;        ;; company-clang is too slow
+;;        (setq company-backends (delete 'company-clang company-backends)))))
 
 (use-package company-c-headers
   :config
   (eval-after-load 'company
     '(add-to-list 'company-backends 'company-c-headers)))
 
-(use-package company-irony-c-headers
-  :config
-  (eval-after-load 'company
-    '(add-to-list 'company-backends 'company-irony-c-headers)))
+;; (use-package company-irony-c-headers
+;;   :config
+;;   (eval-after-load 'company
+;;     '(add-to-list 'company-backends 'company-irony-c-headers)))
 
 (use-package ws-butler
   :diminish ws-butler-mode
@@ -461,6 +447,7 @@ With argument ARG, do this that many times."
 (global-set-key (kbd "M-R") 'ya-helm-do-ag)
 (global-set-key (kbd "M-F") 'ya-helm-do-ag-buffers)
 (define-key helm-find-files-map (kbd "M-R") 'helm-config--ff-run-helm-ag)
+(global-set-key (kbd "M-.") 'ya-helm-do-ag-projectile-project-symbol)
 
 (setq projectile-keymap-prefix (kbd "M-p"))
 (use-package projectile
@@ -600,6 +587,51 @@ With argument ARG, do this that many times."
 (use-package nhexl-mode)
 
 (use-package dockerfile-mode)
+
+(use-package lsp-mode
+  :config
+  (setq lsp-message-project-root-warning t)
+
+  (use-package company-lsp
+    :config
+    (push 'company-lsp company-backends))
+
+  (use-package lsp-ui
+    :config
+    (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+    (setq lsp-ui-sideline-show-hover nil)
+    (setq lsp-ui-sideline-show-code-actions nil)
+    (setq lsp-ui-doc-enable nil)
+    (setq lsp-ui-flycheck-live-reporting t))
+
+  ;; (use-package lsp-clangd
+  ;;   :init
+  ;;   (when (equal system-type 'darwin)
+  ;;     (setq lsp-clangd-executable "/usr/local/opt/llvm/bin/clangd"))
+  ;;   (add-hook 'c-mode-hook #'lsp-clangd-c-enable)
+  ;;   (add-hook 'c++-mode-hook #'lsp-clangd-c++-enable)
+  ;;   (add-hook 'objc-mode-hook #'lsp-clangd-objc-enable))
+
+  (use-package ccls
+    :config
+    (setq ccls-executable "/usr/local/bin/ccls")
+    (add-hook 'c-mode-hook #'lsp-ccls-enable)
+    (add-hook 'c++-mode-hook #'lsp-ccls-enable)
+    (add-hook 'objc-mode-hook #'lsp-ccls-enable)
+    (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil))
+  )
+
+(use-package clang-format)
+
+(use-package json-mode)
+
+(use-package elixir-mode
+  :config
+  (lsp-define-stdio-client lsp-elixir "elixir"
+                           #'projectile-project-root
+                           '("/Users/ouabde_r/signals/elixir-ls/bin/language_server.sh")))
+
+(use-package rust-mode)
 
 ;; load graphic settings
 (require 'graphics)
