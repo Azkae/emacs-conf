@@ -447,7 +447,7 @@ With argument ARG, do this that many times."
 (global-set-key (kbd "M-R") 'ya-helm-do-ag)
 (global-set-key (kbd "M-F") 'ya-helm-do-ag-buffers)
 (define-key helm-find-files-map (kbd "M-R") 'helm-config--ff-run-helm-ag)
-(global-set-key (kbd "M-.") 'ya-helm-do-ag-projectile-project-symbol)
+(define-key prog-mode-map (kbd "M-.") 'ya-helm-do-ag-projectile-project-symbol)
 
 (setq projectile-keymap-prefix (kbd "M-p"))
 (use-package projectile
@@ -539,6 +539,15 @@ With argument ARG, do this that many times."
 
 (use-package git-timemachine)
 
+;; ;; dirlocals:
+;; ((nil
+;;   (python-shell-interpreter . "python_env")
+;;   (flycheck-pycheckers-venv-root . "/path/to/venv/bin")))
+
+;; python_env:
+;; source ~/signals/venv/bin/activate && python $*
+
+
 (use-package quickrun
   :straight (quickrun :type git :host  github :repo "pickardjoe/emacs-quickrun"
                       :upstream (:host github :repo "syohex/emacs-quickrun"))
@@ -588,48 +597,85 @@ With argument ARG, do this that many times."
 
 (use-package dockerfile-mode)
 
-(use-package lsp-mode
+;; (use-package lsp-mode
+;;   :config
+;;   (add-hook 'prog-mode-hook #'lsp)
+;;   (setq lsp-message-project-root-warning t)
+
+;;   (use-package company-lsp
+;;     :config
+;;     (push 'company-lsp company-backends))
+
+;;   (use-package lsp-ui
+;;     :config
+;;     (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+;;     (setq lsp-ui-sideline-show-hover nil)
+;;     (setq lsp-ui-sideline-show-code-actions nil)
+;;     (setq lsp-ui-doc-enable nil)
+;;     (setq lsp-ui-flycheck-live-reporting t))
+
+;;   ;; (use-package lsp-clangd
+;;   ;;   :init
+;;   ;;   (when (equal system-type 'darwin)
+;;   ;;     (setq lsp-clangd-executable "/usr/local/opt/llvm/bin/clangd"))
+;;   ;;   (add-hook 'c-mode-hook #'lsp-clangd-c-enable)
+;;   ;;   (add-hook 'c++-mode-hook #'lsp-clangd-c++-enable)
+;;   ;;   (add-hook 'objc-mode-hook #'lsp-clangd-objc-enable))
+
+;;   (use-package ccls
+;;     :hook ((c-mode c++-mode objc-mode) .
+;;            (lambda () (require 'ccls) (lsp))))
+
+
+;;   ;; (use-package ccls
+;;   ;;   :config
+;;   ;;   (setq ccls-executable "/usr/local/bin/ccls")
+;;   ;;   (add-hook 'c-mode-hook #'lsp-ccls-enable)
+;;   ;;   (add-hook 'c++-mode-hook #'lsp-ccls-enable)
+;;   ;;   (add-hook 'objc-mode-hook #'lsp-ccls-enable)
+;;   ;;   (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil))
+;;   ;; )
+;;   )
+
+(use-package lsp-mode :commands lsp
+  :bind
+  (:map lsp-mode-map
+        ("M-." . lsp-find-definition)
+        ("M-?" . lsp-find-references)
+        )
   :config
-  (setq lsp-message-project-root-warning t)
-
-  (use-package company-lsp
-    :config
-    (push 'company-lsp company-backends))
-
-  (use-package lsp-ui
-    :config
-    (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-    (setq lsp-ui-sideline-show-hover nil)
-    (setq lsp-ui-sideline-show-code-actions nil)
-    (setq lsp-ui-doc-enable nil)
-    (setq lsp-ui-flycheck-live-reporting t))
-
-  ;; (use-package lsp-clangd
-  ;;   :init
-  ;;   (when (equal system-type 'darwin)
-  ;;     (setq lsp-clangd-executable "/usr/local/opt/llvm/bin/clangd"))
-  ;;   (add-hook 'c-mode-hook #'lsp-clangd-c-enable)
-  ;;   (add-hook 'c++-mode-hook #'lsp-clangd-c++-enable)
-  ;;   (add-hook 'objc-mode-hook #'lsp-clangd-objc-enable))
-
-  (use-package ccls
-    :config
-    (setq ccls-executable "/usr/local/bin/ccls")
-    (add-hook 'c-mode-hook #'lsp-ccls-enable)
-    (add-hook 'c++-mode-hook #'lsp-ccls-enable)
-    (add-hook 'objc-mode-hook #'lsp-ccls-enable)
-    (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil))
+  (add-hook 'prog-mode-hook #'lsp)
+  ;; (when (string-equal system-type "darwin")
+  ;;   (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd"))
   )
+
+(use-package lsp-ui :commands lsp-ui-mode
+  :config
+  (setq lsp-ui-sideline-show-hover nil)
+  (setq lsp-ui-sideline-show-code-actions nil)
+  (setq lsp-ui-doc-enable nil)
+  (setq lsp-ui-flycheck-live-reporting nil))
+
+(use-package company-lsp :commands company-lsp
+  :config
+  (push 'company-lsp company-backends)
+)
+
+(use-package ccls
+  :config
+  ;; (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
+  :hook ((c-mode c++-mode objc-mode) .
+         (lambda () (require 'ccls) (lsp))))
 
 (use-package clang-format)
 
 (use-package json-mode)
 
-(use-package elixir-mode
-  :config
-  (lsp-define-stdio-client lsp-elixir "elixir"
-                           #'projectile-project-root
-                           '("/Users/ouabde_r/signals/elixir-ls/bin/language_server.sh")))
+;; (use-package elixir-mode
+;;   :config
+;;   (lsp-define-stdio-client lsp-elixir "elixir"
+;;                            #'projectile-project-root
+;;                            '("/Users/ouabde_r/signals/elixir-ls/bin/language_server.sh")))
 
 (use-package rust-mode)
 
