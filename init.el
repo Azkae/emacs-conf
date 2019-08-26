@@ -679,5 +679,17 @@ With argument ARG, do this that many times."
 
 (use-package rust-mode)
 
+(use-package restclient)
+
+(defun restclient-collapse-all ()
+  (interactive)
+  (save-excursion
+    (goto-char (point-min))
+    (while (not (eq (point) (point-max)))
+      (restclient-toggle-body-visibility)
+      (restclient-jump-next))))
+
+(add-hook 'restclient-mode-hook 'restclient-collapse-all)
+
 ;; load graphic settings
 (require 'graphics)
