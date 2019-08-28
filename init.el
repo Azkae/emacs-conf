@@ -327,7 +327,9 @@
    ("C-c i l" . flycheck-list-errors))
   :config
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  (add-hook 'prog-mode-hook 'flycheck-mode))
+  :hook ((prog-mode) . #'flycheck-mode)
+  )
+
 
 ;; (use-package company-irony
 ;;   :config
@@ -644,7 +646,6 @@ With argument ARG, do this that many times."
         ("M-?" . lsp-find-references)
         )
   :config
-  (add-hook 'prog-mode-hook #'lsp)
   ;; (when (string-equal system-type "darwin")
   ;;   (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd"))
   )
