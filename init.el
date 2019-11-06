@@ -327,9 +327,19 @@
    ("C-c i l" . flycheck-list-errors))
   :config
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  
+  (flycheck-define-checker
+      python-mypy ""
+      :command ("dmypy-single-file" source-original)
+      :error-patterns
+      ((error line-start (file-name) ":" line ": error:" (message) line-end))
+      :modes python-mode)
+
+  (add-to-list 'flycheck-checkers 'python-mypy t)
+  (flycheck-add-next-checker 'python-flake8 'python-mypy t)
+  
   :hook ((prog-mode) . #'flycheck-mode)
   )
-
 
 ;; (use-package company-irony
 ;;   :config
@@ -385,6 +395,7 @@ With argument ARG, do this that many times."
   (("M-f"         . helm-occur)
    ("C-x C-f"     . helm-find-files)
    ("C-x b"       . helm-mini)
+   ("C-b"         . helm-resume)
    ("C-p"         . helm-buffers-list)
    ("M-X"         . helm-M-x)
    ("M-o"         . helm-find-files)
@@ -399,7 +410,7 @@ With argument ARG, do this that many times."
    ("<M-down>"    . helm-scroll-other-window)
    ("<M-up>"      . helm-scroll-other-window-down)
    ("DEL"         . nil)
-   :map helm-moccur-map
+   :map helm-occur-map
    ("<right>"     . nil)
    ("<left>"      . nil)
    ("<M-down>"    . helm-scroll-other-window)
@@ -646,12 +657,16 @@ With argument ARG, do this that many times."
         ("M-?" . lsp-find-references)
         )
   :config
+  (setq lsp-prefer-flymake nil)
+  (setq lsp-enable-file-watchers nil)
   ;; (when (string-equal system-type "darwin")
   ;;   (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd"))
   )
 
-(use-package lsp-ui :commands lsp-ui-mode
+(use-package lsp-ui ;; :commands lsp-ui-mode
   :config
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+  (add-hook 'lsp-mode-hook 'flymake-mode)
   (setq lsp-ui-sideline-show-hover nil)
   (setq lsp-ui-sideline-show-code-actions nil)
   (setq lsp-ui-doc-enable nil)
@@ -665,8 +680,7 @@ With argument ARG, do this that many times."
 (use-package ccls
   :config
   ;; (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
-  :hook ((c-mode c++-mode objc-mode) .
-         (lambda () (require 'ccls) (lsp))))
+  :hook ((c-mode c++-mode objc-mode) . (lambda () (require 'ccls) (lsp))))
 
 (use-package clang-format)
 
@@ -690,7 +704,30 @@ With argument ARG, do this that many times."
       (restclient-toggle-body-visibility)
       (restclient-jump-next))))
 
+(defun smerge-next-safe ()
+  (condition-case err
+      (not (smerge-next))
+    ('error
+     nil)))
+
+(defun goto-next-conflict ()
+  (interactive)
+  (let ((buffer (current-buffer)))
+    (when (not (smerge-next-safe))
+      (vc-find-conflicted-file)
+      (if (eq buffer (current-buffer))
+          (message "No conflicts found")
+        (goto-char 0)
+        (smerge-next-safe)))))
+
+(global-set-key (kbd "M-q e") 'goto-next-conflict)
+
 (add-hook 'restclient-mode-hook 'restclient-collapse-all)
+
+(use-package emojify
+  :config
+  (emojify-set-emoji-styles '(unicode))
+  (global-emojify-mode))
 
 ;; load graphic settings
 (require 'graphics)
