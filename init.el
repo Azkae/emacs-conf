@@ -44,6 +44,9 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq-default indent-tabs-mode nil)
 
+;; speedup long lines
+(setq bidi-display-reordering nil)
+
 ;; basic keybindings
 (global-set-key (kbd "C-f") "\C-a\C-@\C-e")
 (global-set-key (kbd "RET") 'newline-and-indent)
@@ -171,6 +174,7 @@
                (tab-width . 4)                 ; better reading of code written with tabs
                (c-offsets-alist . ((inline-open . 0)  ; custom indentation rules
                                    (brace-list-open . 0)
+                                   (inlambda . 0)
                                    (statement-case-open . +)
                                    (innamespace 0)))))
 
@@ -659,6 +663,7 @@ With argument ARG, do this that many times."
   :config
   (setq lsp-prefer-flymake nil)
   (setq lsp-enable-file-watchers nil)
+  (setq lsp-enable-semantic-highlighting nil)
   ;; (when (string-equal system-type "darwin")
   ;;   (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd"))
   )
@@ -679,6 +684,7 @@ With argument ARG, do this that many times."
 
 (use-package ccls
   :config
+  (setq ccls-sem-highlight-method nil)
   ;; (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
   :hook ((c-mode c++-mode objc-mode) . (lambda () (require 'ccls) (lsp))))
 
@@ -728,6 +734,10 @@ With argument ARG, do this that many times."
   :config
   (emojify-set-emoji-styles '(unicode))
   (global-emojify-mode))
+
+(use-package solidity-mode
+  :config
+  (add-hook 'solidity-mode-hook '--set-tab-with))
 
 ;; load graphic settings
 (require 'graphics)
