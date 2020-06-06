@@ -36,7 +36,7 @@
  ("json-mode" . "0e819e519ae17a2686e0881c4ca51fa873fa9b83")
  ("json-reformat" . "8eb6668ed447988aea06467ba8f42e1f2178246f")
  ("json-snatcher" . "c4cecc0a5051bd364373aa499c47a1bb7a5ac51c")
- ("let-alist" . "57561d7d9267da48e8b7ab1f3bd45c9d05951289")
+ ("let-alist" . "ef3c02fa292b6e32769945bbbfb7f2e5ac574b64")
  ("lsp-mode" . "716f9ceaa7f7cc8da93afa14e35482674a994842")
  ("lsp-ui" . "1f92d29b389c86679c73e0f80bf5faf1dd6fee02")
  ("magit" . "65531031acc38cc2bd51a84394a284e70de5c749")

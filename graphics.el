@@ -1,6 +1,6 @@
 (load-theme 'monokai t)
 
-(set-default-font "Fira Mono-13")
+;; (set-default-font "Fira Mono-13")
 (add-to-list 'default-frame-alist '(font . "Fira Mono-13"))
 (add-to-list 'default-frame-alist '(cursor-color . "white"))
 

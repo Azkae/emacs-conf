@@ -46,6 +46,7 @@
 
 ;; speedup long lines
 (setq bidi-display-reordering nil)
+(setq auto-window-vscroll nil)
 
 ;; basic keybindings
 (global-set-key (kbd "C-f") "\C-a\C-@\C-e")
@@ -99,6 +100,8 @@
 
 (global-set-key (kbd "M-<up>")   (lambda () (interactive) (move-up 4)))
 (global-set-key (kbd "M-<down>") (lambda () (interactive) (move-down 4)))
+(setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
+
 
 (defun copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
@@ -456,14 +459,33 @@ With argument ARG, do this that many times."
                      basename)))
     (ya-helm-ag (list basename))))
 
+(defun ya-helm-do-ag-on-project-root(basename)
+  (interactive)
+  (ya-helm-ag (list (projectile-project-root))))
+
 (defun helm-config--ff-run-helm-ag()
-    (interactive)
-    (with-helm-alive-p
-      (helm-exit-and-execute-action 'ya-helm-do-ag-on-file-maybe)))
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'ya-helm-do-ag-on-file-maybe)))
+
+(defun helm-config--ff-run-helm-ag-root()
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'ya-helm-do-ag-on-project-root)))
+
+(add-hook
+ 'helm-find-files-after-init-hook
+ (lambda ()
+   (helm-add-action-to-source "Find AG" 'ya-helm-do-ag-on-file-maybe helm-source-find-files)))
+
+(with-eval-after-load "helm-projectile"
+  (helm-add-action-to-source "Find AG" 'ya-helm-do-ag-on-file-maybe helm-source-projectile-projects)
+  (helm-add-action-to-source "Find AG" 'ya-helm-do-ag-on-project-root helm-source-projectile-files-list))
 
 (global-set-key (kbd "M-R") 'ya-helm-do-ag)
 (global-set-key (kbd "M-F") 'ya-helm-do-ag-buffers)
 (define-key helm-find-files-map (kbd "M-R") 'helm-config--ff-run-helm-ag)
+(define-key helm-projectile-find-file-map (kbd "M-R") 'helm-config--ff-run-helm-ag-root)
 (define-key prog-mode-map (kbd "M-.") 'ya-helm-do-ag-projectile-project-symbol)
 
 (setq projectile-keymap-prefix (kbd "M-p"))
