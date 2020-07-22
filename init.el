@@ -485,7 +485,6 @@ With argument ARG, do this that many times."
 (global-set-key (kbd "M-R") 'ya-helm-do-ag)
 (global-set-key (kbd "M-F") 'ya-helm-do-ag-buffers)
 (define-key helm-find-files-map (kbd "M-R") 'helm-config--ff-run-helm-ag)
-(define-key helm-projectile-find-file-map (kbd "M-R") 'helm-config--ff-run-helm-ag-root)
 (define-key prog-mode-map (kbd "M-.") 'ya-helm-do-ag-projectile-project-symbol)
 
 (setq projectile-keymap-prefix (kbd "M-p"))
@@ -507,6 +506,7 @@ With argument ARG, do this that many times."
    ("<right>"     . nil)
    ("<left>"      . nil)
    ([M-backspace] . backward-delete-word)
+   ("M-R"         . helm-config--ff-run-helm-ag-root)
    :map helm-projectile-projects-map
    ("M-R"         . helm-config--ff-run-helm-ag))
   :config
@@ -760,6 +760,13 @@ With argument ARG, do this that many times."
 (use-package solidity-mode
   :config
   (add-hook 'solidity-mode-hook '--set-tab-with))
+
+(use-package sqlformat
+  :config
+  (setq sqlformat-command 'pgformatter)
+  (setq sqlformat-args '("-s2" "-g"))
+
+  (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
 
 ;; load graphic settings
 (require 'graphics)
