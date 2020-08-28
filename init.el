@@ -46,7 +46,10 @@
 
 ;; speedup long lines
 (setq bidi-display-reordering nil)
+(setq bidi-inhibit-bpa t)
+(setq bidi-paragraph-direction "left-to-right")
 (setq auto-window-vscroll nil)
+(global-so-long-mode 1)
 
 ;; basic keybindings
 (global-set-key (kbd "C-f") "\C-a\C-@\C-e")
@@ -276,6 +279,9 @@
 (global-set-key [remap previous-buffer] 'my-prev-buffer)
 (global-set-key [remap kill-this-buffer] 'kill-this-buffer-avoid-boring)
 
+;; better performance
+(setq gc-cons-threshold 100000000)
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
 
 ;; --------------
 ;; setup packages
@@ -310,6 +316,11 @@
     (setq company-backends (delete 'company-semantic company-backends)))
   (add-hook 'c-mode-hook 'cc-company-setup)
   (add-hook 'c++-mode-hook 'cc-company-setup))
+
+;; (use-package company-emoji
+;;   :config
+;;   ;; ...
+;;   (add-to-list 'company-backends 'company-emoji))
 
 ;; (use-package irony
 ;;   :config
@@ -755,7 +766,7 @@ With argument ARG, do this that many times."
 (use-package emojify
   :config
   (emojify-set-emoji-styles '(unicode))
-  (global-emojify-mode))
+  (setq emojify-display-style 'unicode))
 
 (use-package solidity-mode
   :config
