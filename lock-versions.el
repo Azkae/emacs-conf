@@ -16,6 +16,7 @@
  ("emacs-ccls" . "675a5704c14a27931e835a431beea3631d92e8e6")
  ("emacs-emojify" . "d886069974d05c8c15654204f9afeaee962f3e7d")
  ("emacs-helm-tramp" . "55e56975fe1456591a293bf60c183c3dda9f788f")
+ ("emacs-libvterm" . "1348404fe9a78b1f1dd810f22892863e124123da")
  ("emacs-quickrun" . "e1a9e11b670bbf4005141b1c8d4e68b8474eb0d8")
  ("emacs-solidity" . "d166a86b83907e0cfd64c191e9dfce4b44a9843e")
  ("emacsmirror-mirror" . "2f118d4f3bab536aaeaf65af8e6a721ac1880e08")
