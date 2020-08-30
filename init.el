@@ -47,7 +47,7 @@
 ;; speedup long lines
 (setq bidi-display-reordering nil)
 (setq bidi-inhibit-bpa t)
-(setq bidi-paragraph-direction "left-to-right")
+(setq bidi-paragraph-direction 'left-to-right)
 (setq auto-window-vscroll nil)
 (global-so-long-mode 1)
 
@@ -75,6 +75,9 @@
 (global-set-key (kbd "C-c p b") 'profiler-start)
 (global-set-key (kbd "C-c p r") 'profiler-report)
 (global-set-key (kbd "C-c p e") 'profiler-stop)
+
+;; don't ask confirmation for kill-buffer with process
+(setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
 
 (defun kill-region-maybe()
   (interactive)
@@ -407,6 +410,9 @@ With argument ARG, do this that many times."
   (delete-slash)
   (insert "/"))
 
+;; performance regression on helm on mac os.
+;; run on helm repo:
+;; git revert 1ecefa3840aa5bdd8d4959d2c4efd3ea0e433f64 && git reset HEAD~1
 (use-package helm
   :diminish helm-mode
   :bind
@@ -470,9 +476,33 @@ With argument ARG, do this that many times."
                      basename)))
     (ya-helm-ag (list basename))))
 
+(defun open-vterm-action(basename)
+  (interactive)
+  (let* ((basename (expand-file-name basename))
+         (basename (if (not (file-directory-p basename))
+                       (file-name-directory basename)
+                     basename))
+         (default-directory basename))
+    (vterm)))
+
 (defun ya-helm-do-ag-on-project-root(basename)
   (interactive)
   (ya-helm-ag (list (projectile-project-root))))
+
+(defun open-vterm-on-project-root-action(basename)
+  (interactive)
+  (let* ((default-directory (projectile-project-root)))
+    (vterm)))
+
+(defun helm-config--ff-open-vterm()
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'open-vterm-action)))
+
+(defun helm-config--ff-open-vterm-root()
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'open-vterm-on-project-root-action)))
 
 (defun helm-config--ff-run-helm-ag()
   (interactive)
@@ -487,14 +517,18 @@ With argument ARG, do this that many times."
 (add-hook
  'helm-find-files-after-init-hook
  (lambda ()
-   (helm-add-action-to-source "Find AG" 'ya-helm-do-ag-on-file-maybe helm-source-find-files)))
+   (helm-add-action-to-source "Find AG" 'ya-helm-do-ag-on-file-maybe helm-source-find-files)
+   (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-find-files)))
 
 (with-eval-after-load "helm-projectile"
   (helm-add-action-to-source "Find AG" 'ya-helm-do-ag-on-file-maybe helm-source-projectile-projects)
-  (helm-add-action-to-source "Find AG" 'ya-helm-do-ag-on-project-root helm-source-projectile-files-list))
+  (helm-add-action-to-source "Find AG" 'ya-helm-do-ag-on-project-root helm-source-projectile-files-list)
+  (helm-add-action-to-source "Open vterm root" 'open-vterm-action helm-source-projectile-projects)
+  (helm-add-action-to-source "Open vterm root" 'open-vterm-on-project-root-action helm-source-projectile-files-list))
 
 (global-set-key (kbd "M-R") 'ya-helm-do-ag)
 (global-set-key (kbd "M-F") 'ya-helm-do-ag-buffers)
+(define-key helm-find-files-map (kbd "M-e") 'helm-config--ff-open-vterm)
 (define-key helm-find-files-map (kbd "M-R") 'helm-config--ff-run-helm-ag)
 (define-key prog-mode-map (kbd "M-.") 'ya-helm-do-ag-projectile-project-symbol)
 
@@ -517,8 +551,10 @@ With argument ARG, do this that many times."
    ("<right>"     . nil)
    ("<left>"      . nil)
    ([M-backspace] . backward-delete-word)
+   ("M-e"         . helm-config--ff-open-vterm-root)
    ("M-R"         . helm-config--ff-run-helm-ag-root)
    :map helm-projectile-projects-map
+   ("M-e"         . helm-config--ff-open-vterm)
    ("M-R"         . helm-config--ff-run-helm-ag))
   :config
   (setq projectile-completion-system 'helm))
@@ -778,6 +814,10 @@ With argument ARG, do this that many times."
   (setq sqlformat-args '("-s2" "-g"))
 
   (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
+
+(use-package vterm
+  :init
+  (setq vterm-keymap-exceptions '("M-q" "C-q" "C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-v" "M-v" "C-y" "M-y")))
 
 ;; load graphic settings
 (require 'graphics)
