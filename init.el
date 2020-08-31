@@ -523,8 +523,9 @@ With argument ARG, do this that many times."
 (with-eval-after-load "helm-projectile"
   (helm-add-action-to-source "Find AG" 'ya-helm-do-ag-on-file-maybe helm-source-projectile-projects)
   (helm-add-action-to-source "Find AG" 'ya-helm-do-ag-on-project-root helm-source-projectile-files-list)
-  (helm-add-action-to-source "Open vterm root" 'open-vterm-action helm-source-projectile-projects)
-  (helm-add-action-to-source "Open vterm root" 'open-vterm-on-project-root-action helm-source-projectile-files-list))
+  (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-projectile-projects)
+  (helm-add-action-to-source "Open vterm on project root" 'open-vterm-on-project-root-action helm-source-projectile-files-list)
+  (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-projectile-files-list))
 
 (global-set-key (kbd "M-R") 'ya-helm-do-ag)
 (global-set-key (kbd "M-F") 'ya-helm-do-ag-buffers)
@@ -551,7 +552,8 @@ With argument ARG, do this that many times."
    ("<right>"     . nil)
    ("<left>"      . nil)
    ([M-backspace] . backward-delete-word)
-   ("M-e"         . helm-config--ff-open-vterm-root)
+   ("M-e"         . helm-config--ff-open-vterm)
+   ("M-E"         . helm-config--ff-open-vterm-root)
    ("M-R"         . helm-config--ff-run-helm-ag-root)
    :map helm-projectile-projects-map
    ("M-e"         . helm-config--ff-open-vterm)
