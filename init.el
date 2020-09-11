@@ -819,7 +819,14 @@ With argument ARG, do this that many times."
 
 (use-package vterm
   :init
-  (setq vterm-keymap-exceptions '("M-q" "C-q" "C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-v" "M-v" "C-y" "M-y")))
+  (setq vterm-keymap-exceptions '("M-q" "C-q" "C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-v" "M-v" "C-y" "M-y" "M-z"))
+  :bind
+  (:map vterm-mode-map
+  ("M-z" . 'vterm-copy-mode)
+  :map vterm-copy-mode-map
+  ("M-z" . 'vterm-copy-mode))
+  :config
+  (setq vterm-timer-delay 0.01))
 
 ;; load graphic settings
 (require 'graphics)
