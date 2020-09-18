@@ -32,7 +32,7 @@
  ("git-timemachine" . "8d675750e921a047707fcdc36d84f8439b19a907")
  ("glsl-mode" . "b07112016436d9634cd4ef747f9af6b01366d136")
  ("gnu-elpa-mirror" . "0d87e08838f1aa25fb892d12f2361ee834e9cef8")
- ("helm" . "e766d2f46c1b8bf6827c0f0b2cb7604d6a63f898")
+ ("helm" . "19d2ba9d36615f1dea6be6cd6dcf5792dfefc45b")
  ("helm-gtags" . "a15fe1dd272d252ad933d8129db1dce02fd41adb")
  ("helm-projectile" . "2f3a2a03d6cb9419c25b432637aa11c8d2f9f3b7")
  ("highlight-symbol.el" . "7a789c779648c55b16e43278e51be5898c121b3a")
