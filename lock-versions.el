@@ -64,7 +64,7 @@
  ("s.el" . "43ba8b563bee3426cead0e6d4ddc09398e1a349d")
  ("spinner" . "2daa167bec1c7566d662d48613a94453536b524a")
  ("sqlformat" . "9e6351dc97a6f58f221d6e1baa7bab292309c437")
- ("straight.el" . "5d046ad09413f3aba6198229e392cdd3f07e77ee")
+ ("straight.el" . "4656560c49ae7545ee7d6c3847057e03a60c047b")
  ("swift-mode" . "d266fbd300a1bf1592e1462ead4be093b8b68f98")
  ("transient" . "f5d81ef0ed24be935f3c0192b746a1738d903d37")
  ("treemacs" . "512294b9a004bf116aad4bbbab2f1e65b92401e7")
