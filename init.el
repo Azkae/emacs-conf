@@ -308,7 +308,6 @@
   (setq company-frontends '(company-pseudo-tooltip-frontend
 			    company-preview-if-just-one-frontend
 			    company-echo-metadata-frontend))
-  (add-hook 'after-init-hook 'global-company-mode)
   (defun --company-setup ()
     (setq company-backends (delete '(company-dabbrev-code company-gtags company-etags company-keywords) company-backends))
     (setq company-backends (delete 'company-dabbrev company-backends))
@@ -318,7 +317,8 @@
   (defun cc-company-setup ()
     (setq company-backends (delete 'company-semantic company-backends)))
   (add-hook 'c-mode-hook 'cc-company-setup)
-  (add-hook 'c++-mode-hook 'cc-company-setup))
+  (add-hook 'c++-mode-hook 'cc-company-setup)
+  (global-company-mode))
 
 ;; (use-package company-emoji
 ;;   :config
@@ -370,10 +370,10 @@
 ;;        ;; company-clang is too slow
 ;;        (setq company-backends (delete 'company-clang company-backends)))))
 
-(use-package company-c-headers
-  :config
-  (eval-after-load 'company
-    '(add-to-list 'company-backends 'company-c-headers)))
+;; (use-package company-c-headers
+;;   :config
+;;   (eval-after-load 'company
+;;     '(add-to-list 'company-backends 'company-c-headers)))
 
 ;; (use-package company-irony-c-headers
 ;;   :config
