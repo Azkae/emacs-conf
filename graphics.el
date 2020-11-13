@@ -60,7 +60,8 @@
     (set-face-attribute 'company-tooltip-annotation nil :inherit 'company-tooltip :foreground "slate gray")
     (set-face-attribute 'company-tooltip-common nil :inherit 'company-tooltip :underline t :foreground nil)
     (set-face-attribute 'company-tooltip-common-selection nil :inherit 'company-tooltip-selection :underline t :foreground nil)
-    (set-face-attribute 'company-tooltip-selection nil :inherit 'company-tooltip :background "LightSteelBlue3")))
+    (set-face-attribute 'company-tooltip-selection nil :inherit 'company-tooltip :background "LightSteelBlue3")
+    (set-face-attribute 'company-tooltip-mouse nil :inherit 'company-tooltip :background "LightSteelBlue2")))
 
 (eval-after-load 'company
   '(progn
