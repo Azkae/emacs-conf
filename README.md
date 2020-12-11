@@ -63,6 +63,6 @@ Keybinding | Description
 In `.dir-locals.el`:
 ```
 ((python-mode
-  (pyvenv-activate . "/path/to/venv")
+  (eval . (pyvenv-activate "/path/to/venv/"))
   (flycheck-checker . python-flake8)))
 ```
