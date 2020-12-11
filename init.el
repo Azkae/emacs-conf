@@ -1,3 +1,12 @@
+;;; emacs-conf --- Summary
+;;; Commentary:
+;;
+;; TODO:
+;; - try tree siter: https://github.com/ubolonton/emacs-tree-sitter
+;;   faster & better syntax highlighting
+;;
+;;; Code:
+
 ;; ------------------
 ;; bootstrap straight
 ;; ------------------
@@ -50,6 +59,8 @@
 (setq bidi-paragraph-direction 'left-to-right)
 (setq auto-window-vscroll nil)
 (global-so-long-mode 1)
+
+;; TODO: use bind-key: https://melpa.org/#/bind-key
 
 ;; basic keybindings
 (global-set-key (kbd "C-f") "\C-a\C-@\C-e")
@@ -827,6 +838,10 @@ With argument ARG, do this that many times."
   ("M-z" . 'vterm-copy-mode))
   :config
   (setq vterm-timer-delay 0.01))
+
+(use-package helm-xref)
+
+(use-package pyvenv)
 
 ;; load graphic settings
 (require 'graphics)

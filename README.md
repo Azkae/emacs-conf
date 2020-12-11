@@ -57,3 +57,12 @@ Keybinding | Description
 -----------|-------------------------------------------------
 <kbd>C-j</kbd> | add a new cursor to the next point that match the selected region.
 <kbd>M-j</kbd> | add a new cursor to the next point that match the selected symbol.
+
+### Virtualenv
+
+In `.dir-locals.el`:
+```
+((python-mode
+  (pyvenv-activate . "/path/to/venv")
+  (flycheck-checker . python-flake8)))
+```

@@ -1,0 +1,6 @@
+# -*- mode: python-mode -*-
+# name: icecream
+# key: icecream
+# --
+from icecream import ic
+ic($0)
