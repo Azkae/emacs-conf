@@ -816,7 +816,7 @@ With argument ARG, do this that many times."
 
 (use-package vterm
   :init
-  (setq vterm-keymap-exceptions '("M-q" "C-q" "C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-v" "M-v" "C-y" "M-y" "M-z"))
+  (setq vterm-keymap-exceptions '("M-q" "C-q" "C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-v" "M-v" "C-y" "M-y" "M-z" "M-X" "M-O"))
   :bind
   (:map vterm-mode-map
   ("M-z" . 'vterm-copy-mode)
