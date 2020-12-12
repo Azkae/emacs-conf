@@ -825,6 +825,17 @@ With argument ARG, do this that many times."
   :config
   (setq vterm-timer-delay 0.01))
 
+(defface conf--vterm-face
+  '((t :family "Monaco"))
+  "The basic fixed-pitch face."
+  :group 'basic-faces)
+
+(add-hook 'vterm-mode-hook
+          (lambda ()
+            (set
+             (make-local-variable 'buffer-face-mode-face) 'conf--vterm-face)
+            (buffer-face-mode t)))
+
 (use-package helm-xref)
 
 (use-package pyvenv)
