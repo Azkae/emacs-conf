@@ -816,7 +816,7 @@ With argument ARG, do this that many times."
 
 (use-package vterm
   :init
-  (setq vterm-keymap-exceptions '("M-q" "C-q" "C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-v" "M-v" "C-y" "M-y" "M-z" "M-X" "M-O"))
+  (setq vterm-keymap-exceptions '("M-q" "C-q" "C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-v" "M-v" "C-y" "M-y" "M-z" "M-X" "M-O" "M-e"))
   :bind
   (:map vterm-mode-map
   ("M-z" . 'vterm-copy-mode)
@@ -835,6 +835,13 @@ With argument ARG, do this that many times."
             (set
              (make-local-variable 'buffer-face-mode-face) 'conf--vterm-face)
             (buffer-face-mode t)))
+
+(use-package vterm-toggle
+  :bind
+  (("M-e" . vterm-toggle)
+   ("M-E" . vterm-toggle-cd))
+  :config
+  (setq vterm-toggle-hide-method 'reset-window-configration))
 
 (use-package helm-xref)
 
