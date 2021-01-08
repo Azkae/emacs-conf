@@ -826,7 +826,7 @@ With argument ARG, do this that many times."
   (setq vterm-timer-delay 0.01))
 
 (defface conf--vterm-face
-  '((t :family "Monaco"))
+  '((t :family "Monaco" :height 125))
   "The basic fixed-pitch face."
   :group 'basic-faces)
 
@@ -841,11 +841,18 @@ With argument ARG, do this that many times."
   (("M-e" . vterm-toggle)
    ("M-E" . vterm-toggle-cd))
   :config
-  (setq vterm-toggle-hide-method 'reset-window-configration))
+  (setq vterm-toggle-hide-method 'reset-window-configration)
+
+  ;;; TODO: try scope per project instead of a global shell
+  ;; (setq vterm-toggle-scope 'project)
+  ;; (setq vterm-toggle-project-root nil)
+  )
 
 (use-package helm-xref)
 
 (use-package pyvenv)
+
+(use-package kotlin-mode)
 
 ;; load graphic settings
 (require 'graphics)
