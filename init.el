@@ -439,6 +439,7 @@ With argument ARG, do this that many times."
    :map helm-find-files-map
    ("<M-down>"    . helm-scroll-other-window)
    ("<M-up>"      . helm-scroll-other-window-down)
+   ("M-e"         . helm-config--ff-open-vterm)
    ("DEL"         . nil)
    ([M-backspace] . delete-until-slash)
    :map helm-read-file-map
@@ -463,15 +464,25 @@ With argument ARG, do this that many times."
    helm-find-files-ignore-thing-at-point t)
   (helm-mode))
 
-(require 'ya-helm-ag)
+(use-package helm-ag
+  :bind
+  (("M-R"         . helm-do-ag)
+   ("M-F"         . helm-do-ag-buffers)
+   :map helm-find-files-map
+   ("M-R"         . helm-config--ff-run-helm-ag)
+   :map helm-ag-mode-map
+   ("<right>"     . nil)
+   ("<left>"      . nil)
+   :map helm-ag-edit-map
+   ("RET"         . helm-ag-mode-jump-other-window)))
 
-(defun ya-helm-do-ag-on-file-maybe(basename)
+(defun helm-config--helm-do-ag-on-file-maybe(basename)
   (interactive)
   (let* ((basename (expand-file-name basename))
          (basename (if (not (file-directory-p basename))
                        (file-name-directory basename)
                      basename)))
-    (ya-helm-ag (list basename))))
+    (helm-do-ag basename)))
 
 (defun open-vterm-action(basename)
   (interactive)
@@ -482,9 +493,9 @@ With argument ARG, do this that many times."
          (default-directory basename))
     (vterm)))
 
-(defun ya-helm-do-ag-on-project-root(basename)
+(defun helm-config--helm-do-ag-on-project-root(basename)
   (interactive)
-  (ya-helm-ag (list (projectile-project-root))))
+  (helm-do-ag (projectile-project-root)))
 
 (defun open-vterm-on-project-root-action(basename)
   (interactive)
@@ -504,31 +515,31 @@ With argument ARG, do this that many times."
 (defun helm-config--ff-run-helm-ag()
   (interactive)
   (with-helm-alive-p
-    (helm-exit-and-execute-action 'ya-helm-do-ag-on-file-maybe)))
+    (helm-exit-and-execute-action 'helm-config--helm-do-ag-on-file-maybe)))
 
 (defun helm-config--ff-run-helm-ag-root()
   (interactive)
   (with-helm-alive-p
-    (helm-exit-and-execute-action 'ya-helm-do-ag-on-project-root)))
+    (helm-exit-and-execute-action 'helm-config--helm-do-ag-on-project-root)))
 
 (add-hook
  'helm-find-files-after-init-hook
  (lambda ()
-   (helm-add-action-to-source "Find AG" 'ya-helm-do-ag-on-file-maybe helm-source-find-files)
+   (helm-add-action-to-source "Find AG" 'helm-config--helm-do-ag-on-file-maybe helm-source-find-files)
    (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-find-files)))
 
 (with-eval-after-load "helm-projectile"
-  (helm-add-action-to-source "Find AG" 'ya-helm-do-ag-on-file-maybe helm-source-projectile-projects)
-  (helm-add-action-to-source "Find AG" 'ya-helm-do-ag-on-project-root helm-source-projectile-files-list)
+  (helm-add-action-to-source "Find AG" 'helm-config--helm-do-ag-on-file-maybe helm-source-projectile-projects)
+  (helm-add-action-to-source "Find AG" 'helm-config--helm-do-ag-on-project-root helm-source-projectile-files-list)
   (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-projectile-projects)
   (helm-add-action-to-source "Open vterm on project root" 'open-vterm-on-project-root-action helm-source-projectile-files-list)
   (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-projectile-files-list))
 
-(global-set-key (kbd "M-R") 'ya-helm-do-ag)
-(global-set-key (kbd "M-F") 'ya-helm-do-ag-buffers)
-(define-key helm-find-files-map (kbd "M-e") 'helm-config--ff-open-vterm)
-(define-key helm-find-files-map (kbd "M-R") 'helm-config--ff-run-helm-ag)
-(define-key prog-mode-map (kbd "M-.") 'ya-helm-do-ag-projectile-project-symbol)
+(defun helm-config--helm-do-ag-projectile-project-symbol ()
+  (interactive)
+    (helm-do-ag (projectile-project-root) nil (symbol-name (symbol-at-point))))
+
+(define-key prog-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
 
 (setq projectile-keymap-prefix (kbd "M-p"))
 (use-package projectile
@@ -559,7 +570,7 @@ With argument ARG, do this that many times."
   (setq projectile-completion-system 'helm))
 (helm-projectile-on)
 ;; must be binded after (helm-projectile-on) because it remap projectile keybindings
-(define-key projectile-mode-map [remap projectile-ag] 'ya-helm-do-ag-projectile-project)
+(define-key projectile-mode-map [remap projectile-ag] 'helm-do-ag-project-root)
 
 (use-package helm-gtags
   :diminish helm-gtags-mode
