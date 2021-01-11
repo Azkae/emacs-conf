@@ -473,8 +473,17 @@ With argument ARG, do this that many times."
    :map helm-ag-mode-map
    ("<right>"     . nil)
    ("<left>"      . nil)
+   :map helm-do-ag-map
+   ("<right>"     . nil)
+   ("<left>"      . nil)
    :map helm-ag-edit-map
-   ("RET"         . helm-ag-mode-jump-other-window)))
+   ("RET"         . helm-ag-mode-jump-other-window))
+  )
+
+(defun remove-helm-autopair ()
+  (autopair-mode -1))
+
+(add-hook 'helm-minibuffer-set-up-hook 'remove-helm-autopair)
 
 (defun helm-config--helm-do-ag-on-file-maybe(basename)
   (interactive)
@@ -543,6 +552,7 @@ With argument ARG, do this that many times."
 
 (setq projectile-keymap-prefix (kbd "M-p"))
 (use-package projectile
+  :diminish projectile-mode
   :config
   (projectile-global-mode)
   (setq projectile-enable-caching nil
@@ -572,15 +582,15 @@ With argument ARG, do this that many times."
 ;; must be binded after (helm-projectile-on) because it remap projectile keybindings
 (define-key projectile-mode-map [remap projectile-ag] 'helm-do-ag-project-root)
 
-(use-package helm-gtags
-  :diminish helm-gtags-mode
-  :bind
-  (:map helm-gtags-mode-map
-   ("M-." . helm-gtags-dwim))
-  :config
-  (add-hook 'prog-mode-hook 'helm-gtags-mode)
-  (add-hook 'dired-mode-hook 'helm-gtags-mode)
-  (setq helm-gtags-direct-helm-completing t))
+;; (use-package helm-gtags
+;;   :diminish helm-gtags-mode
+;;   :bind
+;;   (:map helm-gtags-mode-map
+;;    ("M-." . helm-gtags-dwim))
+;;   :config
+;;   (add-hook 'prog-mode-hook 'helm-gtags-mode)
+;;   (add-hook 'dired-mode-hook 'helm-gtags-mode)
+;;   (setq helm-gtags-direct-helm-completing t))
 
 (use-package highlight-symbol
   :bind

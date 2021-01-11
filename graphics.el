@@ -39,7 +39,9 @@
     (set-face-attribute 'helm-ff-symlink nil :foreground "Magenta"
 			:background nil)
     (set-face-attribute 'helm-locate-finish nil :foreground "Black" :weight 'bold
-			:background "Yellow")))
+			:background "Yellow")
+    (set-face-attribute 'helm-moccur-buffer nil :foreground "BlueViolet"
+			:background nil :underline nil)))
 
 (eval-after-load 'helm
   '(progn
