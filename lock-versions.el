@@ -27,7 +27,7 @@
  ("glsl-mode" . "b07112016436d9634cd4ef747f9af6b01366d136")
  ("gnu-elpa-mirror" . "0d87e08838f1aa25fb892d12f2361ee834e9cef8")
  ("helm" . "a9dc55df6c423c609a9d706da7b423351fcc51e6")
- ("helm-ag" . "e7e50434fab7d2b7f70bf73e3e8ecd0a31fa3905")
+ ("helm-ag" . "5e7923658de9b43c60ae36dcce79223bd030f4c2")
  ("helm-projectile" . "2f3a2a03d6cb9419c25b432637aa11c8d2f9f3b7")
  ("helm-xref" . "23f1174cfca7667d95828dcd388c655a4a9c877d")
  ("highlight-symbol.el" . "7a789c779648c55b16e43278e51be5898c121b3a")
