@@ -465,6 +465,7 @@ With argument ARG, do this that many times."
   (helm-mode))
 
 (use-package helm-ag
+  :straight (:fork (:host github :repo "Azkae/emacs-helm-ag"))
   :bind
   (("M-R"         . helm-do-ag)
    ("M-F"         . helm-do-ag-buffers)
@@ -477,8 +478,7 @@ With argument ARG, do this that many times."
    ("<right>"     . nil)
    ("<left>"      . nil)
    :map helm-ag-edit-map
-   ("RET"         . helm-ag-mode-jump-other-window))
-  )
+   ("RET"         . helm-ag-mode-jump-other-window)))
 
 (defun remove-helm-autopair ()
   (autopair-mode -1))
@@ -612,6 +612,9 @@ With argument ARG, do this that many times."
   (("C-x C-+" . zoom-in)
    ("C-x C--" . zoom-out)))
 
+(global-set-key (vector (list 'control mouse-wheel-down-event)) 'zoom-in)
+(global-set-key (vector (list 'control mouse-wheel-up-event)) 'zoom-out)
+
 (use-package git-gutter-fringe+
   :diminish git-gutter+-mode
   :config
@@ -655,14 +658,10 @@ With argument ARG, do this that many times."
 
 
 (use-package quickrun
-  :straight (quickrun :type git :host  github :repo "pickardjoe/emacs-quickrun"
-                      :upstream (:host github :repo "syohex/emacs-quickrun"))
   :bind
   (("M-q r" . quickrun))
   :config
-  (quickrun-add-command "python"
-                        '((:command . "python"))
-                        :override t)
+  (setq quickrun-timeout-seconds 99999999)
   )
 
 (use-package yaml-mode)
@@ -744,6 +743,7 @@ With argument ARG, do this that many times."
 ;;   )
 
 (use-package lsp-mode :commands lsp
+  :diminish lsp-mode
   :bind
   (:map lsp-mode-map
         ("M-." . lsp-find-definition)
