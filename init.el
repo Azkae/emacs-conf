@@ -427,6 +427,7 @@ With argument ARG, do this that many times."
    ("<left>"      . nil)
    ("M-v"         . yank)
    ("C-i"         . helm-execute-persistent-action) ;tab
+   ("M-z"         . helm-select-action) ;tab
    ([M-backspace] . backward-delete-word)
    ("<M-down>"    . helm-scroll-other-window)
    ("<M-up>"      . helm-scroll-other-window-down)
@@ -500,6 +501,9 @@ With argument ARG, do this that many times."
                        (file-name-directory basename)
                      basename))
          (default-directory basename))
+
+    ;; use vterm toggle internal to save window configuration: when we do M-e (vterm-toggle) it will restore current window configuration
+    (setq vterm-toggle--window-configration (current-window-configuration))
     (vterm)))
 
 (defun helm-config--helm-do-ag-on-project-root(basename)
@@ -837,14 +841,15 @@ With argument ARG, do this that many times."
 
 (use-package vterm
   :init
-  (setq vterm-keymap-exceptions '("M-q" "C-q" "C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-v" "M-v" "C-y" "M-y" "M-z" "M-X" "M-O" "M-e"))
+  (setq vterm-keymap-exceptions '("M-q" "C-q" "C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-v" "M-v" "C-y" "M-y" "M-z" "M-X" "M-O" "M-e" "M-E"))
   :bind
   (:map vterm-mode-map
   ("M-z" . 'vterm-copy-mode)
   :map vterm-copy-mode-map
   ("M-z" . 'vterm-copy-mode))
   :config
-  (setq vterm-timer-delay 0.01))
+  ;; (setq vterm-timer-delay 0.01)
+  (setq vterm-timer-delay 0.1))
 
 (defface conf--vterm-face
   '((t :family "Monaco" :height 125))
@@ -860,9 +865,12 @@ With argument ARG, do this that many times."
 (use-package vterm-toggle
   :bind
   (("M-e" . vterm-toggle)
-   ("M-E" . vterm-toggle-cd))
+   ("M-E" . vterm-toggle-cd)
+   :map vterm-mode-map
+   ("M-E" . vterm-toggle-insert-cd))
   :config
   (setq vterm-toggle-hide-method 'reset-window-configration)
+  (setq vterm-toggle-reset-window-configration-after-exit nil)
 
   ;;; TODO: try scope per project instead of a global shell
   ;; (setq vterm-toggle-scope 'project)
@@ -874,6 +882,27 @@ With argument ARG, do this that many times."
 (use-package pyvenv)
 
 (use-package kotlin-mode)
+
+(use-package groovy-mode)
+
+(use-package string-inflection
+  :bind
+  ("C-c f" . string-inflection-toggle))
+
+(use-package org-roam
+      :ensure t
+      :hook
+      (after-init . org-roam-mode)
+      :custom
+      (org-roam-directory (expand-file-name "~/Dropbox/org-roam"))
+      (org-roam-verbose nil)
+      :bind (:map org-roam-mode-map
+              (("C-c n l" . org-roam)
+               ("C-c n f" . org-roam-find-file)
+               ("C-c n g" . org-roam-graph))
+              :map org-mode-map
+              (("C-c n i" . org-roam-insert))
+              (("C-c n I" . org-roam-insert-immediate))))
 
 ;; load graphic settings
 (require 'graphics)
