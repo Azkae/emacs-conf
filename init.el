@@ -513,6 +513,8 @@ With argument ARG, do this that many times."
 (defun open-vterm-on-project-root-action(basename)
   (interactive)
   (let* ((default-directory (projectile-project-root)))
+    ;; use vterm toggle internal to save window configuration: when we do M-e (vterm-toggle) it will restore current window configuration
+    (setq vterm-toggle--window-configration (current-window-configuration))
     (vterm)))
 
 (defun helm-config--ff-open-vterm()
@@ -852,7 +854,7 @@ With argument ARG, do this that many times."
   (setq vterm-timer-delay 0.1))
 
 (defface conf--vterm-face
-  '((t :family "Monaco" :height 125))
+  '((t :family "Menlo" :height 125))
   "The basic fixed-pitch face."
   :group 'basic-faces)
 
@@ -899,6 +901,8 @@ With argument ARG, do this that many times."
       :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
                ("C-c n f" . org-roam-find-file)
+               ("C-c n t" . org-roam-dailies-today)
+               ("C-c n y" . org-roam-dailies-yesterday)
                ("C-c n g" . org-roam-graph))
               :map org-mode-map
               (("C-c n i" . org-roam-insert))
