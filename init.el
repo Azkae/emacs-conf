@@ -144,14 +144,6 @@
 (global-set-key (kbd "M-q M-<up>")    'windmove-up)
 (global-set-key (kbd "M-q M-<down>")  'windmove-down)
 
-;; Fix windmove in org-mode
-(add-hook 'org-mode-hook
-          (lambda()
-            (define-key org-mode-map [M-left] 'windmove-left)
-            (define-key org-mode-map [M-right] 'windmove-right)
-            (define-key org-mode-map [M-up] 'windmove-up)
-            (define-key org-mode-map [M-down] 'windmove-down)))
-
 ;; fix some coding systems
 (define-coding-system-alias 'UTF-8 'utf-8)
 (define-coding-system-alias 'utf8 'utf-8)
@@ -890,6 +882,25 @@ With argument ARG, do this that many times."
 (use-package string-inflection
   :bind
   ("C-c f" . string-inflection-toggle))
+
+(defun conf--org-open-link-maybe()
+  (interactive)
+  (if (eq (car (org-element-context)) 'link)
+      (call-interactively 'org-open-at-point)
+    (call-interactively 'org-meta-return)))
+
+;; Fix windmove in org-mode
+(add-hook 'org-mode-hook
+          (lambda()
+            (define-key org-mode-map [M-left] 'windmove-left)
+            (define-key org-mode-map [M-right] 'windmove-right)
+            (define-key org-mode-map [M-up] 'windmove-up)
+            (define-key org-mode-map [M-down] 'windmove-down)
+            (define-key org-mode-map [M-return] 'conf--org-open-link-maybe)))
+
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((dot . t)))
 
 (use-package org-roam
       :ensure t
