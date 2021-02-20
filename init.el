@@ -843,7 +843,9 @@ With argument ARG, do this that many times."
   ("M-z" . 'vterm-copy-mode))
   :config
   ;; (setq vterm-timer-delay 0.01)
-  (setq vterm-timer-delay 0.1))
+  (setq vterm-timer-delay 0.05)
+  ;; (setq vterm-timer-delay 0.1)
+  )
 
 (defface conf--vterm-face
   '((t :family "Menlo" :height 125))
@@ -896,7 +898,8 @@ With argument ARG, do this that many times."
             (define-key org-mode-map [M-right] 'windmove-right)
             (define-key org-mode-map [M-up] 'windmove-up)
             (define-key org-mode-map [M-down] 'windmove-down)
-            (define-key org-mode-map [M-return] 'conf--org-open-link-maybe)))
+            (define-key org-mode-map [M-return] 'conf--org-open-link-maybe)
+            (toggle-truncate-lines)))
 
 (org-babel-do-load-languages
  'org-babel-load-languages
