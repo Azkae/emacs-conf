@@ -632,7 +632,9 @@ With argument ARG, do this that many times."
    ("C-n"      . mc/skip-to-next-like-this)
    ("C-S-n"    . mc/unmark-previous-like-this)
    :map mc/keymap
-   ("<return>" . nil)))
+   ("<return>" . nil))
+  :config
+  (add-to-list 'mc/unsupported-minor-modes 'electric-indent-mode))
 
 (use-package yasnippet
   :diminish yas-minor-mode
@@ -741,7 +743,6 @@ With argument ARG, do this that many times."
 ;;   )
 
 (use-package lsp-mode :commands lsp
-  :diminish lsp-mode
   :bind
   (:map lsp-mode-map
         ("M-." . lsp-find-definition)
@@ -843,7 +844,7 @@ With argument ARG, do this that many times."
   ("M-z" . 'vterm-copy-mode))
   :config
   ;; (setq vterm-timer-delay 0.01)
-  (setq vterm-timer-delay 0.05)
+  (setq vterm-timer-delay 0.025)
   ;; (setq vterm-timer-delay 0.1)
   )
 
