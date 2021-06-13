@@ -52,6 +52,7 @@
 (delete-selection-mode)
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq-default indent-tabs-mode nil)
+(setq native-comp-async-report-warnings-errors nil)
 
 ;; speedup long lines
 (setq bidi-display-reordering nil)
@@ -59,6 +60,7 @@
 (setq bidi-paragraph-direction 'left-to-right)
 (setq auto-window-vscroll nil)
 (global-so-long-mode 1)
+
 
 ;; TODO: use bind-key: https://melpa.org/#/bind-key
 
@@ -458,7 +460,8 @@ With argument ARG, do this that many times."
   (helm-mode))
 
 (use-package helm-ag
-  :straight (:fork (:host github :repo "Azkae/emacs-helm-ag"))
+  :straight (helm-ag :type git :host github :repo "emacsorphanage/helm-ag"
+                     :fork (:host github :repo "Azkae/emacs-helm-ag"))
   :bind
   (("M-R"         . helm-do-ag)
    ("M-F"         . helm-do-ag-buffers)
@@ -662,6 +665,12 @@ With argument ARG, do this that many times."
   (("M-q r" . quickrun))
   :config
   (setq quickrun-timeout-seconds 99999999)
+  (add-hook 'quickrun-after-run-hook
+            (lambda()
+              (with-current-buffer quickrun--buffer-name
+                (read-only-mode -1)
+                (insert "\n-- End --")
+                (read-only-mode +1))))
   )
 
 (use-package yaml-mode)
