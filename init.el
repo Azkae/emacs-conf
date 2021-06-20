@@ -916,13 +916,13 @@ With argument ARG, do this that many times."
  '((dot . t)))
 
 (use-package org-roam
-      :ensure t
-      :hook
-      (after-init . org-roam-mode)
-      :custom
-      (org-roam-directory (expand-file-name "~/Dropbox/org-roam"))
-      (org-roam-verbose nil)
-      :bind (:map org-roam-mode-map
+  :ensure t
+  :hook
+  (after-init . org-roam-mode)
+  :custom
+  (org-roam-directory (expand-file-name "~/Dropbox/org-roam"))
+  (org-roam-verbose nil)
+  :bind (:map org-roam-mode-map
               (("C-c n l" . org-roam)
                ("C-c n f" . org-roam-find-file)
                ("C-c n t" . org-roam-dailies-today)
@@ -931,6 +931,24 @@ With argument ARG, do this that many times."
               :map org-mode-map
               (("C-c n i" . org-roam-insert))
               (("C-c n I" . org-roam-insert-immediate))))
+
+(defun get-string-from-file (filePath)
+  (with-temp-buffer
+    (insert-file-contents filePath)
+    (buffer-string)))
+
+(setq tree-sitter-queries-python (get-string-from-file (format "%s/%s" conf--base-dir "tree-sitter/python.scm")))
+
+(use-package tree-sitter
+  :config)
+(use-package tree-sitter-langs
+  :hook
+  (python-mode . tree-sitter-hl-mode)
+  (python-mode . (lambda ()
+                   (setq-local tree-sitter-hl-default-patterns tree-sitter-queries-python))))
+
+(require 'tree-sitter)
+(require 'tree-sitter-langs)
 
 ;; load graphic settings
 (require 'graphics)
