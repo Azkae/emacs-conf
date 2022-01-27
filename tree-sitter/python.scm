@@ -220,5 +220,6 @@
  (.match? @doc "^\"\"\""))
 (string) @string
 
-((decorator) @function.special
- (.match? @function.special "^@[A-Z_a-z\\d]*$"))
+((decorator)
+ (_) @function.special
+ "(")
