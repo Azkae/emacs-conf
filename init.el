@@ -574,6 +574,7 @@ With argument ARG, do this that many times."
    ("M-e"         . helm-config--ff-open-vterm)
    ("M-E"         . helm-config--ff-open-vterm-root)
    ("M-R"         . helm-config--ff-run-helm-ag-root)
+   ("M-p"         . previous-history-element)
    :map helm-projectile-projects-map
    ("M-e"         . helm-config--ff-open-vterm)
    ("M-R"         . helm-config--ff-run-helm-ag))
@@ -954,6 +955,11 @@ With argument ARG, do this that many times."
 
 (require 'tree-sitter)
 (require 'tree-sitter-langs)
+
+(use-package python-black
+  :demand t
+  :after python
+  :hook (python-mode . python-black-on-save-mode-enable-dwim))
 
 ;; load graphic settings
 (require 'graphics)
