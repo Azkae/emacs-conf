@@ -757,10 +757,15 @@ With argument ARG, do this that many times."
         ("M-." . lsp-find-definition)
         ("M-?" . lsp-find-references)
         )
+  (:map lsp-signature-mode-map
+        ("M-p" . nil)
+        )
   :config
-  (setq lsp-prefer-flymake nil)
-  (setq lsp-enable-file-watchers nil)
-  (setq lsp-enable-semantic-highlighting nil)
+  (setq lsp-prefer-flymake               nil
+        lsp-enable-file-watchers         nil
+        lsp-enable-semantic-highlighting nil
+        lsp-enable-indentation           nil
+        lsp-enable-on-type-formatting    nil)
   ;; (when (string-equal system-type "darwin")
   ;;   (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd"))
   )
