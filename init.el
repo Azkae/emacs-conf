@@ -767,6 +767,7 @@ With argument ARG, do this that many times."
         lsp-enable-semantic-highlighting nil
         lsp-enable-indentation           nil
         lsp-enable-on-type-formatting    nil)
+  (setq lsp-completion-provider :capf)
   ;; (when (string-equal system-type "darwin")
   ;;   (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd"))
   )
@@ -779,11 +780,6 @@ With argument ARG, do this that many times."
   (setq lsp-ui-sideline-show-code-actions nil)
   (setq lsp-ui-doc-enable nil)
   (setq lsp-ui-flycheck-live-reporting nil))
-
-(use-package company-lsp :commands company-lsp
-  :config
-  (push 'company-lsp company-backends)
-)
 
 (use-package ccls
   :config
@@ -948,6 +944,7 @@ With argument ARG, do this that many times."
 (use-package tree-sitter
   :config)
 (use-package tree-sitter-langs
+  :ensure t
   :hook
   (python-mode . tree-sitter-hl-mode)
   (python-mode . (lambda ()
