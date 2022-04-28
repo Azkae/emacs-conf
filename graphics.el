@@ -1,8 +1,10 @@
 (load-theme 'monokai t)
 
 ;; (set-default-font "Fira Mono-13")
-(add-to-list 'default-frame-alist '(font . "Fira Mono-13"))
+(add-to-list 'default-frame-alist '(font . "Fira Mono"))
 (add-to-list 'default-frame-alist '(cursor-color . "white"))
+
+(set-face-attribute 'default nil :height 150)
 
 (menu-bar-mode -1)
 (blink-cursor-mode 0)

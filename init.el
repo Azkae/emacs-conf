@@ -10,8 +10,10 @@
 ;; ------------------
 ;; bootstrap straight
 ;; ------------------
-(let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
-      (bootstrap-version 3))
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
         (url-retrieve-synchronously
@@ -23,6 +25,7 @@
 
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
+(setq package-enable-at-startup nil)
 
 ;; set load path
 (setq conf--base-dir (file-name-directory (or load-file-name default-directory)))
@@ -61,6 +64,8 @@
 (setq auto-window-vscroll nil)
 (global-so-long-mode 1)
 
+;; treat camelCase as multiple words for cursor movement
+(global-subword-mode)
 
 ;; TODO: use bind-key: https://melpa.org/#/bind-key
 
@@ -198,12 +203,18 @@
 (add-hook 'c-mode-hook '--cc-style-setup)
 (add-hook 'c++-mode-hook '--cc-style-setup)
 
-(defun --set-tab-with()
+(defun --set-tab-width()
   (setq tab-width 4)
   (setq c-basic-offset 4))
 
-(add-hook 'cmake-mode-hook '--set-tab-with)
-(add-hook 'objc-mode-hook '--set-tab-with)
+(add-hook 'cmake-mode-hook '--set-tab-width)
+(add-hook 'objc-mode-hook '--set-tab-width)
+
+(defun --set-tab-width-js()
+  (setq-default typescript-indent-level 2))
+
+(add-hook 'typescript-mode-hook '--set-tab-width-js)
+
 
 (setq c-default-style "linux")
 (setq-default indent-tabs-mode nil)
@@ -283,6 +294,9 @@
 
 (use-package diminish)
 
+(diminish 'eldoc-mode)
+(diminish 'subword-mode)
+
 (use-package autopair
   :diminish autopair-mode
   :config
@@ -350,7 +364,7 @@
   (add-to-list 'flycheck-checkers 'python-mypy t)
   (flycheck-add-next-checker 'python-flake8 'python-mypy t)
   
-  :hook ((prog-mode) . #'flycheck-mode)
+  :hook ((python-mode) . #'flycheck-mode)
   )
 
 ;; (use-package company-irony
@@ -602,12 +616,12 @@ With argument ARG, do this that many times."
   :config
   (setq cmake-tab-width 4))
 
-(use-package powerline
-  :config
-  (powerline-default-theme)
-  (setq powerline-display-buffer-size nil
-        powerline-display-mule-info   nil
-        powerline-display-hud         nil))
+;; (use-package powerline
+;;   :config
+;;   (powerline-default-theme)
+;;   (setq powerline-display-buffer-size nil
+;;         powerline-display-mule-info   nil
+;;         powerline-display-hud         nil))
 
 (use-package zoom-frm
   :bind
@@ -635,8 +649,11 @@ With argument ARG, do this that many times."
    ("M-j"      . mc/mark-next-symbol-like-this)
    ("C-n"      . mc/skip-to-next-like-this)
    ("C-S-n"    . mc/unmark-previous-like-this)
+   :map python-mode-map
+   ("C-j"      . mc/mark-next-like-this)
    :map mc/keymap
-   ("<return>" . nil))
+   ("<return>" . nil)
+   ("M-v" . nil))
   :config
   (add-to-list 'mc/unsupported-minor-modes 'electric-indent-mode))
 
@@ -712,90 +729,52 @@ With argument ARG, do this that many times."
 
 (use-package dockerfile-mode)
 
-;; (use-package lsp-mode
+;; (use-package lsp-mode :commands lsp
+;;   :bind
+;;   (:map lsp-mode-map
+;;         ("M-." . lsp-find-definition)
+;;         ("M-?" . lsp-find-references)
+;;         )
+;;   (:map lsp-signature-mode-map
+;;         ("M-p" . nil)
+;;         )
 ;;   :config
-;;   (add-hook 'prog-mode-hook #'lsp)
-;;   (setq lsp-message-project-root-warning t)
-
-;;   (use-package company-lsp
-;;     :config
-;;     (push 'company-lsp company-backends))
-
-;;   (use-package lsp-ui
-;;     :config
-;;     (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-;;     (setq lsp-ui-sideline-show-hover nil)
-;;     (setq lsp-ui-sideline-show-code-actions nil)
-;;     (setq lsp-ui-doc-enable nil)
-;;     (setq lsp-ui-flycheck-live-reporting t))
-
-;;   ;; (use-package lsp-clangd
-;;   ;;   :init
-;;   ;;   (when (equal system-type 'darwin)
-;;   ;;     (setq lsp-clangd-executable "/usr/local/opt/llvm/bin/clangd"))
-;;   ;;   (add-hook 'c-mode-hook #'lsp-clangd-c-enable)
-;;   ;;   (add-hook 'c++-mode-hook #'lsp-clangd-c++-enable)
-;;   ;;   (add-hook 'objc-mode-hook #'lsp-clangd-objc-enable))
-
-;;   (use-package ccls
-;;     :hook ((c-mode c++-mode objc-mode) .
-;;            (lambda () (require 'ccls) (lsp))))
-
-
-;;   ;; (use-package ccls
-;;   ;;   :config
-;;   ;;   (setq ccls-executable "/usr/local/bin/ccls")
-;;   ;;   (add-hook 'c-mode-hook #'lsp-ccls-enable)
-;;   ;;   (add-hook 'c++-mode-hook #'lsp-ccls-enable)
-;;   ;;   (add-hook 'objc-mode-hook #'lsp-ccls-enable)
-;;   ;;   (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil))
-;;   ;; )
+;;   (setq lsp-prefer-flymake               nil
+;;         lsp-enable-file-watchers         nil
+;;         lsp-enable-semantic-highlighting nil
+;;         lsp-enable-indentation           nil
+;;         lsp-enable-on-type-formatting    nil)
+;;   (setq lsp-completion-provider :capf)
+;;   ;; (when (string-equal system-type "darwin")
+;;   ;;   (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd"))
 ;;   )
 
-(use-package lsp-mode :commands lsp
+;; (use-package lsp-ui ;; :commands lsp-ui-mode
+;;   :config
+;;   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
+;;   (add-hook 'lsp-mode-hook 'flymake-mode)
+;;   (setq lsp-ui-sideline-show-hover nil)
+;;   (setq lsp-ui-sideline-show-code-actions nil)
+;;   (setq lsp-ui-doc-enable nil)
+;;   (setq lsp-ui-flycheck-live-reporting nil))
+
+;; (use-package ccls
+;;   :config
+;;   (setq ccls-sem-highlight-method nil)
+;;   ;; (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
+;;   :hook ((c-mode c++-mode objc-mode) . (lambda () (require 'ccls) (lsp))))
+
+(use-package eglot
   :bind
-  (:map lsp-mode-map
-        ("M-." . lsp-find-definition)
-        ("M-?" . lsp-find-references)
-        )
-  (:map lsp-signature-mode-map
-        ("M-p" . nil)
-        )
-  :config
-  (setq lsp-prefer-flymake               nil
-        lsp-enable-file-watchers         nil
-        lsp-enable-semantic-highlighting nil
-        lsp-enable-indentation           nil
-        lsp-enable-on-type-formatting    nil)
-  (setq lsp-completion-provider :capf)
-  ;; (when (string-equal system-type "darwin")
-  ;;   (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd"))
-  )
-
-(use-package lsp-ui ;; :commands lsp-ui-mode
-  :config
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-  (add-hook 'lsp-mode-hook 'flymake-mode)
-  (setq lsp-ui-sideline-show-hover nil)
-  (setq lsp-ui-sideline-show-code-actions nil)
-  (setq lsp-ui-doc-enable nil)
-  (setq lsp-ui-flycheck-live-reporting nil))
-
-(use-package ccls
-  :config
-  (setq ccls-sem-highlight-method nil)
-  ;; (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
-  :hook ((c-mode c++-mode objc-mode) . (lambda () (require 'ccls) (lsp))))
+  (:map eglot-mode-map
+   ("M-." . xref-find-definitions))
+  :hook
+  (c-mode . eglot-ensure)
+  (c++-mode . eglot-ensure))
 
 (use-package clang-format)
 
 (use-package json-mode)
-
-;; (use-package elixir-mode
-;;   :config
-;;   (lsp-define-stdio-client lsp-elixir "elixir"
-;;                            #'projectile-project-root
-;;                            '("/Users/ouabde_r/signals/elixir-ls/bin/language_server.sh")))
 
 (use-package rust-mode)
 
@@ -851,6 +830,7 @@ With argument ARG, do this that many times."
   :bind
   (:map vterm-mode-map
   ("M-z" . 'vterm-copy-mode)
+  ("<down-mouse-1>" . 'vterm-copy-mode)
   :map vterm-copy-mode-map
   ("M-z" . 'vterm-copy-mode))
   :config
@@ -860,7 +840,7 @@ With argument ARG, do this that many times."
   )
 
 (defface conf--vterm-face
-  '((t :family "Menlo" :height 125))
+  '((t :family "Menlo" :height 150))
   "The basic fixed-pitch face."
   :group 'basic-faces)
 
@@ -918,7 +898,7 @@ With argument ARG, do this that many times."
  '((dot . t)))
 
 (use-package org-roam
-  :ensure t
+  :diminish org-roam-mode
   :hook
   (after-init . org-roam-mode)
   :custom
@@ -944,11 +924,11 @@ With argument ARG, do this that many times."
 (use-package tree-sitter
   :config)
 (use-package tree-sitter-langs
-  :ensure t
   :hook
   (python-mode . tree-sitter-hl-mode)
   (python-mode . (lambda ()
-                   (setq-local tree-sitter-hl-default-patterns tree-sitter-queries-python))))
+                   (setq-local tree-sitter-hl-default-patterns tree-sitter-queries-python)))
+  )
 
 (require 'tree-sitter)
 (require 'tree-sitter-langs)
@@ -957,6 +937,18 @@ With argument ARG, do this that many times."
   :demand t
   :after python
   :hook (python-mode . python-black-on-save-mode-enable-dwim))
+
+(use-package python-mode
+  :config
+  (modify-syntax-entry ?_ "_" python-mode-syntax-table)
+  :bind (:map python-mode-map
+              (("C-j" . nil))))
+
+(use-package typescript-mode
+  :mode "\\.tsx?$")
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; load graphic settings
 (require 'graphics)
