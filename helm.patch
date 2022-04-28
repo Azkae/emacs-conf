@@ -1,0 +1,24 @@
+diff --git a/helm-mode.el b/helm-mode.el
+index 9e978b80..3540a351 100644
+--- a/helm-mode.el
++++ b/helm-mode.el
+@@ -1704,17 +1704,10 @@ Actually does nothing."
+   "Allow `all-completions' multi matching on its candidates."
+   ;; Doing an initial call of all-completions on the first element of
+   ;; STRING speedup completion and fix file completion when CAPF
+-  ;; returns relative paths to initial pattern (eshell and shell).
++  ;; returns relative paths to initial pattern (eshell).
+   (let* ((split (helm-mm-split-pattern string))
+          (fpat (or (car split) ""))
+-         (file-comp-p (or minibuffer-completing-file-name
+-                          (eq
+-                           (completion-metadata-get
+-                            (completion-metadata string collection predicate)
+-                            'category)
+-                           'file)))
+-         (all (and file-comp-p
+-                   (or (cdr split)
++         (all (and (or (cdr split)
+                        (and (not (cdr split))
+                             ;; Kickin when STRING is a simple string.
+                             ;; Handle as well "foo " (space at end).
