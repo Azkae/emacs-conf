@@ -84,7 +84,7 @@
 
 (defun mode-line--set-faces (frame)
   (with-selected-frame frame
-    (set-face-attribute 'mode-line    nil :background "OliveDrab3" :foreground "black")))
+    (set-face-attribute 'mode-line    nil :background "OliveDrab4" :foreground "black")))
 
 (mode-line--set-faces (selected-frame))
 (add-hook 'after-make-frame-functions 'mode-line--set-faces)

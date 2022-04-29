@@ -623,6 +623,15 @@ With argument ARG, do this that many times."
 ;;         powerline-display-mule-info   nil
 ;;         powerline-display-hud         nil))
 
+(use-package doom-modeline
+  :init (doom-modeline-mode 1)
+  :config
+  (setq doom-modeline-lsp t)
+  (setq doom-modeline-vcs-max-length 24))
+
+(use-package all-the-icons
+  :if (display-graphic-p))
+
 (use-package zoom-frm
   :bind
   (("C-x C-+" . zoom-in)
