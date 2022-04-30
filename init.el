@@ -89,6 +89,7 @@
 (global-unset-key (kbd "M-t"))
 
 (define-key key-translation-map (kbd "M-g") (kbd "C-g"))
+(define-key flymake-mode-map (kbd "C-c i l") 'flymake-show-diagnostics-buffer)
 
 (global-set-key (kbd "C-c p b") 'profiler-start)
 (global-set-key (kbd "C-c p r") 'profiler-report)
@@ -627,7 +628,7 @@ With argument ARG, do this that many times."
   :init (doom-modeline-mode 1)
   :config
   (setq doom-modeline-lsp t)
-  (setq doom-modeline-vcs-max-length 24))
+  (setq doom-modeline-vcs-max-length 32))
 
 (use-package all-the-icons
   :if (display-graphic-p))
