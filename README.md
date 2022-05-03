@@ -66,3 +66,9 @@ In `.dir-locals.el`:
   (eval . (pyvenv-activate "/path/to/venv/"))
   (flycheck-checker . python-flake8)))
 ```
+
+Apply helm patch for OSX:
+```
+cd ~/.emacs.d/straight/repos/helm
+git apply ~/emacs-conf/helm.patch
+```

@@ -89,6 +89,8 @@
 (global-unset-key (kbd "M-t"))
 
 (define-key key-translation-map (kbd "M-g") (kbd "C-g"))
+
+(require 'flymake)
 (define-key flymake-mode-map (kbd "C-c i l") 'flymake-show-diagnostics-buffer)
 
 (global-set-key (kbd "C-c p b") 'profiler-start)
