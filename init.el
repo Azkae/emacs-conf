@@ -213,11 +213,6 @@
 (add-hook 'cmake-mode-hook '--set-tab-width)
 (add-hook 'objc-mode-hook '--set-tab-width)
 
-(defun --set-tab-width-js()
-  (setq-default typescript-indent-level 2))
-
-(add-hook 'typescript-mode-hook '--set-tab-width-js)
-
 
 (setq c-default-style "linux")
 (setq-default indent-tabs-mode nil)
@@ -300,12 +295,9 @@
 (diminish 'eldoc-mode)
 (diminish 'subword-mode)
 
-(use-package autopair
-  :diminish autopair-mode
+(use-package smartparens
   :config
-  (autopair-global-mode t)
-  (setq autopair-autowrap t)
-  (setq autopair-blink nil))
+  (smartparens-global-mode))
 
 (use-package company
   :bind
@@ -493,10 +485,10 @@ With argument ARG, do this that many times."
    :map helm-ag-edit-map
    ("RET"         . helm-ag-mode-jump-other-window)))
 
-(defun remove-helm-autopair ()
-  (autopair-mode -1))
+(defun remove-helm-smartparens ()
+  (smartparens-mode -1))
 
-(add-hook 'helm-minibuffer-set-up-hook 'remove-helm-autopair)
+(add-hook 'helm-minibuffer-set-up-hook 'remove-helm-smartparens)
 
 (defun helm-config--helm-do-ag-on-file-maybe(basename)
   (interactive)
@@ -939,8 +931,7 @@ With argument ARG, do this that many times."
   :hook
   (python-mode . tree-sitter-hl-mode)
   (python-mode . (lambda ()
-                   (setq-local tree-sitter-hl-default-patterns tree-sitter-queries-python)))
-  )
+                   (setq-local tree-sitter-hl-default-patterns tree-sitter-queries-python))))
 
 (require 'tree-sitter)
 (require 'tree-sitter-langs)
@@ -956,8 +947,24 @@ With argument ARG, do this that many times."
   :bind (:map python-mode-map
               (("C-j" . nil))))
 
+(setq-default typescript-indent-level 2)
+
 (use-package typescript-mode
-  :mode "\\.tsx?$")
+  :config
+  (tree-sitter-require 'tsx)
+  (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx)))
+
+(straight-use-package '(tsi :type git :host github :repo "orzechowskid/tsi.el"))
+
+(define-derived-mode typescript-tsx-mode typescript-mode "TSX"
+  "Major mode for editing TSX files.
+
+Refer to Typescript documentation for syntactic differences between normal and TSX
+variants of Typescript.")
+(add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-tsx-mode))
+
+(add-hook 'typescript-tsx-mode-hook 'tree-sitter-hl-mode)
+(add-hook 'typescript-tsx-mode-hook 'tsi-typescript-mode)
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
