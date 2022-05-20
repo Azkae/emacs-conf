@@ -496,6 +496,11 @@ With argument ARG, do this that many times."
 
 ;; (add-hook 'helm-minibuffer-set-up-hook 'remove-helm-smartparens)
 
+(defun remove-helm-electric-pair ()
+  (electric-pair-local-mode -1))
+
+(add-hook 'helm-minibuffer-set-up-hook 'remove-helm-electric-pair)
+
 (defun helm-config--helm-do-ag-on-file-maybe(basename)
   (interactive)
   (let* ((basename (expand-file-name basename))
