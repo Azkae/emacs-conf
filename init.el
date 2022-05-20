@@ -71,8 +71,7 @@
 
 ;; basic keybindings
 (global-set-key (kbd "C-f") "\C-a\C-@\C-e")
-(global-set-key (kbd "RET") 'newline-and-indent)
-(global-set-key [C-return] 'newline-and-indent)
+(global-set-key [C-return] 'newline)
 
 (global-set-key (kbd "M-$") 'shrink-window)
 (global-set-key (kbd "M-*") 'enlarge-window)
@@ -295,9 +294,25 @@
 (diminish 'eldoc-mode)
 (diminish 'subword-mode)
 
-(use-package smartparens
-  :config
-  (smartparens-global-mode))
+(electric-pair-mode)
+(electric-indent-mode)
+;; (electric-layout-mode)
+
+;; (use-package smartparens
+;;   :config
+;;   (smartparens-global-mode)
+;;   (defun indent-between-pair (&rest _ignored)
+;;     (newline)
+;;     (indent-according-to-mode)
+;;     (forward-line -1)
+;;     (indent-according-to-mode))
+
+;;   (sp-local-pair 'prog-mode "{" nil :post-handlers '((indent-between-pair "RET")))
+;;   (sp-local-pair 'prog-mode "[" nil :post-handlers '((indent-between-pair "RET")))
+;;   (sp-local-pair 'prog-mode "(" nil :post-handlers '((indent-between-pair "RET"))))
+
+(setq conf--basic-completion-backends '(company-files (company-dabbrev-code company-keywords)))
+(setq conf--default-completion-backends '(company-capf company-files (company-dabbrev-code company-keywords)))
 
 (use-package company
   :bind
@@ -308,17 +323,8 @@
   (setq company-frontends '(company-pseudo-tooltip-frontend
 			    company-preview-if-just-one-frontend
 			    company-echo-metadata-frontend))
-  (defun --company-setup ()
-    (setq company-backends (delete '(company-dabbrev-code company-gtags company-etags company-keywords) company-backends))
-    (setq company-backends (delete 'company-dabbrev company-backends))
-    (add-to-list 'company-backends '(company-dabbrev-code company-keywords) t))
-  (add-hook 'company-mode-hook '--company-setup)
-  ;; remove unwanted (and slow) backends
-  (defun cc-company-setup ()
-    (setq company-backends (delete 'company-semantic company-backends)))
-  (add-hook 'c-mode-hook 'cc-company-setup)
-  (add-hook 'c++-mode-hook 'cc-company-setup)
-  (global-company-mode))
+  (setq company-backends conf--default-completion-backends))
+(global-company-mode)
 
 ;; (use-package company-emoji
 ;;   :config
@@ -485,10 +491,10 @@ With argument ARG, do this that many times."
    :map helm-ag-edit-map
    ("RET"         . helm-ag-mode-jump-other-window)))
 
-(defun remove-helm-smartparens ()
-  (smartparens-mode -1))
+;; (defun remove-helm-smartparens ()
+;;   (smartparens-mode -1))
 
-(add-hook 'helm-minibuffer-set-up-hook 'remove-helm-smartparens)
+;; (add-hook 'helm-minibuffer-set-up-hook 'remove-helm-smartparens)
 
 (defun helm-config--helm-do-ag-on-file-maybe(basename)
   (interactive)
@@ -768,13 +774,18 @@ With argument ARG, do this that many times."
 ;;   ;; (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
 ;;   :hook ((c-mode c++-mode objc-mode) . (lambda () (require 'ccls) (lsp))))
 
+
 (use-package eglot
   :bind
   (:map eglot-mode-map
    ("M-." . xref-find-definitions))
   :hook
   (c-mode . eglot-ensure)
-  (c++-mode . eglot-ensure))
+  (c++-mode . eglot-ensure)
+  (typescript-mode . eglot-ensure)
+  (typescript-mode . (lambda () (setq-local company-backends conf--basic-completion-backends)))
+  :config
+  (add-to-list 'eglot-stay-out-of 'company-backends))
 
 (use-package clang-format)
 
