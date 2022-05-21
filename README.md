@@ -67,6 +67,12 @@ In `.dir-locals.el`:
   (flycheck-checker . python-flake8)))
 ```
 
+Install emacs:
+```
+brew tap d12frosted/emacs-plus
+brew install emacs-plus --with-native-comp --with-no-frame-refocus
+```
+
 Apply helm patch for OSX:
 ```
 cd ~/.emacs.d/straight/repos/helm
