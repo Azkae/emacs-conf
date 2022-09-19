@@ -199,7 +199,7 @@
                                    (inlambda . 0)
                                    (statement-case-open . +)
                                    (innamespace 0)
-                                   (arglist-close . +cc-lineup-arglist-close)))))
+                                   (arglist-close 0)))))
 
 (defun --cc-style-setup()
   (c-set-style "better-cc-style"))
