@@ -284,12 +284,17 @@
 (global-set-key [remap kill-this-buffer] 'kill-this-buffer-avoid-boring)
 
 ;; better performance
-(setq gc-cons-threshold 100000000)
+;; (setq gc-cons-threshold 100000000)
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
 ;; --------------
 ;; setup packages
 ;; --------------
+
+(use-package gcmh
+  :config
+  (gcmh-mode 1))
+
 
 (use-package diminish)
 
