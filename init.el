@@ -198,7 +198,8 @@
                                    (brace-list-open . 0)
                                    (inlambda . 0)
                                    (statement-case-open . +)
-                                   (innamespace 0)))))
+                                   (innamespace 0)
+                                   (arglist-close . +cc-lineup-arglist-close)))))
 
 (defun --cc-style-setup()
   (c-set-style "better-cc-style"))
