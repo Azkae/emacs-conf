@@ -62,6 +62,7 @@
 (setq bidi-inhibit-bpa t)
 (setq bidi-paragraph-direction 'left-to-right)
 (setq auto-window-vscroll nil)
+(setq redisplay-skip-fontification-on-input t)
 (global-so-long-mode 1)
 
 ;; treat camelCase as multiple words for cursor movement
