@@ -325,7 +325,7 @@
   :bind
   (("M-RET" . company-complete))
   :config
-  (setq company-idle-delay 0)
+  (setq company-idle-delay 0.1)
   (setq company-minimum-prefix-length 1)
   (setq company-frontends '(company-pseudo-tooltip-frontend
 			    company-preview-if-just-one-frontend
