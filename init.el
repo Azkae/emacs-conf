@@ -797,6 +797,10 @@ With argument ARG, do this that many times."
   (typescript-mode . eglot-ensure)
   (typescript-mode . (lambda () (setq-local company-backends conf--basic-completion-backends)))
   :config
+
+  ;; Disable auto indent after '}' on cpp mode, may break a few things..
+  ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
+
   (add-to-list 'eglot-stay-out-of 'company-backends))
 
 (use-package clang-format)
@@ -953,6 +957,7 @@ With argument ARG, do this that many times."
 (use-package tree-sitter-langs
   :hook
   (python-mode . tree-sitter-hl-mode)
+  (cc-mode . tree-sitter-hl-mode)
   (python-mode . (lambda ()
                    (setq-local tree-sitter-hl-default-patterns tree-sitter-queries-python))))
 
@@ -964,11 +969,11 @@ With argument ARG, do this that many times."
   :after python
   :hook (python-mode . python-black-on-save-mode-enable-dwim))
 
-(use-package python-mode
-  :config
-  (modify-syntax-entry ?_ "_" python-mode-syntax-table)
-  :bind (:map python-mode-map
-              (("C-j" . nil))))
+;; (use-package python-mode
+;;   :config
+;;   (modify-syntax-entry ?_ "_" python-mode-syntax-table)
+;;   :bind (:map python-mode-map
+;;               (("C-j" . nil))))
 
 (setq-default typescript-indent-level 2)
 
@@ -978,6 +983,7 @@ With argument ARG, do this that many times."
   (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx)))
 
 (straight-use-package '(tsi :type git :host github :repo "orzechowskid/tsi.el"))
+(require 'tsi-typescript)
 
 (define-derived-mode typescript-tsx-mode typescript-mode "TSX"
   "Major mode for editing TSX files.
@@ -991,6 +997,8 @@ variants of Typescript.")
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package markdown-mode)
 
 ;; load graphic settings
 (require 'graphics)
