@@ -623,9 +623,9 @@ With argument ARG, do this that many times."
 ;;   (add-hook 'dired-mode-hook 'helm-gtags-mode)
 ;;   (setq helm-gtags-direct-helm-completing t))
 
-(use-package highlight-symbol
+(use-package symbol-overlay
   :bind
-  ([f7] . highlight-symbol-at-point))
+  ([f7] . symbol-overlay-put))
 
 (use-package cmake-mode
   :config
