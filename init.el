@@ -291,6 +291,8 @@
 ;; setup packages
 ;; --------------
 
+(use-package org)
+
 (use-package gcmh
   :config
   (gcmh-mode 1))
@@ -751,41 +753,6 @@ With argument ARG, do this that many times."
 
 (use-package dockerfile-mode)
 
-;; (use-package lsp-mode :commands lsp
-;;   :bind
-;;   (:map lsp-mode-map
-;;         ("M-." . lsp-find-definition)
-;;         ("M-?" . lsp-find-references)
-;;         )
-;;   (:map lsp-signature-mode-map
-;;         ("M-p" . nil)
-;;         )
-;;   :config
-;;   (setq lsp-prefer-flymake               nil
-;;         lsp-enable-file-watchers         nil
-;;         lsp-enable-semantic-highlighting nil
-;;         lsp-enable-indentation           nil
-;;         lsp-enable-on-type-formatting    nil)
-;;   (setq lsp-completion-provider :capf)
-;;   ;; (when (string-equal system-type "darwin")
-;;   ;;   (setq lsp-clients-clangd-executable "/usr/local/opt/llvm/bin/clangd"))
-;;   )
-
-;; (use-package lsp-ui ;; :commands lsp-ui-mode
-;;   :config
-;;   (add-hook 'lsp-mode-hook 'lsp-ui-mode)
-;;   (add-hook 'lsp-mode-hook 'flymake-mode)
-;;   (setq lsp-ui-sideline-show-hover nil)
-;;   (setq lsp-ui-sideline-show-code-actions nil)
-;;   (setq lsp-ui-doc-enable nil)
-;;   (setq lsp-ui-flycheck-live-reporting nil))
-
-;; (use-package ccls
-;;   :config
-;;   (setq ccls-sem-highlight-method nil)
-;;   ;; (setq company-transformers nil company-lsp-async t company-lsp-cache-candidates nil)
-;;   :hook ((c-mode c++-mode objc-mode) . (lambda () (require 'ccls) (lsp))))
-
 
 (use-package eglot
   :bind
@@ -798,6 +765,7 @@ With argument ARG, do this that many times."
   (typescript-mode . (lambda () (setq-local company-backends conf--basic-completion-backends)))
   :config
 
+  (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed")))
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
 
