@@ -642,7 +642,9 @@ With argument ARG, do this that many times."
   :init (doom-modeline-mode 1)
   :config
   (setq doom-modeline-lsp t)
-  (setq doom-modeline-vcs-max-length 32))
+  (setq doom-modeline-vcs-max-length 32)
+  (setq doom-modeline-buffer-encoding 'nondefault)
+  (setq doom-modeline-buffer-file-name-style 'relative-from-project))
 
 (use-package all-the-icons
   :if (display-graphic-p))
