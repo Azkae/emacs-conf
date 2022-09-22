@@ -973,5 +973,9 @@ variants of Typescript.")
 
 (use-package markdown-mode)
 
+(use-package with-editor
+  :hook
+  (vterm-mode . with-editor-export-editor))
+
 ;; load graphic settings
 (require 'graphics)
