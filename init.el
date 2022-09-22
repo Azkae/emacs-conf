@@ -402,10 +402,12 @@
 
 (use-package undo-tree
   :diminish undo-tree-mode
+  :init
+  (global-undo-tree-mode 1)
   :bind
   (("M-Z" . redo))
   :config
-  (global-undo-tree-mode 1)
+  (setq undo-tree-history-directory-alist '((".*" . "~/.emacs.d/undo")))
   (defalias 'redo 'undo-tree-redo))
 
 (defun backward-delete-word (arg)
@@ -892,6 +894,7 @@ With argument ARG, do this that many times."
             (define-key org-mode-map [M-up] 'windmove-up)
             (define-key org-mode-map [M-down] 'windmove-down)
             (define-key org-mode-map [M-return] 'conf--org-open-link-maybe)
+            (define-key org-mode-map (kbd "M-.") 'org-open-at-point)
             (toggle-truncate-lines)))
 
 (org-babel-do-load-languages
@@ -900,20 +903,19 @@ With argument ARG, do this that many times."
 
 (use-package org-roam
   :diminish org-roam-mode
-  :hook
-  (after-init . org-roam-mode)
+  :init
+  (org-roam-db-autosync-mode)
   :custom
   (org-roam-directory (expand-file-name "~/Dropbox/org-roam"))
   (org-roam-verbose nil)
-  :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n t" . org-roam-dailies-today)
-               ("C-c n y" . org-roam-dailies-yesterday)
-               ("C-c n g" . org-roam-graph))
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert))
-              (("C-c n I" . org-roam-insert-immediate))))
+  :bind
+  (("C-c n f" . org-roam-node-find)
+   ("C-c n t" . org-roam-dailies-capture-today)
+   ("C-c n y" . org-roam-dailies-capture-yesterday)
+   ("C-c n g" . org-roam-graph)
+   :map org-mode-map
+   (("C-c n i" . org-roam-node-insert))
+   (("M-," . org-mark-ring-goto))))
 
 (defun get-string-from-file (filePath)
   (with-temp-buffer
