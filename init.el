@@ -461,6 +461,7 @@ With argument ARG, do this that many times."
    ("<M-down>"    . helm-scroll-other-window)
    ("<M-up>"      . helm-scroll-other-window-down)
    ("M-e"         . helm-config--ff-open-vterm)
+   ("M-r"         . helm-ff-run-rename-file)
    ("DEL"         . nil)
    ([M-backspace] . delete-until-slash)
    :map helm-read-file-map
