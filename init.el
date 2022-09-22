@@ -408,7 +408,15 @@
   (("M-Z" . redo))
   :config
   (setq undo-tree-history-directory-alist '((".*" . "~/.emacs.d/undo")))
-  (defalias 'redo 'undo-tree-redo))
+  (defalias 'redo 'undo-tree-redo)
+
+  (defun my-undo-tree-save-history (undo-tree-save-history &rest args)
+    (let ((message-log-max nil)
+          (inhibit-message t))
+      (apply undo-tree-save-history args)))
+
+  (advice-add 'undo-tree-save-history :around 'my-undo-tree-save-history))
+
 
 (defun backward-delete-word (arg)
   "Delete characters backward until encountering the beginning of a word.
