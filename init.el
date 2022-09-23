@@ -985,5 +985,9 @@ variants of Typescript.")
   :hook
   (vterm-mode . with-editor-export-editor))
 
+(use-package treemacs)
+
+(use-package treemacs-projectile)
+
 ;; load graphic settings
 (require 'graphics)
