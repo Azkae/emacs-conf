@@ -291,12 +291,37 @@
 ;; setup packages
 ;; --------------
 
-(use-package org)
+(use-package org
+  :config
+  (defun conf--org-open-link-maybe()
+    (interactive)
+    (if (eq (car (org-element-context)) 'link)
+        (call-interactively 'org-open-at-point)
+      (call-interactively 'org-meta-return)))
+
+  ;; Fix windmove in org-mode
+  (add-hook 'org-mode-hook
+            (lambda()
+              (define-key org-mode-map [M-left] 'windmove-left)
+              (define-key org-mode-map [M-right] 'windmove-right)
+              (define-key org-mode-map [M-up] 'windmove-up)
+              (define-key org-mode-map [M-down] 'windmove-down)
+              (define-key org-mode-map [M-return] 'conf--org-open-link-maybe)
+              (define-key org-mode-map (kbd "M-.") 'org-open-at-point)
+              (toggle-truncate-lines)))
+
+  ;; being able to create a new item directly even if the last item if folded
+  ;; default setting may be faster
+  ;; may have been be fixed with org-mode commit `39005dc098e5cd9dab76357e3a1aaa541f8304a1`
+  (setq org-fold-core-style 'overlays)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((dot . t))))
 
 (use-package gcmh
   :config
   (gcmh-mode 1))
-
 
 (use-package diminish)
 
@@ -888,27 +913,6 @@ With argument ARG, do this that many times."
 (use-package string-inflection
   :bind
   ("C-c f" . string-inflection-toggle))
-
-(defun conf--org-open-link-maybe()
-  (interactive)
-  (if (eq (car (org-element-context)) 'link)
-      (call-interactively 'org-open-at-point)
-    (call-interactively 'org-meta-return)))
-
-;; Fix windmove in org-mode
-(add-hook 'org-mode-hook
-          (lambda()
-            (define-key org-mode-map [M-left] 'windmove-left)
-            (define-key org-mode-map [M-right] 'windmove-right)
-            (define-key org-mode-map [M-up] 'windmove-up)
-            (define-key org-mode-map [M-down] 'windmove-down)
-            (define-key org-mode-map [M-return] 'conf--org-open-link-maybe)
-            (define-key org-mode-map (kbd "M-.") 'org-open-at-point)
-            (toggle-truncate-lines)))
-
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((dot . t)))
 
 (use-package org-roam
   :diminish org-roam-mode
