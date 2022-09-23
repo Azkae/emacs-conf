@@ -91,7 +91,8 @@
 
 (defun basic--set-faces (frame)
   (with-selected-frame frame
-    (set-face-attribute 'show-paren-match    nil :background "steelblue3")))
+    (set-face-attribute 'show-paren-match    nil :background "steelblue3")
+    (set-face-attribute 'ansi-color-slow-blink nil :box nil)))
 
 (basic--set-faces (selected-frame))
 (add-hook 'after-make-frame-functions 'basic--set-faces)
