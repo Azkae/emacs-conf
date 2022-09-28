@@ -196,6 +196,8 @@
  "try"
  "while"
  "with"
+ "match"
+ "case"
  "yield"] @keyword
 
 ;; "Contexts" may have internal highlighting -> low priority.
