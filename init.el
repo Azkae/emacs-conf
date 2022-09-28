@@ -1017,7 +1017,9 @@ variants of Typescript.")
   :hook
   (vterm-mode . with-editor-export-editor))
 
-(use-package treemacs)
+(use-package treemacs
+  :config
+  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
 
 (use-package treemacs-projectile)
 
