@@ -315,6 +315,8 @@
   ;; may have been be fixed with org-mode commit `39005dc098e5cd9dab76357e3a1aaa541f8304a1`
   (setq org-fold-core-style 'overlays)
 
+  (setq org-startup-folded t)
+
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((dot . t))))
