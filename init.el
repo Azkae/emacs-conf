@@ -731,7 +731,7 @@ With argument ARG, do this that many times."
   :bind
   (("C-x g" . magit-status)))
 
-(use-package git-timemachine)
+(straight-use-package '(git-timemachine :type git :host github :repo "emacsmirror/git-timemachine"))
 
 ;; ;; dirlocals:
 ;; ((nil
