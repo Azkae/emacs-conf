@@ -246,14 +246,14 @@
 
 (defun is-buffer-valid (buffer-name)
   (let ((valid-buffer t))
-    (loop for boring-buffer in boring-buffers do
+    (cl-loop for boring-buffer in boring-buffers do
           (when (string-match boring-buffer buffer-name)
             (setq valid-buffer nil)))
     valid-buffer))
 
 (defun --contains-valid-buffer (buffer-list)
   (let ((valid-buffer nil))
-    (loop for buffer in buffer-list do
+    (cl-loop for buffer in buffer-list do
           (when (is-buffer-valid (buffer-name buffer))
             (setq valid-buffer t)))
     valid-buffer))
@@ -958,7 +958,7 @@ With argument ARG, do this that many times."
       (org-hide-properties)))
 
   ;; call org-hide-properties after inserting a new node
-  (add-hook 'org-roam-post-node-insert-hook #'(lambda (_ _) (org-hide-properties))))
+  (add-hook 'org-roam-post-node-insert-hook '(lambda (_ _) (org-hide-properties))))
 
 (defun get-string-from-file (filePath)
   (with-temp-buffer
