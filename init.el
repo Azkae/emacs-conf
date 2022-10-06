@@ -729,7 +729,8 @@ With argument ARG, do this that many times."
 
 (use-package magit
   :bind
-  (("C-x g" . magit-status)))
+  (("C-x g" . magit-status)
+   ("C-x v l" . magit-log-buffer-file)))
 
 (straight-use-package '(git-timemachine :type git :host github :repo "emacsmirror/git-timemachine"))
 
