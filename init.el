@@ -1026,5 +1026,9 @@ variants of Typescript.")
 
 (use-package treemacs-projectile)
 
+(use-package which-key
+  :config
+  (which-key-mode))
+
 ;; load graphic settings
 (require 'graphics)
