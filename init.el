@@ -213,7 +213,7 @@
 
 (add-hook 'cmake-mode-hook '--set-tab-width)
 (add-hook 'objc-mode-hook '--set-tab-width)
-
+(setq-default tab-width 4)
 
 (setq c-default-style "linux")
 (setq-default indent-tabs-mode nil)
@@ -237,6 +237,8 @@
            ;; ("\\<\\(xstring\\|xchar\\)\\>" . font-lock-type-face)
            ))
         ) t)
+
+(add-to-list 'auto-mode-alist '("\\.mm?\\'" . objc-mode))
 
 ;; avoid boring buffers
 (defvar boring-buffers
@@ -434,6 +436,8 @@
   :bind
   (("M-Z" . redo))
   :config
+  (setq undo-tree-auto-save-history nil)
+  (setq undo-tree-enable-undo-in-region t)
   (setq undo-tree-history-directory-alist '((".*" . "~/.emacs.d/undo")))
   (defalias 'redo 'undo-tree-redo)
 
@@ -814,6 +818,7 @@ With argument ARG, do this that many times."
   :config
 
   (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed")))
+  (setq eldoc-echo-area-use-multiline-p 7)
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
 
@@ -1036,6 +1041,12 @@ variants of Typescript.")
 (use-package which-key
   :config
   (which-key-mode))
+
+;; (use-package eldoc-box
+;;   :init
+;;   (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t))
+
+;; (add-to-list 'eglot-ignored-server-capabilites :hoverProvider)
 
 ;; load graphic settings
 (require 'graphics)
