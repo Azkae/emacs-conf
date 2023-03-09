@@ -14,7 +14,7 @@
 (global-unset-key (kbd "C-z"))
 (normal-erase-is-backspace-mode 1)
 
-(defun git-gutter-fringe--set-faces (frame)
+(defun git-gutter-fringe-plus--set-faces (frame)
   (with-selected-frame frame
     (git-gutter-fr+-minimal)
     (set-face-attribute 'git-gutter-fr+-added    nil :foreground "gray25")
@@ -23,8 +23,21 @@
 
 (eval-after-load 'git-gutter-fringe+
   '(progn
-     (git-gutter-fringe--set-faces (selected-frame))
-     (add-hook 'after-make-frame-functions 'git-gutter-fringe--set-faces)))
+     (git-gutter-fringe-plus--set-faces (selected-frame))
+     (add-hook 'after-make-frame-functions 'git-gutter-fringe-plus--set-faces)))
+
+
+;; (defun git-gutter-fringe--set-faces (frame)
+;;   (with-selected-frame frame
+;;     (git-gutter-fr+-minimal)
+;;     (set-face-attribute 'git-gutter-fr:added    nil :foreground "gray25" :background nil)
+;;     (set-face-attribute 'git-gutter-fr:deleted  nil :foreground "gray25" :background nil)
+;;     (set-face-attribute 'git-gutter-fr:modified nil :foreground "gray25" :background nil)))
+
+;; (eval-after-load 'git-gutter-fringe
+;;   '(progn
+;;      (git-gutter-fringe--set-faces (selected-frame))
+;;      (add-hook 'after-make-frame-functions 'git-gutter-fringe--set-faces)))
 
 (defun helm--set-faces (frame)
   (with-selected-frame frame

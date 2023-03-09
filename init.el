@@ -700,12 +700,19 @@ With argument ARG, do this that many times."
   :config
   (global-git-gutter+-mode))
 
+;; (use-package git-gutter-fringe
+;;   :diminish git-gutter-mode
+;;   :config
+;;   (global-git-gutter-mode))
+
 ;; (use-package yascroll
 ;;   :config
 ;;   (global-yascroll-bar-mode 1)
 ;;   (setq yascroll:delay-to-hide 0.3))
 
-(use-package phi-search)
+(use-package phi-search
+  :config
+  (setq phi-search-limit 10000))
 
 (use-package multiple-cursors
   :bind
