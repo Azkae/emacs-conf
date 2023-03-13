@@ -999,10 +999,30 @@ variants of Typescript.")
 
 ;; (add-to-list 'eglot-ignored-server-capabilites :hoverProvider)
 
+(defun corfu-complete-common ()
+  "Complete common prefix or go to next candidate."
+  (interactive)
+  (if (= corfu--total 1)
+      (progn
+        (corfu--goto 1)
+        (corfu-insert))
+    (let* ((input (car corfu--input))
+           (str (if (thing-at-point 'filename) (file-name-nondirectory input) input))
+           (pt (length str))
+           (common (try-completion str corfu--candidates)))
+      (when (and (> pt 0)
+                 (stringp common)
+                 (not (string= str common)))
+        (insert (substring common pt))))))
+
 (use-package corfu
   :bind
   (("M-RET" . completion-at-point))
-  (:map corfu-map ("C-s" . corfu-insert-separator))
+  (:map corfu-map
+        ("C-s" . corfu-insert-separator)
+        ("TAB" . corfu-complete-common)
+        ("<tab>" . corfu-complete-common)
+        ("ret" . corfu-insert))
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0)
