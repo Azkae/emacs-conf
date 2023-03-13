@@ -1005,21 +1005,23 @@ variants of Typescript.")
   (:map corfu-map ("C-s" . corfu-insert-separator))
   :custom
   (corfu-auto t)
-  (corfu-auto-delay 0.1)
+  (corfu-auto-delay 0)
   (corfu-auto-prefix 2)
   :init
   (global-corfu-mode))
 
+(use-package company)
+
+(setq conf--basic-completion-functions `(,(cape-company-to-capf 'company-dabbrev-code) cape-file cape-keyword))
+
 (defun conf--setup-simple-completion()
-  (setq-local completion-at-point-functions '(cape-dabbrev cape-file cape-keyword)))
+  (setq-local completion-at-point-functions conf--basic-completion-functions))
 
 (use-package cape
   :hook
   (python-mode . conf--setup-simple-completion)
   :config
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-keyword))
+  (setq completion-at-point-functions conf--basic-completion-functions))
 
 ;; load graphic settings
 (require 'graphics)
