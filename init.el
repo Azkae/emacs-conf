@@ -1012,15 +1012,14 @@ variants of Typescript.")
 
 (use-package company)
 
-(setq conf--basic-completion-functions `(,(cape-company-to-capf 'company-dabbrev-code) cape-file cape-keyword))
-
 (defun conf--setup-simple-completion()
   (setq-local completion-at-point-functions conf--basic-completion-functions))
 
 (use-package cape
   :hook
   (python-mode . conf--setup-simple-completion)
-  :config
+  :init
+  (setq conf--basic-completion-functions `(,(cape-company-to-capf 'company-dabbrev-code) cape-file cape-keyword))
   (setq completion-at-point-functions conf--basic-completion-functions))
 
 ;; load graphic settings
