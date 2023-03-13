@@ -71,7 +71,7 @@
 ;; TODO: use bind-key: https://melpa.org/#/bind-key
 
 ;; basic keybindings
-(global-set-key (kbd "C-f") "\C-a\C-@\C-e")
+(global-set-key (kbd "C-f") "\C-a\C-a\C-@\C-e")
 (global-set-key [C-return] 'newline)
 
 (global-set-key (kbd "M-$") 'shrink-window)
@@ -1002,6 +1002,7 @@ variants of Typescript.")
 (use-package corfu
   :bind
   (("M-RET" . completion-at-point))
+  (:map corfu-map ("C-s" . corfu-insert-separator))
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0)
@@ -1010,7 +1011,7 @@ variants of Typescript.")
   (global-corfu-mode))
 
 (defun conf--setup-simple-completion()
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+  (setq-local completion-at-point-functions '(cape-dabbrev)))
 
 (use-package cape
   :hook
