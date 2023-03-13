@@ -1021,8 +1021,7 @@ variants of Typescript.")
   (:map corfu-map
         ("C-s" . corfu-insert-separator)
         ("TAB" . corfu-complete-common)
-        ("<tab>" . corfu-complete-common)
-        ("ret" . corfu-insert))
+        ("<tab>" . corfu-complete-common))
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0)
