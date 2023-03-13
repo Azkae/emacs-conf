@@ -1004,8 +1004,8 @@ variants of Typescript.")
   (("M-RET" . completion-at-point))
   :custom
   (corfu-auto t)
-  (setq corfu-auto-delay 0)
-  (setq corfu-auto-prefix 2)
+  (corfu-auto-delay 0)
+  (corfu-auto-prefix 2)
   :init
   (global-corfu-mode))
 
