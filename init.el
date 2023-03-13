@@ -334,56 +334,26 @@
 
 (electric-pair-mode)
 (electric-indent-mode)
-;; (electric-layout-mode)
 
-;; (use-package smartparens
+
+;; (setq conf--basic-completion-backends '(company-files (company-dabbrev-code company-keywords)))
+;; (setq conf--default-completion-backends '(company-capf company-files (company-dabbrev-code company-keywords)))
+
+;; (use-package company
+;;   :bind
+;;   (("M-RET" . company-complete))
 ;;   :config
-;;   (smartparens-global-mode)
-;;   (defun indent-between-pair (&rest _ignored)
-;;     (newline)
-;;     (indent-according-to-mode)
-;;     (forward-line -1)
-;;     (indent-according-to-mode))
+;;   (setq company-idle-delay 0)
+;;   (setq company-minimum-prefix-length 1)
+;;   ;; (setq company-frontends '(company-pseudo-tooltip-frontend
+;;   ;;   		    company-preview-if-just-one-frontend
+;;   ;;   		    company-echo-metadata-frontend))
+;;   (setq company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
+;;                                company-preview-if-just-one-frontend
+;;                                company-echo-metadata-frontend))
+;;   (setq company-backends conf--default-completion-backends))
+;; (global-company-mode)
 
-;;   (sp-local-pair 'prog-mode "{" nil :post-handlers '((indent-between-pair "RET")))
-;;   (sp-local-pair 'prog-mode "[" nil :post-handlers '((indent-between-pair "RET")))
-;;   (sp-local-pair 'prog-mode "(" nil :post-handlers '((indent-between-pair "RET"))))
-
-(setq conf--basic-completion-backends '(company-files (company-dabbrev-code company-keywords)))
-(setq conf--default-completion-backends '(company-capf company-files (company-dabbrev-code company-keywords)))
-
-(use-package company
-  :bind
-  (("M-RET" . company-complete))
-  :config
-  (setq company-idle-delay 0.1)
-  (setq company-minimum-prefix-length 1)
-  (setq company-frontends '(company-pseudo-tooltip-frontend
-			    company-preview-if-just-one-frontend
-			    company-echo-metadata-frontend))
-  (setq company-backends conf--default-completion-backends))
-(global-company-mode)
-
-;; (use-package company-emoji
-;;   :config
-;;   ;; ...
-;;   (add-to-list 'company-backends 'company-emoji))
-
-;; (use-package irony
-;;   :config
-;;   (add-hook 'c-mode-hook (lambda ()
-;; 			 (if (not (equal major-mode 'glsl-mode))
-;; 			     (irony-mode))))
-;;   (add-hook 'c++-mode-hook 'irony-mode)
-;;   (add-hook 'objc-mode-hook 'irony-mode)
-;;   (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options))
-
-;; (use-package flycheck-irony
-;;   :config
-;;   (eval-after-load 'flycheck
-;;     '(progn
-;;        (require 'flycheck-irony)
-;;        (add-hook 'flycheck-mode-hook #'flycheck-irony-setup))))
 
 (use-package flycheck
   :bind
@@ -405,24 +375,6 @@
   
   :hook ((python-mode) . #'flycheck-mode)
   )
-
-;; (use-package company-irony
-;;   :config
-;;   (eval-after-load 'company
-;;     '(progn
-;;        (add-to-list 'company-backends 'company-irony)
-;;        ;; company-clang is too slow
-;;        (setq company-backends (delete 'company-clang company-backends)))))
-
-;; (use-package company-c-headers
-;;   :config
-;;   (eval-after-load 'company
-;;     '(add-to-list 'company-backends 'company-c-headers)))
-
-;; (use-package company-irony-c-headers
-;;   :config
-;;   (eval-after-load 'company
-;;     '(add-to-list 'company-backends 'company-irony-c-headers)))
 
 (use-package ws-butler
   :diminish ws-butler-mode
@@ -805,7 +757,6 @@ With argument ARG, do this that many times."
 
 (use-package dockerfile-mode)
 
-
 (use-package eglot
   :bind
   (:map eglot-mode-map
@@ -1047,6 +998,23 @@ variants of Typescript.")
 ;;   (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t))
 
 ;; (add-to-list 'eglot-ignored-server-capabilites :hoverProvider)
+
+(use-package corfu
+  :bind
+  (("M-RET" . completion-at-point))
+  :custom
+  (corfu-auto t)
+  (setq corfu-auto-delay 0)
+  (setq corfu-auto-prefix 2)
+  :init
+  (global-corfu-mode))
+
+(defun conf--setup-simple-completion()
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+
+(use-package cape
+  :hook
+  (python-mode . conf--setup-simple-completion))
 
 ;; load graphic settings
 (require 'graphics)

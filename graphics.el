@@ -85,6 +85,22 @@
      (company--set-faces (selected-frame))
      (add-hook 'after-make-frame-functions 'company--set-faces)))
 
+
+(defun corfu--set-faces (frame)
+  (with-selected-frame frame
+    ;; (set-face-attribute 'corfu-default nil :background "LightSteelBlue1" :foreground "dark slate gray")
+    ;; (set-face-attribute 'completions-common-part nil :inherit 'corfu-default :underline t)
+    ;; (set-face-attribute 'corfu-current nil :inherit 'corfu-default :background "LightSteelBlue3")
+    ;; (set-face-attribute 'corfu-annotations nil :inherit 'corfu-default :background "LightSteelBlue3")
+
+    (set-face-attribute 'corfu-border nil :background "#F8F8F2")
+    ))
+
+(eval-after-load 'corfu
+  '(progn
+     (corfu--set-faces (selected-frame))
+     (add-hook 'after-make-frame-functions 'corfu--set-faces)))
+
 (defun yascroll--set-faces (frame)
   (with-selected-frame frame
     (set-face-attribute 'yascroll:thumb-fringe    nil :foreground "gray25" :background "gray25")
