@@ -758,6 +758,8 @@ With argument ARG, do this that many times."
 (use-package dockerfile-mode)
 
 (use-package eglot
+  ;; TODO: try with emacs 29
+  ;; :straight nil
   :bind
   (:map eglot-mode-map
    ("M-." . xref-find-definitions))
@@ -1004,7 +1006,7 @@ variants of Typescript.")
   (interactive)
   (if (= corfu--total 1)
       (progn
-        (corfu--goto 1)
+        (corfu--goto 0)
         (corfu-insert))
     (let* ((input (car corfu--input))
            (str (if (thing-at-point 'filename) (file-name-nondirectory input) input))
@@ -1013,26 +1015,36 @@ variants of Typescript.")
       (when (and (> pt 0)
                  (stringp common)
                  (not (string= str common)))
-        (insert (substring common pt))))))
+        (if (and (string= common (car corfu--candidates))
+                 ;; remove next line if you want to end completion if the current prefix is equal to the first completion
+                 (not (string-prefix-p common (nth 1 corfu--candidates))))
+            (progn
+              (corfu--goto 0)
+              (corfu-insert))
+          (insert (substring common pt)))))))
 
 (use-package corfu
   :bind
   (("M-RET" . completion-at-point))
   (:map corfu-map
         ("C-s" . corfu-insert-separator)
-        ("TAB" . corfu-complete-common)
         ("<tab>" . corfu-complete-common))
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0)
   (corfu-auto-prefix 2)
+  ;; (completion-styles '(basic))
   :init
   (global-corfu-mode))
 
-(use-package company)
-
 (defun conf--setup-simple-completion()
   (setq-local completion-at-point-functions conf--basic-completion-functions))
+
+(when (< emacs-major-version 29)
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
+  (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
+
+(use-package company)
 
 (use-package cape
   :hook
