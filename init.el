@@ -1036,15 +1036,21 @@ variants of Typescript.")
       (corfu-complete)
     (corfu-insert)))
 
+(defun conf--corfu-active-p ()
+  (and corfu-mode completion-in-region-mode))
+
 (use-package corfu
   :bind
   (("M-RET" . completion-at-point))
   (:map corfu-map
         ("C-s" . corfu-insert-separator)
+        ("TAB" . corfu-complete-common)
         ("<tab>" . corfu-complete-common)
-        ("<ret>" . corfu-insert-maybe)
         ("RET" . corfu-insert-maybe)
+        ("<ret>" . corfu-insert-maybe)
         ("M-RET" . corfu-insert))
+  :hook
+  (corfu-mode . (lambda () (add-hook 'yas-keymap-disable-hook 'conf--corfu-active-p nil t)))
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0.05)
