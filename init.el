@@ -1006,8 +1006,11 @@ variants of Typescript.")
   (interactive)
   (if (= corfu--total 1)
       (progn
-        (corfu--goto 0)
-        (corfu-insert))
+        ;; Handling of file completion (next 2 lines)
+        (if (string-suffix-p "/" (car corfu--candidates))
+            (corfu-complete)
+          (corfu--goto 0)
+          (corfu-insert)))
     (let* ((input (car corfu--input))
            (str (if (thing-at-point 'filename) (file-name-nondirectory input) input))
            (pt (length str))
@@ -1015,24 +1018,38 @@ variants of Typescript.")
       (when (and (> pt 0)
                  (stringp common)
                  (not (string= str common)))
-        (if (and (string= common (car corfu--candidates))
-                 ;; remove next line if you want to end completion if the current prefix is equal to the first completion
-                 (not (string-prefix-p common (nth 1 corfu--candidates))))
-            (progn
-              (corfu--goto 0)
-              (corfu-insert))
-          (insert (substring common pt)))))))
+        ;; Handling of file completion (next 2 lines)
+        (if (string-suffix-p "/" common)
+            (corfu-complete)
+          (if (and (string= common (car corfu--candidates))
+                   ;; remove next line if you want to end completion if the current prefix is equal to the first completion
+                   (not (string-prefix-p common (nth 1 corfu--candidates))))
+              (progn
+                (corfu--goto 0)
+                (corfu-insert))
+            (insert (substring common pt))))))))
+
+(defun corfu-insert-maybe ()
+  (interactive)
+  ;; Handling of file completion (next 2 lines)
+  (if (string-suffix-p "/" (nth corfu--index corfu--candidates))
+      (corfu-complete)
+    (corfu-insert)))
 
 (use-package corfu
   :bind
   (("M-RET" . completion-at-point))
   (:map corfu-map
         ("C-s" . corfu-insert-separator)
-        ("<tab>" . corfu-complete-common))
+        ("<tab>" . corfu-complete-common)
+        ("<ret>" . corfu-insert-maybe)
+        ("RET" . corfu-insert-maybe)
+        ("M-RET" . corfu-insert))
   :custom
   (corfu-auto t)
-  (corfu-auto-delay 0)
+  (corfu-auto-delay 0.05)
   (corfu-auto-prefix 2)
+  (corfu-preview-current nil)
   ;; (completion-styles '(basic))
   :init
   (global-corfu-mode))
@@ -1050,7 +1067,7 @@ variants of Typescript.")
   :hook
   (python-mode . conf--setup-simple-completion)
   :init
-  (setq conf--basic-completion-functions `(,(cape-company-to-capf 'company-dabbrev-code) cape-file cape-keyword))
+  (setq conf--basic-completion-functions `(cape-file ,(cape-company-to-capf 'company-dabbrev-code) cape-keyword))
   (setq completion-at-point-functions conf--basic-completion-functions))
 
 ;; load graphic settings
