@@ -767,11 +767,12 @@ With argument ARG, do this that many times."
   (c-mode . eglot-ensure)
   (c++-mode . eglot-ensure)
   (typescript-mode . eglot-ensure)
-  (typescript-mode . (lambda () (setq-local company-backends conf--basic-completion-backends)))
+  (typescript-mode . conf--setup-simple-completion)
   :config
 
   (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed")))
-  (setq eldoc-echo-area-use-multiline-p 7)
+  ;; (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed" "--header-insertion-decorators=0")))
+  (setq eldoc-echo-area-use-multiline-p 3)
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
 
@@ -995,39 +996,43 @@ variants of Typescript.")
   :config
   (which-key-mode))
 
-;; (use-package eldoc-box
-;;   :init
-;;   (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode t))
+(use-package eldoc-box
+  :bind
+  (("M-§" . eldoc-box-help-at-point)))
 
 ;; (add-to-list 'eglot-ignored-server-capabilites :hoverProvider)
+
 
 (defun corfu-complete-common ()
   "Complete common prefix or go to next candidate."
   (interactive)
-  (if (= corfu--total 1)
-      (progn
-        ;; Handling of file completion (next 2 lines)
-        (if (string-suffix-p "/" (car corfu--candidates))
-            (corfu-complete)
-          (corfu--goto 0)
-          (corfu-insert)))
-    (let* ((input (car corfu--input))
-           (str (if (thing-at-point 'filename) (file-name-nondirectory input) input))
-           (pt (length str))
-           (common (try-completion str corfu--candidates)))
-      (when (and (> pt 0)
-                 (stringp common)
-                 (not (string= str common)))
-        ;; Handling of file completion (next 2 lines)
-        (if (string-suffix-p "/" common)
-            (corfu-complete)
-          (if (and (string= common (car corfu--candidates))
-                   ;; remove next line if you want to end completion if the current prefix is equal to the first completion
-                   (not (string-prefix-p common (nth 1 corfu--candidates))))
-              (progn
-                (corfu--goto 0)
-                (corfu-insert))
-            (insert (substring common pt))))))))
+  (if (yas--templates-for-key-at-point)
+      (progn (message "Use tab once again to expand snippet")
+             (corfu-quit))
+    (if (= corfu--total 1)
+        (progn
+          ;; Handling of file completion (next 2 lines)
+          (if (string-suffix-p "/" (car corfu--candidates))
+              (corfu-complete)
+            (corfu--goto 0)
+            (corfu-insert)))
+      (let* ((input (car corfu--input))
+             (str (if (thing-at-point 'filename) (file-name-nondirectory input) input))
+             (pt (length str))
+             (common (try-completion str corfu--candidates)))
+        (when (and (> pt 0)
+                   (stringp common)
+                   (not (string= str common)))
+          ;; Handling of file completion (next 2 lines)
+          (if (string-suffix-p "/" common)
+              (corfu-complete)
+            (if (and (string= common (car corfu--candidates))
+                     ;; remove next line if you want to end completion if the current prefix is equal to the first completion
+                     (not (string-prefix-p common (nth 1 corfu--candidates))))
+                (progn
+                  (corfu--goto 0)
+                  (corfu-insert))
+              (insert (substring common pt)))))))))
 
 (defun corfu-insert-maybe ()
   (interactive)
@@ -1072,6 +1077,7 @@ variants of Typescript.")
 (use-package cape
   :hook
   (python-mode . conf--setup-simple-completion)
+  (lisp-mode . conf--setup-simple-completion)
   :init
   (setq conf--basic-completion-functions `(cape-file ,(cape-company-to-capf 'company-dabbrev-code) cape-keyword))
   (setq completion-at-point-functions conf--basic-completion-functions))
