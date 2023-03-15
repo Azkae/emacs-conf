@@ -770,8 +770,8 @@ With argument ARG, do this that many times."
   (typescript-mode . conf--setup-simple-completion)
   :config
 
-  (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed")))
-  ;; (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed" "--header-insertion-decorators=0")))
+  ;; (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed")))
+  (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed" "--header-insertion-decorators=0" "--header-insertion=never")))
   (setq eldoc-echo-area-use-multiline-p 3)
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
@@ -1003,8 +1003,30 @@ variants of Typescript.")
 ;; (add-to-list 'eglot-ignored-server-capabilites :hoverProvider)
 
 
-(defun corfu-complete-common ()
-  "Complete common prefix or go to next candidate."
+;; ;; --- fix dot sorting ---
+(defsubst conf--remove-leading-dot (v)
+  (string-remove-prefix "•" v))
+
+;; (defsubst conf--dot-length-string< (x y)
+;;   "Sorting predicate which compares X and Y first by length then by `string<'."
+;;   (let ((x_ (conf--remove-leading-dot x)) (y_ (conf--remove-leading-dot y)))
+;;     ;; (message "%s %s %s %s %s" x_ y_ (length x_) (length y_) (or (< (length x_) (length y_)) (and (= (length x_) (length y_)) (string< x_ y_))))
+;;     (or (< (length x_) (length y_)) (and (= (length x_) (length y_)) (string< x_ y_)))))
+
+;; (defun conf--corfu-sort (list)
+;;   "Sort LIST by length and alphabetically."
+;;   ;; (message "%s" (sort list 'conf--dot-length-string<))
+;;   (sort list 'conf--dot-length-string<))
+
+;; (defun conf--corfu-move-candidates-to-front (corfu--move-prefix-candidates-to-front &rest args)
+;;     (let ((message-log-max nil)
+;;           (inhibit-message t))
+;;       (apply undo-tree-save-history args)))
+;; ;; --- !fix dot sorting ---
+
+
+(defun conf--corfu-compete ()
+  "Complete common prefix"
   (interactive)
   (if (yas--templates-for-key-at-point)
       (progn (message "Use tab once again to expand snippet")
@@ -1019,22 +1041,29 @@ variants of Typescript.")
       (let* ((input (car corfu--input))
              (str (if (thing-at-point 'filename) (file-name-nondirectory input) input))
              (pt (length str))
-             (common (try-completion str corfu--candidates)))
+             (candidates (mapcar 'conf--remove-leading-dot corfu--candidates))
+             (common (try-completion str candidates))
+             (first-parent (string-search "(" common))
+             (first-angle-bracket (string-search "<" common))
+             (endpt (or
+                     (and first-parent first-angle-bracket (min first-parent first-angle-bracket))
+                     first-parent
+                     first-angle-bracket)))
         (when (and (> pt 0)
                    (stringp common)
                    (not (string= str common)))
           ;; Handling of file completion (next 2 lines)
           (if (string-suffix-p "/" common)
               (corfu-complete)
-            (if (and (string= common (car corfu--candidates))
+            (if (and (string= common (car candidates))
                      ;; remove next line if you want to end completion if the current prefix is equal to the first completion
-                     (not (string-prefix-p common (nth 1 corfu--candidates))))
+                     (not (string-prefix-p common (nth 1 candidates))))
                 (progn
                   (corfu--goto 0)
                   (corfu-insert))
-              (insert (substring common pt)))))))))
+              (insert (substring common pt endpt)))))))))
 
-(defun corfu-insert-maybe ()
+(defun conf--corfu-insert ()
   (interactive)
   ;; Handling of file completion (next 2 lines)
   (if (string-suffix-p "/" (nth corfu--index corfu--candidates))
@@ -1044,15 +1073,16 @@ variants of Typescript.")
 (defun conf--corfu-active-p ()
   (and corfu-mode completion-in-region-mode))
 
+
 (use-package corfu
   :bind
   (("M-RET" . completion-at-point))
   (:map corfu-map
         ("C-s" . corfu-insert-separator)
-        ("TAB" . corfu-complete-common)
-        ("<tab>" . corfu-complete-common)
-        ("RET" . corfu-insert-maybe)
-        ("<ret>" . corfu-insert-maybe)
+        ("TAB" . conf--corfu-compete)
+        ("<tab>" . conf--corfu-compete)
+        ("RET" . conf--corfu-insert)
+        ("<ret>" . conf--corfu-insert)
         ("M-RET" . corfu-insert))
   :hook
   (corfu-mode . (lambda () (add-hook 'yas-keymap-disable-hook 'conf--corfu-active-p nil t)))
@@ -1061,9 +1091,13 @@ variants of Typescript.")
   (corfu-auto-delay 0.05)
   (corfu-auto-prefix 2)
   (corfu-preview-current nil)
+  ;; (corfu-sort-function 'conf--corfu-sort)
+  ;; (corfu-sort-override-function 'conf--corfu-sort)
   ;; (completion-styles '(basic))
   :init
-  (global-corfu-mode))
+  (global-corfu-mode)
+  ;; (advice-add 'corfu--move-prefix-candidates-to-front :around 'conf--corfu-move-candidates-to-front)
+  )
 
 (defun conf--setup-simple-completion()
   (setq-local completion-at-point-functions conf--basic-completion-functions))
