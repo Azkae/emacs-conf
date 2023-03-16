@@ -355,26 +355,26 @@
 ;; (global-company-mode)
 
 
-(use-package flycheck
-  :bind
-  (("C-c i f" . flycheck-mode)
-   :map flycheck-mode-map
-   ("C-c i l" . flycheck-list-errors))
-  :config
-  (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  
-  (flycheck-define-checker
-      python-mypy ""
-      :command ("dmypy-single-file" source-original)
-      :error-patterns
-      ((error line-start (file-name) ":" line ": error:" (message) line-end))
-      :modes python-mode)
+;; (use-package flycheck
+;;   :bind
+;;   (("C-c i f" . flycheck-mode)
+;;    :map flycheck-mode-map
+;;    ("C-c i l" . flycheck-list-errors))
+;;   :config
+;;   (setq flycheck-check-syntax-automatically '(save mode-enabled))
 
-  (add-to-list 'flycheck-checkers 'python-mypy t)
-  (flycheck-add-next-checker 'python-flake8 'python-mypy t)
-  
-  :hook ((python-mode) . #'flycheck-mode)
-  )
+;;   (flycheck-define-checker
+;;       python-mypy ""
+;;       :command ("dmypy-single-file" source-original)
+;;       :error-patterns
+;;       ((error line-start (file-name) ":" line ": error:" (message) line-end))
+;;       :modes python-mode)
+
+;;   (add-to-list 'flycheck-checkers 'python-mypy t)
+;;   (flycheck-add-next-checker 'python-flake8 'python-mypy t)
+
+;;   :hook ((python-mode) . #'flycheck-mode)
+;;   )
 
 (use-package ws-butler
   :diminish ws-butler-mode
@@ -769,6 +769,7 @@ With argument ARG, do this that many times."
   (c++-mode . eglot-ensure)
   (typescript-mode . eglot-ensure)
   (typescript-mode . conf--setup-simple-completion)
+  (python-mode . eglot-ensure)
   :config
 
   ;; (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed")))
@@ -1140,7 +1141,7 @@ variants of Typescript.")
 
 (use-package cape
   :hook
-  (python-mode . conf--setup-simple-completion)
+  ;; (python-mode . conf--setup-simple-completion)
   (emacs-lisp-mode . conf--setup-simple-completion)
   (sh-mode . conf--setup-simple-completion)
   :init
