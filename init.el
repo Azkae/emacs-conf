@@ -573,6 +573,7 @@ With argument ARG, do this that many times."
     (helm-do-ag (projectile-project-root) nil (symbol-name (symbol-at-point))))
 
 (define-key prog-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
+(define-key emacs-lisp-mode-map (kbd "M-.") 'xref-find-definitions)
 
 (setq projectile-keymap-prefix (kbd "M-p"))
 (use-package projectile
@@ -1004,8 +1005,8 @@ variants of Typescript.")
 
 
 ;; ;; --- fix dot sorting ---
-(defsubst conf--remove-leading-dot (v)
-  (string-remove-prefix "•" v))
+;; (defsubst conf--remove-leading-dot (v)
+;;   (string-remove-prefix "•" v))
 
 ;; (defsubst conf--dot-length-string< (x y)
 ;;   "Sorting predicate which compares X and Y first by length then by `string<'."
@@ -1025,7 +1026,7 @@ variants of Typescript.")
 ;; ;; --- !fix dot sorting ---
 
 
-(defun conf--corfu-compete ()
+(defun conf--corfu-complete ()
   "Complete common prefix"
   (interactive)
   (if (yas--templates-for-key-at-point)
@@ -1041,27 +1042,33 @@ variants of Typescript.")
       (let* ((input (car corfu--input))
              (str (if (thing-at-point 'filename) (file-name-nondirectory input) input))
              (pt (length str))
-             (candidates (mapcar 'conf--remove-leading-dot corfu--candidates))
-             (common (try-completion str candidates))
-             (first-parent (string-search "(" common))
-             (first-angle-bracket (string-search "<" common))
-             (endpt (or
-                     (and first-parent first-angle-bracket (min first-parent first-angle-bracket))
-                     first-parent
-                     first-angle-bracket)))
-        (when (and (> pt 0)
-                   (stringp common)
-                   (not (string= str common)))
-          ;; Handling of file completion (next 2 lines)
-          (if (string-suffix-p "/" common)
-              (corfu-complete)
-            (if (and (string= common (car candidates))
-                     ;; remove next line if you want to end completion if the current prefix is equal to the first completion
-                     (not (string-prefix-p common (nth 1 candidates))))
-                (progn
-                  (corfu--goto 0)
-                  (corfu-insert))
-              (insert (substring common pt endpt)))))))))
+             ;; (candidates (mapcar 'conf--remove-leading-dot corfu--candidates))
+             (candidates corfu--candidates)
+             (common (try-completion str candidates)))
+
+        ;; if no common string is found, try re-fetching candidates,
+        ;; ex: if the completion started from an empty string
+        (if (not common)
+            (conf--corfu-reset)
+          (let* ((first-parent (string-search "(" common))
+                 (first-angle-bracket (string-search "<" common))
+                 (endpt (or
+                         (and first-parent first-angle-bracket (min first-parent first-angle-bracket))
+                         first-parent
+                         first-angle-bracket)))
+            (when (and (> pt 0)
+                       (stringp common)
+                       (not (string= str common)))
+              ;; Handling of file completion (next 2 lines)
+              (if (string-suffix-p "/" common)
+                  (corfu-complete)
+                (if (and (string= common (car candidates))
+                         ;; remove next line if you want to end completion if the current prefix is equal to the first completion
+                         (not (string-prefix-p common (nth 1 candidates))))
+                    (progn
+                      (corfu--goto 0)
+                      (corfu-insert))
+                  (insert (substring common pt endpt)))))))))))
 
 (defun conf--corfu-insert ()
   (interactive)
@@ -1073,19 +1080,36 @@ variants of Typescript.")
 (defun conf--corfu-active-p ()
   (and corfu-mode completion-in-region-mode))
 
+(defun conf--corfu-reset()
+  (interactive)
+  (corfu-quit)
+  (corfu--auto-complete-deferred))
+
+(defun conf--corfu-post-command()
+  "Refresh completion when prefix length is 3 and no candidates are found."
+  (when completion-in-region-mode
+    (let* ((input (car corfu--input))
+           (str (if (thing-at-point 'filename) (file-name-nondirectory input) input))
+           (len (length str))
+           (candidates corfu--candidates))
+      (when (and (= len 3)
+                 (not (try-completion str candidates)))
+        (conf--corfu-reset)))))
 
 (use-package corfu
   :bind
   (("M-RET" . completion-at-point))
   (:map corfu-map
         ("C-s" . corfu-insert-separator)
-        ("TAB" . conf--corfu-compete)
-        ("<tab>" . conf--corfu-compete)
+        ("TAB" . conf--corfu-complete)
+        ("<tab>" . conf--corfu-complete)
         ("RET" . conf--corfu-insert)
         ("<ret>" . conf--corfu-insert)
-        ("M-RET" . corfu-insert))
+        ("M-RET" . conf--corfu-reset))
   :hook
-  (corfu-mode . (lambda () (add-hook 'yas-keymap-disable-hook 'conf--corfu-active-p nil t)))
+  (corfu-mode . (lambda ()
+                  (add-hook 'yas-keymap-disable-hook 'conf--corfu-active-p nil t)
+                  (add-hook 'post-command-hook #'conf--corfu-post-command)))
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0.05)

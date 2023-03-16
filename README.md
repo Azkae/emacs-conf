@@ -78,3 +78,11 @@ Apply helm patch for OSX:
 cd ~/.emacs.d/straight/repos/helm
 git apply ~/emacs-conf/helm.patch
 ```
+
+TODO:
+- try without fork on helm-ag: https://github.com/Azkae/emacs-helm-ag/compare/master...emacsorphanage:helm-ag:master
+  they added finished status on modeline
+
+- try consult & https://github.com/mhayashi1120/Emacs-wgrep to replace helm & helm-ag?
+  see embark: https://github.com/oantolin/embark
+  > If you use the grepping commands from the Consult package, consult-grep, consult-git-grep or consult-ripgrep, then you should install the embark-consult package, which adds support for exporting a list of grep results to an honest grep-mode buffer, on which you can even use wgrep if you wish.
