@@ -1135,7 +1135,8 @@ variants of Typescript.")
 (use-package cape
   :hook
   (python-mode . conf--setup-simple-completion)
-  (lisp-mode . conf--setup-simple-completion)
+  (emacs-lisp-mode . conf--setup-simple-completion)
+  (sh-mode . conf--setup-simple-completion)
   :init
   (setq conf--basic-completion-functions `(cape-file ,(cape-company-to-capf 'company-dabbrev-code) cape-keyword))
   (setq completion-at-point-functions conf--basic-completion-functions))
