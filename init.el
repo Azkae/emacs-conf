@@ -1093,6 +1093,8 @@ variants of Typescript.")
            (len (length str))
            (candidates corfu--candidates))
       (when (and (= len 3)
+                 ;; (>= len 3)
+                 ;; (= (% len 3) 0)
                  (not (try-completion str candidates)))
         (conf--corfu-reset)))))
 
