@@ -1102,6 +1102,10 @@ variants of Typescript.")
   :bind
   (("M-RET" . completion-at-point))
   (:map corfu-map
+        ("C-a" . nil)
+        ("C-e" . nil)
+        ("<remap> <move-beginning-of-line>" . nil)
+        ("<remap> <move-end-of-line>" . nil)
         ("C-s" . corfu-insert-separator)
         ("TAB" . conf--corfu-complete)
         ("<tab>" . conf--corfu-complete)
