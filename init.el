@@ -1119,7 +1119,7 @@ variants of Typescript.")
                   (add-hook 'post-command-hook #'conf--corfu-post-command)))
   :custom
   (corfu-auto t)
-  (corfu-auto-delay 0.05)
+  (corfu-auto-delay 0.01)
   (corfu-auto-prefix 2)
   (corfu-preview-current nil)
   ;; (corfu-sort-function 'conf--corfu-sort)
