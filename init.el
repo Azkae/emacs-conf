@@ -774,7 +774,7 @@ With argument ARG, do this that many times."
 
   ;; (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed")))
   (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed" "--header-insertion-decorators=0" "--header-insertion=never")))
-  (setq eldoc-echo-area-use-multiline-p 3)
+  (setq eldoc-echo-area-use-multiline-p 2)
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
 
@@ -995,6 +995,7 @@ variants of Typescript.")
 (use-package treemacs-projectile)
 
 (use-package which-key
+  :diminish which-key-mode
   :config
   (which-key-mode))
 
@@ -1088,7 +1089,7 @@ variants of Typescript.")
 
 (defun conf--corfu-post-command()
   "Refresh completion when prefix length is 3 and no candidates are found."
-  (when completion-in-region-mode
+  (when (and corfu-mode completion-in-region-mode)
     (let* ((input (car corfu--input))
            (str (if (thing-at-point 'filename) (file-name-nondirectory input) input))
            (len (length str))
