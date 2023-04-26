@@ -408,81 +408,81 @@ With argument ARG, do this that many times."
   (delete-slash)
   (insert "/"))
 
-;; performance regression on helm on mac os.
-;; run on helm repo:
-;; git revert 1ecefa3840aa5bdd8d4959d2c4efd3ea0e433f64 && git reset HEAD~1
-(use-package helm
-  :diminish helm-mode
-  :bind
-  (("M-f"         . helm-occur)
-   ("C-x C-f"     . helm-find-files)
-   ("C-x b"       . helm-mini)
-   ("C-b"         . helm-resume)
-   ("C-p"         . helm-buffers-list)
-   ("M-X"         . helm-M-x)
-   ("M-o"         . helm-find-files)
-   ("M-O"         . helm-buffers-list)
-   ("C-x c M-y"   . helm-show-kill-ring)
-   :map helm-map
-   ("<right>"     . nil)
-   ("<left>"      . nil)
-   ("M-v"         . yank)
-   ("C-i"         . helm-execute-persistent-action) ;tab
-   ("M-z"         . helm-select-action) ;tab
-   ([M-backspace] . backward-delete-word)
-   ("<M-down>"    . helm-scroll-other-window)
-   ("<M-up>"      . helm-scroll-other-window-down)
-   ("DEL"         . nil)
-   :map helm-occur-map
-   ("<right>"     . nil)
-   ("<left>"      . nil)
-   ("<M-down>"    . helm-scroll-other-window)
-   ("<M-up>"      . helm-scroll-other-window-down)
-   :map helm-find-files-map
-   ("<M-down>"    . helm-scroll-other-window)
-   ("<M-up>"      . helm-scroll-other-window-down)
-   ("M-e"         . helm-config--ff-open-vterm)
-   ("M-r"         . helm-ff-run-rename-file)
-   ("DEL"         . nil)
-   ([M-backspace] . delete-until-slash)
-   :map helm-read-file-map
-   ([M-backspace] . delete-until-slash)
-   :map helm-grep-map
-   ("<M-down>"    . helm-scroll-other-window)
-   ("<M-up>"      . helm-scroll-other-window-down)
-   ("<right>"     . nil)
-   ("<left>"      . nil)
-   ("DEL"         . nil))
-  :config
-  (setq
-   helm-buffers-fuzzy-matching t
-   helm-ff-newfile-prompt-p nil
-   helm-split-window-in-side-p t
-   helm-echo-input-in-header-line t
-   ;; Disable helm in minibuffer region completion (eval-expression for example)
-   helm-mode-handle-completion-in-region nil
-   helm-moccur-use-ioccur-style-keys nil
-   helm-scroll-amount 6
-   helm-moccur-show-buffer-fontification t
-   helm-find-files-ignore-thing-at-point t)
-  (helm-mode))
+;; ;; performance regression on helm on mac os.
+;; ;; run on helm repo:
+;; ;; git revert 1ecefa3840aa5bdd8d4959d2c4efd3ea0e433f64 && git reset HEAD~1
+;; (use-package helm
+;;   :diminish helm-mode
+;;   :bind
+;;   (("M-f"         . helm-occur)
+;;    ("C-x C-f"     . helm-find-files)
+;;    ("C-x b"       . helm-mini)
+;;    ("C-b"         . helm-resume)
+;;    ("C-p"         . helm-buffers-list)
+;;    ("M-X"         . helm-M-x)
+;;    ("M-o"         . helm-find-files)
+;;    ("M-O"         . helm-buffers-list)
+;;    ("C-x c M-y"   . helm-show-kill-ring)
+;;    :map helm-map
+;;    ("<right>"     . nil)
+;;    ("<left>"      . nil)
+;;    ("M-v"         . yank)
+;;    ("C-i"         . helm-execute-persistent-action) ;tab
+;;    ("M-z"         . helm-select-action) ;tab
+;;    ([M-backspace] . backward-delete-word)
+;;    ("<M-down>"    . helm-scroll-other-window)
+;;    ("<M-up>"      . helm-scroll-other-window-down)
+;;    ("DEL"         . nil)
+;;    :map helm-occur-map
+;;    ("<right>"     . nil)
+;;    ("<left>"      . nil)
+;;    ("<M-down>"    . helm-scroll-other-window)
+;;    ("<M-up>"      . helm-scroll-other-window-down)
+;;    :map helm-find-files-map
+;;    ("<M-down>"    . helm-scroll-other-window)
+;;    ("<M-up>"      . helm-scroll-other-window-down)
+;;    ("M-e"         . helm-config--ff-open-vterm)
+;;    ("M-r"         . helm-ff-run-rename-file)
+;;    ("DEL"         . nil)
+;;    ([M-backspace] . delete-until-slash)
+;;    :map helm-read-file-map
+;;    ([M-backspace] . delete-until-slash)
+;;    :map helm-grep-map
+;;    ("<M-down>"    . helm-scroll-other-window)
+;;    ("<M-up>"      . helm-scroll-other-window-down)
+;;    ("<right>"     . nil)
+;;    ("<left>"      . nil)
+;;    ("DEL"         . nil))
+;;   :config
+;;   (setq
+;;    helm-buffers-fuzzy-matching t
+;;    helm-ff-newfile-prompt-p nil
+;;    helm-split-window-in-side-p t
+;;    helm-echo-input-in-header-line t
+;;    ;; Disable helm in minibuffer region completion (eval-expression for example)
+;;    helm-mode-handle-completion-in-region nil
+;;    helm-moccur-use-ioccur-style-keys nil
+;;    helm-scroll-amount 6
+;;    helm-moccur-show-buffer-fontification t
+;;    helm-find-files-ignore-thing-at-point t)
+;;   (helm-mode))
 
-(use-package helm-ag
-  :straight (helm-ag :type git :host github :repo "emacsorphanage/helm-ag"
-                     :fork (:host github :repo "Azkae/emacs-helm-ag"))
-  :bind
-  (("M-R"         . helm-do-ag)
-   ("M-F"         . helm-do-ag-buffers)
-   :map helm-find-files-map
-   ("M-R"         . helm-config--ff-run-helm-ag)
-   :map helm-ag-mode-map
-   ("<right>"     . nil)
-   ("<left>"      . nil)
-   :map helm-do-ag-map
-   ("<right>"     . nil)
-   ("<left>"      . nil)
-   :map helm-ag-edit-map
-   ("RET"         . helm-ag-mode-jump-other-window)))
+;; (use-package helm-ag
+;;   :straight (helm-ag :type git :host github :repo "emacsorphanage/helm-ag"
+;;                      :fork (:host github :repo "Azkae/emacs-helm-ag"))
+;;   :bind
+;;   (("M-R"         . helm-do-ag)
+;;    ("M-F"         . helm-do-ag-buffers)
+;;    :map helm-find-files-map
+;;    ("M-R"         . helm-config--ff-run-helm-ag)
+;;    :map helm-ag-mode-map
+;;    ("<right>"     . nil)
+;;    ("<left>"      . nil)
+;;    :map helm-do-ag-map
+;;    ("<right>"     . nil)
+;;    ("<left>"      . nil)
+;;    :map helm-ag-edit-map
+;;    ("RET"         . helm-ag-mode-jump-other-window)))
 
 ;; (defun remove-helm-smartparens ()
 ;;   (smartparens-mode -1))
@@ -562,7 +562,7 @@ With argument ARG, do this that many times."
   (interactive)
     (helm-do-ag (projectile-project-root) nil (symbol-name (symbol-at-point))))
 
-(define-key prog-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
+;; (define-key prog-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
 (define-key emacs-lisp-mode-map (kbd "M-.") 'xref-find-definitions)
 
 (setq projectile-keymap-prefix (kbd "M-p"))
@@ -579,6 +579,7 @@ With argument ARG, do this that many times."
               (remove-hook 'find-file-hook #'projectile-visit-project-tags-table t))))
 
 (setq helm-projectile-fuzzy-match nil)
+
 (use-package helm-projectile
   :bind
   (:map helm-projectile-find-file-map
@@ -1137,6 +1138,215 @@ variants of Typescript.")
   :init
   (setq conf--basic-completion-functions `(cape-file ,(cape-company-to-capf 'company-dabbrev-code) cape-keyword))
   (setq completion-at-point-functions conf--basic-completion-functions))
+
+(use-package vertico
+  :init
+  (vertico-mode)
+
+  ;; Different scroll margin
+  ;; (setq vertico-scroll-margin 0)
+
+  ;; Show more candidates
+  (setq vertico-count 30)
+  (setq projectile-completion-system 'default)
+
+  ;; Grow and shrink the Vertico minibuffer
+  (setq vertico-resize nil)
+  ;; (setq resize-mini-windows nil)
+
+  ;; Optionally enable cycling for `vertico-next' and `vertico-previous'.
+  ;; (setq vertico-cycle t)
+  )
+
+;; Persist history over Emacs restarts. Vertico sorts by history position.
+(use-package savehist
+  :init
+  (savehist-mode))
+
+;; A few more useful configurations...
+(use-package emacs
+  :init
+  ;; Add prompt indicator to `completing-read-multiple'.
+  ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+                  (replace-regexp-in-string
+                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                   crm-separator)
+                  (car args))
+          (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+  ;; Do not allow the cursor in the minibuffer prompt
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+
+  ;; Emacs 28: Hide commands in M-x which do not work in the current mode.
+  ;; Vertico commands are hidden in normal buffers.
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
+
+  ;; Enable recursive minibuffers
+  (setq enable-recursive-minibuffers t))
+
+(use-package orderless
+  :init
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (setq orderless-style-dispatchers '(+orderless-consult-dispatch orderless-affix-dispatch)
+  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+  (setq completion-styles '(substring orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
+
+
+(defun conf--consult-line ()
+  (interactive)
+  (consult-line (thing-at-point 'symbol)))
+
+(defun conf--consult-ripgrep ()
+  (interactive)
+  (consult-ripgrep nil (thing-at-point 'symbol)))
+
+(defun conf--consult-line2 (&optional initial start)
+  "Search for a matching line.
+
+Depending on the setting `consult-point-placement' the command
+jumps to the beginning or the end of the first match on the line
+or the line beginning.  The default candidate is the non-empty
+line next to point.  This command obeys narrowing.  Optional
+INITIAL input can be provided.  The search starting point is
+changed if the START prefix argument is set.  The symbol at point
+and the last `isearch-string' is added to the future history."
+  (interactive (list nil (not (not current-prefix-arg))))
+  (let* ((curr-line (line-number-at-pos (point) consult-line-numbers-widen))
+         (top (not (eq start consult-line-start-from-top)))
+         (candidates (consult--slow-operation "Collecting lines..."
+                       (consult--line-candidates top curr-line))))
+    (consult--read
+     candidates
+     :prompt (if top "Go to line from top: " "Go to line: ")
+     :annotate (consult--line-prefix curr-line)
+     :category 'consult-location
+     :sort nil
+     :require-match t
+     ;; Always add last `isearch-string' to future history
+     :add-history (list (thing-at-point 'symbol) isearch-string)
+     :history '(:input consult--line-history)
+     :lookup #'consult--line-match
+     :default (car candidates)
+     ;; Add `isearch-string' as initial input if starting from Isearch
+     :initial "test"
+     :state (consult--location-state candidates))))
+
+
+(use-package consult
+  :bind
+  (
+   ("M-f"         . consult-line)
+   ;; ("C-x C-f"     . helm-find-files)
+   ("C-x b"       . consult-buffer)
+   ;; ("C-b"         . helm-resume)
+   ;; ("C-p"         . helm-buffers-list)
+   ("M-R"         . consult-ripgrep)
+   ("M-X"         . execute-extended-command)
+   ("M-o"         . find-file)
+   ("M-O"         . consult-buffer)
+   :map prog-mode-map
+   ("M-."         . conf--consult-ripgrep)
+   ;; ("C-x c M-y"   . helm-show-kill-ring)
+   ;; :map helm-map
+   ;; ("<right>"     . nil)
+   ;; ("<left>"      . nil)
+   ;; ("M-v"         . yank)
+   ;; ("C-i"         . helm-execute-persistent-action) ;tab
+   ;; ("M-z"         . helm-select-action) ;tab
+   ;; ([M-backspace] . backward-delete-word)
+   ;; ("<M-down>"    . helm-scroll-other-window)
+   ;; ("<M-up>"      . helm-scroll-other-window-down)
+   ;; ("DEL"         . nil)
+   ;; :map helm-occur-map
+   ;; ("<right>"     . nil)
+   ;; ("<left>"      . nil)
+   ;; ("<M-down>"    . helm-scroll-other-window)
+   ;; ("<M-up>"      . helm-scroll-other-window-down)
+   ;; :map helm-find-files-map
+   ;; ("<M-down>"    . helm-scroll-other-window)
+   ;; ("<M-up>"      . helm-scroll-other-window-down)
+   ;; ("M-e"         . helm-config--ff-open-vterm)
+   ;; ("M-r"         . helm-ff-run-rename-file)
+   ;; ("DEL"         . nil)
+   ;; ([M-backspace] . delete-until-slash)
+   ;; :map helm-read-file-map
+   ;; ([M-backspace] . delete-until-slash)
+   ;; :map helm-grep-map
+   ;; ("<M-down>"    . helm-scroll-other-window)
+   ;; ("<M-up>"      . helm-scroll-other-window-down)
+   ;; ("<right>"     . nil)
+   ;; ("<left>"      . nil)
+   ;; ("DEL"         . nil))
+   )
+  :config
+  (setq consult-line-start-from-top 't))
+
+(consult-customize
+ consult-ripgrep consult-git-grep consult-grep
+ consult-bookmark consult-recent-file consult-xref
+ consult--source-bookmark consult--source-file-register
+ consult--source-recent-file consult--source-project-recent-file
+ :preview-key '(:debounce 0.05 any)) ;; Option 1: Delay preview
+
+
+;; (use-package consult-ag
+;;   :bind
+;;   (("M-R" . consult-ag)))
+
+
+(use-package marginalia
+  ;; Either bind `marginalia-cycle' globally or only in the minibuffer
+  :bind (("M-A" . marginalia-cycle)
+         :map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
+
+  ;; The :init configuration is always executed (Not lazy!)
+  :init
+
+  ;; Must be in the :init section of use-package such that the mode gets
+  ;; enabled right away. Note that this forces loading the package.
+  (marginalia-mode))
+
+(use-package embark
+  :bind
+  (("M-/" . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+  :init
+
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+  ;; Show the Embark target at point via Eldoc.  You may adjust the Eldoc
+  ;; strategy, if you want to see the documentation from multiple providers.
+  (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+  ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+
+  :config
+
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+(require 'embark-consult)
+
+
 
 ;; load graphic settings
 (require 'graphics)
