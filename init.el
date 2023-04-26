@@ -358,26 +358,16 @@
 ;; (global-company-mode)
 
 
-;; (use-package flycheck
-;;   :bind
-;;   (("C-c i f" . flycheck-mode)
-;;    :map flycheck-mode-map
-;;    ("C-c i l" . flycheck-list-errors))
-;;   :config
-;;   (setq flycheck-check-syntax-automatically '(save mode-enabled))
+(use-package flycheck
+  :bind
+  (("C-c i f" . flycheck-mode)
+   :map flycheck-mode-map
+   ("C-c i l" . flycheck-list-errors))
+  :config
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
 
-;;   (flycheck-define-checker
-;;       python-mypy ""
-;;       :command ("dmypy-single-file" source-original)
-;;       :error-patterns
-;;       ((error line-start (file-name) ":" line ": error:" (message) line-end))
-;;       :modes python-mode)
-
-;;   (add-to-list 'flycheck-checkers 'python-mypy t)
-;;   (flycheck-add-next-checker 'python-flake8 'python-mypy t)
-
-;;   :hook ((python-mode) . #'flycheck-mode)
-;;   )
+  :hook ((python-mode) . #'flycheck-mode)
+  )
 
 (use-package ws-butler
   :diminish ws-butler-mode
@@ -772,7 +762,7 @@ With argument ARG, do this that many times."
   (c++-mode . eglot-ensure)
   (typescript-mode . eglot-ensure)
   (typescript-mode . conf--setup-simple-completion)
-  (python-mode . eglot-ensure)
+  ;; (python-mode . eglot-ensure)
   :config
 
   ;; (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed")))
@@ -1016,7 +1006,6 @@ variants of Typescript.")
 ;; (defsubst conf--dot-length-string< (x y)
 ;;   "Sorting predicate which compares X and Y first by length then by `string<'."
 ;;   (let ((x_ (conf--remove-leading-dot x)) (y_ (conf--remove-leading-dot y)))
-;;     ;; (message "%s %s %s %s %s" x_ y_ (length x_) (length y_) (or (< (length x_) (length y_)) (and (= (length x_) (length y_)) (string< x_ y_))))
 ;;     (or (< (length x_) (length y_)) (and (= (length x_) (length y_)) (string< x_ y_)))))
 
 ;; (defun conf--corfu-sort (list)
@@ -1145,7 +1134,7 @@ variants of Typescript.")
 
 (use-package cape
   :hook
-  ;; (python-mode . conf--setup-simple-completion)
+  (python-mode . conf--setup-simple-completion)
   (emacs-lisp-mode . conf--setup-simple-completion)
   (sh-mode . conf--setup-simple-completion)
   :init
