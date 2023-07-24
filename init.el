@@ -329,8 +329,11 @@
 
 (use-package diminish)
 
+(diminish 'gcmh-mode)
 (diminish 'eldoc-mode)
 (diminish 'subword-mode)
+
+(add-hook 'cc-mode-hook (lambda () (abbrev-mode -1)))
 
 (electric-pair-mode)
 (electric-indent-mode)
