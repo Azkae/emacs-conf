@@ -79,6 +79,13 @@ cd ~/.emacs.d/straight/repos/helm
 git apply ~/emacs-conf/helm.patch
 ```
 
+### Notes:
+*Iterm*
+In `Profiles` -> `Advanced` -> `Sementic History`:
+Set to `Run command`, with value: `$PATH_TO/emacsclient -n +\2 \1`
+
+
+
 TODO:
 - try without fork on helm-ag: https://github.com/Azkae/emacs-helm-ag/compare/master...emacsorphanage:helm-ag:master
   they added finished status on modeline
