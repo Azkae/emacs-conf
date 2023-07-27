@@ -366,7 +366,8 @@
   :config
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
 
-  :hook ((python-mode) . #'flycheck-mode)
+  :hook
+  ((python-mode) . #'flycheck-mode)
   )
 
 (use-package ws-butler
@@ -382,7 +383,7 @@
   (("M-Z" . redo))
   :config
   (setq undo-tree-auto-save-history nil)
-  (setq undo-tree-enable-undo-in-region t)
+  (setq undo-tree-enable-undo-in-region nil)
   (setq undo-tree-history-directory-alist '((".*" . "~/.emacs.d/undo")))
   (defalias 'redo 'undo-tree-redo)
 
@@ -762,12 +763,12 @@ With argument ARG, do this that many times."
   (c++-mode . eglot-ensure)
   (typescript-mode . eglot-ensure)
   (typescript-mode . conf--setup-simple-completion)
-  ;; (python-mode . eglot-ensure)
+  (python-mode . eglot-ensure)
   :config
 
   ;; (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed")))
   (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed" "--header-insertion-decorators=0" "--header-insertion=never")))
-  (setq eldoc-echo-area-use-multiline-p 2)
+  (setq eldoc-echo-area-use-multiline-p 0.1)
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
 
@@ -775,7 +776,10 @@ With argument ARG, do this that many times."
 
 (use-package clang-format)
 
-(use-package json-mode)
+(use-package json-mode
+  :bind
+  (:map json-mode-map
+        ("M-." 'helm-config--helm-do-ag-projectile-project-symbol)))
 
 (use-package rust-mode)
 
@@ -832,9 +836,13 @@ With argument ARG, do this that many times."
   (:map vterm-mode-map
   ("M-z" . 'vterm-copy-mode)
   ("<down-mouse-1>" . 'vterm-copy-mode)
+  ("M-f" . (lambda () (interactive) (vterm-copy-mode 1) (helm-occur)))
   :map vterm-copy-mode-map
-  ("M-z" . 'vterm-copy-mode))
+  ("M-z" . 'vterm-copy-mode)
+  ("M-v" . (lambda () (interactive) (vterm-copy-mode -1) (vterm-yank))))
   :config
+  (define-key vterm-copy-mode-map [remap self-insert-command] #'(lambda() (interactive) (vterm-copy-mode -1)
+                                                                  (vterm--self-insert)))
   ;; (setq vterm-timer-delay 0.01)
   (setq vterm-timer-delay 0.025)
   ;; (setq vterm-timer-delay 0.1)
@@ -858,7 +866,7 @@ With argument ARG, do this that many times."
    :map vterm-mode-map
    ("M-E" . vterm-toggle-insert-cd))
   :config
-  (setq vterm-toggle-hide-method 'reset-window-configration)
+  (setq vterm-toggle-hide-method 'quit-window)
   (setq vterm-toggle-reset-window-configration-after-exit nil)
 
   ;;; TODO: try scope per project instead of a global shell
@@ -941,10 +949,10 @@ With argument ARG, do this that many times."
 (require 'tree-sitter)
 (require 'tree-sitter-langs)
 
-(use-package python-black
-  :demand t
-  :after python
-  :hook (python-mode . python-black-on-save-mode-enable-dwim))
+;; (use-package python-black
+;;   :demand t
+;;   :after python
+;;   :hook (python-mode . python-black-on-save-mode-enable-dwim))
 
 ;; (use-package python-mode
 ;;   :config
@@ -952,7 +960,7 @@ With argument ARG, do this that many times."
 ;;   :bind (:map python-mode-map
 ;;               (("C-j" . nil))))
 
-(setq-default typescript-indent-level 2)
+(setq-default typescript-indent-level 4)
 
 (use-package typescript-mode
   :config
@@ -1134,12 +1142,30 @@ variants of Typescript.")
 
 (use-package cape
   :hook
-  (python-mode . conf--setup-simple-completion)
+  ;; (python-mode . conf--setup-simple-completion)
   (emacs-lisp-mode . conf--setup-simple-completion)
   (sh-mode . conf--setup-simple-completion)
   :init
   (setq conf--basic-completion-functions `(cape-file ,(cape-company-to-capf 'company-dabbrev-code) cape-keyword))
   (setq completion-at-point-functions conf--basic-completion-functions))
+
+(use-package apheleia
+  :hook
+  (python-mode . apheleia-mode)
+  (c++-mode . apheleia-mode)
+  :init
+  ;; (apheleia-global-mode +1)
+  )
+
+(use-package realgud)
+(use-package realgud-lldb)
+
+(use-package ts-fold
+  :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold")
+  :bind
+  (("C-c C-d" . ts-fold-toggle)
+  :map python-mode-map
+  ("C-c C-d" . nil)))
 
 ;; load graphic settings
 (require 'graphics)
