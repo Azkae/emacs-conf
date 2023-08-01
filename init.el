@@ -835,7 +835,7 @@ With argument ARG, do this that many times."
   :bind
   (:map vterm-mode-map
   ("M-z" . 'vterm-copy-mode)
-  ("<down-mouse-1>" . 'vterm-copy-mode)
+  ("<mouse-1>" . 'vterm-copy-mode)
   ("M-f" . (lambda () (interactive) (vterm-copy-mode 1) (helm-occur)))
   :map vterm-copy-mode-map
   ("M-z" . 'vterm-copy-mode)
