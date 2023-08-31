@@ -79,6 +79,11 @@ cd ~/.emacs.d/straight/repos/helm
 git apply ~/emacs-conf/helm.patch
 ```
 
+Run
+```
+M-x nerd-icons-install-fonts
+```
+
 ### Notes:
 *Iterm*
 In `Profiles` -> `Advanced` -> `Sementic History`:

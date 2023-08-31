@@ -754,7 +754,7 @@ With argument ARG, do this that many times."
 
 (use-package eglot
   ;; TODO: try with emacs 29
-  ;; :straight nil
+  :straight nil
   :bind
   (:map eglot-mode-map
    ("M-." . xref-find-definitions))
@@ -777,9 +777,10 @@ With argument ARG, do this that many times."
 (use-package clang-format)
 
 (use-package json-mode
+  :straight nil
   :bind
   (:map json-mode-map
-        ("M-." 'helm-config--helm-do-ag-projectile-project-symbol)))
+        ("M-." . 'helm-config--helm-do-ag-projectile-project-symbol)))
 
 (use-package rust-mode)
 
@@ -844,7 +845,7 @@ With argument ARG, do this that many times."
   (define-key vterm-copy-mode-map [remap self-insert-command] #'(lambda() (interactive) (vterm-copy-mode -1)
                                                                   (vterm--self-insert)))
   ;; (setq vterm-timer-delay 0.01)
-  (setq vterm-timer-delay 0.025)
+  (setq vterm-timer-delay 0.1)
   ;; (setq vterm-timer-delay 0.1)
   )
 
@@ -1166,6 +1167,34 @@ variants of Typescript.")
   (("C-c C-d" . ts-fold-toggle)
   :map python-mode-map
   ("C-c C-d" . nil)))
+
+;; ;; Set native tree sitter language support
+;; ;; Install them with M-x treesit-install-language-grammar
+;; (setq treesit-language-source-alist
+;;    '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+;;      (cmake "https://github.com/uyha/tree-sitter-cmake")
+;;      (css "https://github.com/tree-sitter/tree-sitter-css")
+;;      (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+;;      (go "https://github.com/tree-sitter/tree-sitter-go")
+;;      (html "https://github.com/tree-sitter/tree-sitter-html")
+;;      (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
+;;      (json "https://github.com/tree-sitter/tree-sitter-json")
+;;      (make "https://github.com/alemuller/tree-sitter-make")
+;;      (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+;;      (python "https://github.com/tree-sitter/tree-sitter-python")
+;;      (toml "https://github.com/tree-sitter/tree-sitter-toml")
+;;      (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
+;;      (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
+;;      (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+;;      (c++ "https://github.com/tree-sitter/tree-sitter-cpp")))
+
+;; ;; Remap python-mode to python-ts-mode
+;; ;; You still need to adapt every hooks/map to the new mode
+;; ;; Eglot for instance
+;; ;; => Disabled for now
+;; (setq major-mode-remap-alist
+;;  '((python-mode . python-ts-mode)))
+
 
 ;; load graphic settings
 (require 'graphics)
