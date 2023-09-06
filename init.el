@@ -113,6 +113,7 @@
 (global-set-key (kbd "M-z") 'undo)
 (global-set-key (kbd "M-e") 'recenter)
 (global-set-key (kbd "M-N") 'goto-line)
+(global-set-key (kbd "M-k") 'compile)
 
 (defun move-up (amount)
   (condition-case nil
@@ -569,9 +570,25 @@ With argument ARG, do this that many times."
 (define-key prog-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
 (define-key emacs-lisp-mode-map (kbd "M-.") 'xref-find-definitions)
 
+(defun projectile-run-compile ()
+  "Invoke `gdb' in the project's root."
+  (interactive)
+  (projectile-with-default-dir (projectile-acquire-root)
+    (call-interactively 'compile)))
+
+(defun projectile-run-lldb ()
+  "Invoke `gdb' in the project's root."
+  (interactive)
+  (projectile-with-default-dir (projectile-acquire-root)
+    (call-interactively 'lldb)))
+
 (setq projectile-keymap-prefix (kbd "M-p"))
 (use-package projectile
   :diminish projectile-mode
+  :bind
+  (:map projectile-mode-map
+   ("M-p k" . projectile-run-compile)
+   ("M-p d" . projectile-run-lldb))
   :config
   (projectile-global-mode)
   (setq projectile-enable-caching nil
