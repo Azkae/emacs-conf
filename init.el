@@ -1189,7 +1189,15 @@ variants of Typescript.")
   )
 
 (use-package realgud)
-(use-package realgud-lldb)
+(use-package realgud-lldb
+  :bind
+  (:map realgud--lldb-track-mode-map
+        ("<M-up>"   . realgud:cmd-older-frame)
+        ("<M-down>" . realgud:cmd-newer-frame)
+        :map comint-mode-map
+        ("<up>"     . comint-previous-input)
+        ("<down>"   . comint-next-input)
+        ))
 
 (use-package ts-fold
   :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold")
@@ -1225,6 +1233,13 @@ variants of Typescript.")
 ;; (setq major-mode-remap-alist
 ;;  '((python-mode . python-ts-mode)))
 
+(use-package fancy-compilation
+  :commands (fancy-compilation-mode)
+  :custom
+  (fancy-compilation-override-colors nil))
+
+(with-eval-after-load 'compile
+  (fancy-compilation-mode))
 
 ;; load graphic settings
 (require 'graphics)
