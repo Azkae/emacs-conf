@@ -574,6 +574,7 @@ With argument ARG, do this that many times."
   (interactive)
     (helm-do-ag (projectile-project-root) nil (symbol-name (symbol-at-point))))
 
+(define-key text-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
 (define-key prog-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
 (define-key emacs-lisp-mode-map (kbd "M-.") 'xref-find-definitions)
 
@@ -777,8 +778,7 @@ With argument ARG, do this that many times."
 (use-package dockerfile-mode)
 
 (use-package eglot
-  ;; TODO: try with emacs 29
-  :straight nil
+  ;; :straight nil
   :bind
   (:map eglot-mode-map
    ("M-." . xref-find-definitions))
@@ -788,11 +788,16 @@ With argument ARG, do this that many times."
   (typescript-mode . eglot-ensure)
   (typescript-mode . conf--setup-simple-completion)
   (python-mode . eglot-ensure)
+  :custom
+  (eglot-report-progress t)
+  ;; help with perf:
+  (eglot-events-buffer-size 0)
   :config
 
   ;; (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed")))
   (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed" "--header-insertion-decorators=0" "--header-insertion=never")))
-  (setq eldoc-echo-area-use-multiline-p 0.1)
+  (setq eldoc-echo-area-use-multiline-p 4)
+  (setq eglot-ignored-server-capabilities '(:inlayHintProvider))
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
 
@@ -801,7 +806,6 @@ With argument ARG, do this that many times."
 (use-package clang-format)
 
 (use-package json-mode
-  :straight nil
   :bind
   (:map json-mode-map
         ("M-." . 'helm-config--helm-do-ag-projectile-project-symbol)))
