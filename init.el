@@ -242,10 +242,17 @@
 (add-to-list 'auto-mode-alist '("\\.mm?\\'" . objc-mode))
 
 ;; avoid boring buffers
-(defvar boring-buffers
-  '("\\*.*\\*"
-    "COMMIT_EDITMSG")
-  "List of boring buffers regexp")
+(setq boring-buffers
+      '("\\*EGLOT .*\\*"
+        "\\*Warnings\\*"
+        "\\*straight-.*\\*"
+        "\\*Async-.*\\*"
+        "\\*scratch.*\\*"
+        "\\*Messages.*\\*"
+        "\\*helm-.*\\*"
+        "\\*helm .*\\*"
+        "magit-diff:.*"
+        "COMMIT_EDITMSG"))
 
 (defun is-buffer-valid (buffer-name)
   (let ((valid-buffer t))
@@ -257,8 +264,8 @@
 (defun --contains-valid-buffer (buffer-list)
   (let ((valid-buffer nil))
     (cl-loop for buffer in buffer-list do
-          (when (is-buffer-valid (buffer-name buffer))
-            (setq valid-buffer t)))
+             (when (is-buffer-valid (buffer-name buffer))
+               (setq valid-buffer t)))
     valid-buffer))
 
 (defun skip-temp-buffers (func)
