@@ -1181,7 +1181,9 @@ variants of Typescript.")
 (use-package apheleia
   :hook
   (python-mode . apheleia-mode)
+  (python-ts-mode . apheleia-mode)
   (c++-mode . apheleia-mode)
+  (c++-ts-mode . apheleia-mode)
   :init
   ;; (apheleia-global-mode +1)
   )
