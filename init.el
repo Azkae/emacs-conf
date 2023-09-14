@@ -796,7 +796,7 @@ With argument ARG, do this that many times."
 
   ;; (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed")))
   (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed" "--header-insertion-decorators=0" "--header-insertion=never")))
-  (setq eldoc-echo-area-use-multiline-p 4)
+  (setq eldoc-echo-area-use-multiline-p 2)
   (setq eglot-ignored-server-capabilities '(:inlayHintProvider))
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
