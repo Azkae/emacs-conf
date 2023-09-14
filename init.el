@@ -895,7 +895,9 @@ With argument ARG, do this that many times."
   (("M-e" . vterm-toggle)
    ("M-E" . vterm-toggle-cd)
    :map vterm-mode-map
-   ("M-E" . vterm-toggle-insert-cd))
+   ("M-E" . vterm-toggle-insert-cd)
+   :map vterm-copy-mode-map
+   ("M-E" . (lambda () (interactive) (vterm-copy-mode -1) (vterm-toggle-insert-cd))))
   :config
   (setq vterm-toggle-hide-method 'quit-window)
   (setq vterm-toggle-reset-window-configration-after-exit nil)
