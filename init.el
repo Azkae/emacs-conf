@@ -526,7 +526,7 @@ With argument ARG, do this that many times."
 
     ;; use vterm toggle internal to save window configuration: when we do M-e (vterm-toggle) it will restore current window configuration
     (setq vterm-toggle--window-configration (current-window-configuration))
-    (vterm)))
+    (vterm-toggle-insert-cd)))
 
 (defun helm-config--helm-do-ag-on-project-root(basename)
   (interactive)
