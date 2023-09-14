@@ -456,6 +456,7 @@ With argument ARG, do this that many times."
    ("<M-down>"    . helm-scroll-other-window)
    ("<M-up>"      . helm-scroll-other-window-down)
    ("M-e"         . helm-config--ff-open-vterm)
+   ("M-E"         . helm-config--ff-open-vterm)
    ("M-r"         . helm-ff-run-rename-file)
    ("DEL"         . nil)
    ([M-backspace] . delete-until-slash)
@@ -516,6 +517,14 @@ With argument ARG, do this that many times."
                      basename)))
     (helm-do-ag basename)))
 
+(defun conf--vterm-toggle-insert-cd()
+  (interactive)
+  (if (eq major-mode 'vterm-mode)
+      (progn
+        (vterm-send-string (concat " cd " (shell-quote-argument default-directory)) t)
+        (vterm-send-return))
+    (call-interactively #'vterm-toggle-cd-show)))
+
 (defun open-vterm-action(basename)
   (interactive)
   (let* ((basename (expand-file-name basename))
@@ -526,7 +535,7 @@ With argument ARG, do this that many times."
 
     ;; use vterm toggle internal to save window configuration: when we do M-e (vterm-toggle) it will restore current window configuration
     (setq vterm-toggle--window-configration (current-window-configuration))
-    (vterm-toggle-insert-cd)))
+    (conf--vterm-toggle-insert-cd)))
 
 (defun helm-config--helm-do-ag-on-project-root(basename)
   (interactive)
@@ -537,7 +546,7 @@ With argument ARG, do this that many times."
   (let* ((default-directory (projectile-project-root)))
     ;; use vterm toggle internal to save window configuration: when we do M-e (vterm-toggle) it will restore current window configuration
     (setq vterm-toggle--window-configration (current-window-configuration))
-    (vterm)))
+    (conf--vterm-toggle-insert-cd)))
 
 (defun helm-config--ff-open-vterm()
   (interactive)
