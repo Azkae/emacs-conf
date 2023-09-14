@@ -1189,15 +1189,21 @@ variants of Typescript.")
   )
 
 (use-package realgud)
+
 (use-package realgud-lldb
   :bind
   (:map realgud--lldb-track-mode-map
         ("<M-up>"   . realgud:cmd-older-frame)
         ("<M-down>" . realgud:cmd-newer-frame)
         :map comint-mode-map
-        ("<up>"     . comint-previous-input)
-        ("<down>"   . comint-next-input)
-        ))
+        ("<up>"     . (lambda () (interactive) (comint-goto-process-mark) (comint-previous-input 1)))
+        ("<down>"   . (lambda () (interactive) (comint-goto-process-mark) (comint-next-input 1)))
+        )
+  :commands realgud--lldb lldb
+  :hook
+  (comint-mode . (lambda () (setq comint-move-point-for-output t
+                                  comint-scroll-to-bottom-on-input t)))
+  )
 
 (use-package ts-fold
   :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold")
