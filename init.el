@@ -251,7 +251,9 @@
         "\\*Messages.*\\*"
         "\\*helm-.*\\*"
         "\\*helm .*\\*"
-        "magit-diff:.*"
+        "magit:.*"
+        "magit-.*"
+        "\\*help\\*"
         "COMMIT_EDITMSG"))
 
 (defun is-buffer-valid (buffer-name)
