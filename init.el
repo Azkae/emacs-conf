@@ -625,8 +625,8 @@ With argument ARG, do this that many times."
    ("<right>"     . nil)
    ("<left>"      . nil)
    ([M-backspace] . backward-delete-word)
-   ("M-e"         . helm-config--ff-open-vterm)
-   ("M-E"         . helm-config--ff-open-vterm-root)
+   ("M-e"         . helm-config--ff-open-vterm-root)
+   ("M-E"         . helm-config--ff-open-vterm)
    ("M-R"         . helm-config--ff-run-helm-ag-root)
    ("M-p"         . previous-history-element)
    :map helm-projectile-projects-map
@@ -910,6 +910,7 @@ With argument ARG, do this that many times."
   :config
   (setq vterm-toggle-hide-method 'quit-window)
   (setq vterm-toggle-reset-window-configration-after-exit nil)
+  :autoload vterm-toggle-cd-show
 
   ;;; TODO: try scope per project instead of a global shell
   ;; (setq vterm-toggle-scope 'project)
