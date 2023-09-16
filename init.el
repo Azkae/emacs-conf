@@ -625,8 +625,8 @@ With argument ARG, do this that many times."
    ("<right>"     . nil)
    ("<left>"      . nil)
    ([M-backspace] . backward-delete-word)
-   ("M-e"         . helm-config--ff-open-vterm-root)
-   ("M-E"         . helm-config--ff-open-vterm)
+   ("M-e"         . helm-config--ff-open-vterm)
+   ("M-E"         . helm-config--ff-open-vterm-root)
    ("M-R"         . helm-config--ff-run-helm-ag-root)
    ("M-p"         . previous-history-element)
    :map helm-projectile-projects-map
