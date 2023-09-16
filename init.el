@@ -533,8 +533,6 @@ With argument ARG, do this that many times."
                      basename))
          (default-directory basename))
 
-    ;; use vterm toggle internal to save window configuration: when we do M-e (vterm-toggle) it will restore current window configuration
-    (setq vterm-toggle--window-configration (current-window-configuration))
     (conf--vterm-toggle-insert-cd)))
 
 (defun helm-config--helm-do-ag-on-project-root(basename)
@@ -544,8 +542,6 @@ With argument ARG, do this that many times."
 (defun open-vterm-on-project-root-action(basename)
   (interactive)
   (let* ((default-directory (projectile-project-root)))
-    ;; use vterm toggle internal to save window configuration: when we do M-e (vterm-toggle) it will restore current window configuration
-    (setq vterm-toggle--window-configration (current-window-configuration))
     (conf--vterm-toggle-insert-cd)))
 
 (defun helm-config--ff-open-vterm()
