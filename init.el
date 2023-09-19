@@ -251,8 +251,7 @@
         "\\*Messages.*\\*"
         "\\*helm-.*\\*"
         "\\*helm .*\\*"
-        "magit:.*"
-        "magit-.*"
+        "magit-process:.*"
         "\\*help\\*"
         "COMMIT_EDITMSG"))
 
