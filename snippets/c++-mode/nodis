@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: nodis
+# key: nodis
+# --
+[[nodiscard]]
