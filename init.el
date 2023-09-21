@@ -455,6 +455,7 @@ With argument ARG, do this that many times."
    ("<M-down>"    . helm-scroll-other-window)
    ("<M-up>"      . helm-scroll-other-window-down)
    ("M-e"         . helm-config--ff-open-vterm)
+   ("C-x g"       . helm-config--ff-open-magit)
    ("M-E"         . helm-config--ff-open-vterm)
    ("M-r"         . helm-ff-run-rename-file)
    ("DEL"         . nil)
@@ -534,6 +535,16 @@ With argument ARG, do this that many times."
 
     (conf--vterm-toggle-insert-cd)))
 
+(defun open-magit-action(basename)
+  (interactive)
+  (let* ((basename (expand-file-name basename))
+         (basename (if (not (file-directory-p basename))
+                       (file-name-directory basename)
+                     basename))
+         (default-directory basename))
+
+    (call-interactively #'magit)))
+
 (defun helm-config--helm-do-ag-on-project-root(basename)
   (interactive)
   (helm-do-ag (projectile-project-root)))
@@ -542,6 +553,11 @@ With argument ARG, do this that many times."
   (interactive)
   (let* ((default-directory (projectile-project-root)))
     (conf--vterm-toggle-insert-cd)))
+
+(defun helm-config--ff-open-magit()
+  (interactive)
+  (with-helm-alive-p
+    (helm-exit-and-execute-action 'open-magit-action)))
 
 (defun helm-config--ff-open-vterm()
   (interactive)
@@ -567,14 +583,17 @@ With argument ARG, do this that many times."
  'helm-find-files-after-init-hook
  (lambda ()
    (helm-add-action-to-source "Find AG" 'helm-config--helm-do-ag-on-file-maybe helm-source-find-files)
-   (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-find-files)))
+   (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-find-files)
+   (helm-add-action-to-source "Open magit" 'open-magit-action helm-source-find-files)))
 
 (with-eval-after-load "helm-projectile"
   (helm-add-action-to-source "Find AG" 'helm-config--helm-do-ag-on-file-maybe helm-source-projectile-projects)
   (helm-add-action-to-source "Find AG" 'helm-config--helm-do-ag-on-project-root helm-source-projectile-files-list)
   (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-projectile-projects)
   (helm-add-action-to-source "Open vterm on project root" 'open-vterm-on-project-root-action helm-source-projectile-files-list)
-  (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-projectile-files-list))
+  (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-projectile-files-list)
+  (helm-add-action-to-source "Open magit" 'open-magit-action helm-source-projectile-files-list)
+  (helm-add-action-to-source "Open magit" 'open-magit-action helm-source-projectile-projects))
 
 (defun helm-config--helm-do-ag-projectile-project-symbol ()
   (interactive)
@@ -624,9 +643,11 @@ With argument ARG, do this that many times."
    ("M-E"         . helm-config--ff-open-vterm-root)
    ("M-R"         . helm-config--ff-run-helm-ag-root)
    ("M-p"         . previous-history-element)
+   ("C-x g"       . helm-config--ff-open-magit)
    :map helm-projectile-projects-map
    ("M-e"         . helm-config--ff-open-vterm)
-   ("M-R"         . helm-config--ff-run-helm-ag))
+   ("M-R"         . helm-config--ff-run-helm-ag)
+   ("C-x g"       . helm-config--ff-open-magit))
   :config
   (setq projectile-completion-system 'helm))
 (helm-projectile-on)
