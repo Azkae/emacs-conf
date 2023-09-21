@@ -742,6 +742,40 @@ With argument ARG, do this that many times."
   (("C-x g" . magit-status)
    ("C-x v l" . magit-log-buffer-file)))
 
+;; (defun conf--visit-pull-request-url-github ()
+;;   "Visit the current branch's PR on Github."
+;;   (interactive)
+;;   (browse-url
+;;    (format "https://github.com/%s/pull/new/%s"
+;;            (replace-regexp-in-string
+;;             "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
+;;             (magit-get "remote"
+;;                        (magit-get-push-remote)
+;;                        "url"))
+;;            (magit-get-current-branch))))
+
+
+(defun conf--visit-pull-request-url-gitlab ()
+  "Visit the current branch's PR on Gitlab."
+  (interactive)
+  (browse-url
+   (format "https://%s/%s/-/merge_requests/new?merge_request%%5Bsource_branch%%5D=%s"
+           (replace-regexp-in-string
+            "\\`.+@\\(.+\\):.+\\.git\\'" "\\1"
+            (magit-get "remote"
+                       (magit-get-push-remote)
+                       "url"))
+           (replace-regexp-in-string
+            "\\`.+:\\(.+\\)\\.git\\'" "\\1"
+            (magit-get "remote"
+                       (magit-get-push-remote)
+                       "url"))
+           (url-hexify-string (magit-get-current-branch)))))
+
+(eval-after-load 'magit
+  '(define-key magit-mode-map "h"
+     #'conf--visit-pull-request-url-gitlab))
+
 (straight-use-package '(git-timemachine :type git :host github :repo "emacsmirror/git-timemachine"))
 
 ;; ;; dirlocals:
