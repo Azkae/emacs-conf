@@ -349,19 +349,15 @@
 
 
 ;; (setq conf--basic-completion-backends '(company-files (company-dabbrev-code company-keywords)))
-;; (setq conf--default-completion-backends '(company-capf company-files (company-dabbrev-code company-keywords)))
+;; (setq conf--default-completion-backends '(company-files company-capf (company-dabbrev-code company-keywords)))
 
 ;; (use-package company
 ;;   :bind
 ;;   (("M-RET" . company-complete))
 ;;   :config
-;;   (setq company-idle-delay 0)
-;;   (setq company-minimum-prefix-length 1)
-;;   ;; (setq company-frontends '(company-pseudo-tooltip-frontend
-;;   ;;   		    company-preview-if-just-one-frontend
-;;   ;;   		    company-echo-metadata-frontend))
-;;   (setq company-frontends '(company-pseudo-tooltip-unless-just-one-frontend
-;;                                company-preview-if-just-one-frontend
+;;   (setq company-idle-delay 0.01)
+;;   (setq company-minimum-prefix-length 2)
+;;   (setq company-frontends '(company-pseudo-tooltip-frontend
 ;;                                company-echo-metadata-frontend))
 ;;   (setq company-backends conf--default-completion-backends))
 ;; (global-company-mode)
