@@ -934,7 +934,8 @@ With argument ARG, do this that many times."
   (define-key vterm-copy-mode-map [remap self-insert-command] #'(lambda() (interactive) (vterm-copy-mode -1)
                                                                   (vterm--self-insert)))
   ;; (setq vterm-timer-delay 0.01)
-  (setq vterm-timer-delay 0.1)
+  ;; (setq vterm-timer-delay 0.1)
+  (setq vterm-timer-delay 0.05)
   ;; (setq vterm-timer-delay 0.1)
   )
 
