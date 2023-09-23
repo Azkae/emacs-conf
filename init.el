@@ -376,7 +376,7 @@
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
 
   :hook
-  ((python-mode) . #'flycheck-mode)
+  ;; ((python-mode) . #'flycheck-mode)
   )
 
 (use-package ws-butler
