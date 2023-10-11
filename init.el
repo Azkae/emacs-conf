@@ -1311,5 +1311,11 @@ variants of Typescript.")
 (use-package zygospore
   :bind
   (("C-x 1" . zygospore-toggle-delete-other-windows)))
+
+;; Note: use dtrt-indent-undo to undo the guess
+(use-package dtrt-indent
+  :custom
+  (dtrt-indent-global-mode t))
+
 ;; load graphic settings
 (require 'graphics)
