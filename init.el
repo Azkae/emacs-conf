@@ -1308,5 +1308,8 @@ variants of Typescript.")
 (with-eval-after-load 'compile
   (fancy-compilation-mode))
 
+(use-package zygospore
+  :bind
+  (("C-x 1" . zygospore-toggle-delete-other-windows)))
 ;; load graphic settings
 (require 'graphics)
