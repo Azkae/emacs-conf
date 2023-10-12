@@ -925,7 +925,10 @@ With argument ARG, do this that many times."
   ("M-f" . (lambda () (interactive) (vterm-copy-mode 1) (helm-occur)))
   :map vterm-copy-mode-map
   ("M-z" . 'vterm-copy-mode)
-  ("M-v" . (lambda () (interactive) (vterm-copy-mode -1) (vterm-yank))))
+  ("M-v" . (lambda () (interactive) (vterm-copy-mode -1) (vterm-yank)))
+  ("C-c C-c" . (lambda () (interactive) (vterm-copy-mode -1) (vterm--self-insert)))
+  ("SPC" . 'vterm-copy-mode)
+  )
   :config
   (define-key vterm-copy-mode-map [remap self-insert-command] #'(lambda() (interactive) (vterm-copy-mode -1)
                                                                   (vterm--self-insert)))
