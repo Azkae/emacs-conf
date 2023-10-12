@@ -377,8 +377,7 @@
 
 (use-package ws-butler
   :diminish ws-butler-mode
-  :config
-  (add-hook 'prog-mode-hook 'ws-butler-mode))
+  :hook ((prog-mode text-mode) . ws-butler-mode))
 
 (use-package undo-tree
   :diminish undo-tree-mode
