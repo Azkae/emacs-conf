@@ -371,7 +371,7 @@
   :config
   (setq flycheck-check-syntax-automatically '(save mode-enabled))
 
-  :hook
+  ;; :hook
   ;; ((python-mode) . #'flycheck-mode)
   )
 
