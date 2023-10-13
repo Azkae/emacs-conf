@@ -1,10 +1,6 @@
 ;;; emacs-conf --- Summary
 ;;; Commentary:
 ;;
-;; TODO:
-;; - try tree siter: https://github.com/ubolonton/emacs-tree-sitter
-;;   faster & better syntax highlighting
-;;
 ;;; Code:
 
 ;; ------------------
@@ -477,6 +473,7 @@ With argument ARG, do this that many times."
    helm-find-files-ignore-thing-at-point t)
   (helm-mode))
 
+;; see https://gist.github.com/PaulCapestany/15d6f04077c1a9bc98968a778d60956e to use ripgrep?
 (use-package helm-ag
   :straight (helm-ag :type git :host github :repo "emacsorphanage/helm-ag"
                      :fork (:host github :repo "Azkae/emacs-helm-ag"))
