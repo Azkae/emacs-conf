@@ -492,7 +492,11 @@ With argument ARG, do this that many times."
    ("<right>"     . nil)
    ("<left>"      . nil)
    :map helm-ag-edit-map
-   ("RET"         . helm-ag-mode-jump-other-window)))
+   ("RET"         . helm-ag-mode-jump-other-window))
+  :custom
+  ;; (helm-ag-base-command "rg --vimgrep --no-heading --smart-case")
+  (helm-ag-base-command "ag --nocolor --nogroup")
+  )
 
 ;; (defun remove-helm-smartparens ()
 ;;   (smartparens-mode -1))
