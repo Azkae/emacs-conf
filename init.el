@@ -64,6 +64,9 @@
 ;; treat camelCase as multiple words for cursor movement
 (global-subword-mode)
 
+;; prefer vertical splits
+(setq split-width-threshold 80)
+
 ;; TODO: use bind-key: https://melpa.org/#/bind-key
 
 ;; basic keybindings
