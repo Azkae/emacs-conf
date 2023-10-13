@@ -653,16 +653,6 @@ With argument ARG, do this that many times."
 ;; must be binded after (helm-projectile-on) because it remap projectile keybindings
 (define-key projectile-mode-map [remap projectile-ag] 'helm-do-ag-project-root)
 
-;; (use-package helm-gtags
-;;   :diminish helm-gtags-mode
-;;   :bind
-;;   (:map helm-gtags-mode-map
-;;    ("M-." . helm-gtags-dwim))
-;;   :config
-;;   (add-hook 'prog-mode-hook 'helm-gtags-mode)
-;;   (add-hook 'dired-mode-hook 'helm-gtags-mode)
-;;   (setq helm-gtags-direct-helm-completing t))
-
 (use-package symbol-overlay
   :bind
   ([f7] . symbol-overlay-put))
@@ -706,11 +696,6 @@ With argument ARG, do this that many times."
 ;;   :diminish git-gutter-mode
 ;;   :config
 ;;   (global-git-gutter-mode))
-
-;; (use-package yascroll
-;;   :config
-;;   (global-yascroll-bar-mode 1)
-;;   (setq yascroll:delay-to-hide 0.3))
 
 (use-package phi-search
   :config
