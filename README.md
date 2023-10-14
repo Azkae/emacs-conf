@@ -89,7 +89,22 @@ M-x nerd-icons-install-fonts
 In `Profiles` -> `Advanced` -> `Sementic History`:
 Set to `Run command`, with value: `$PATH_TO/emacsclient -n +\2 \1`
 
+### How to reproduce bugs:
+`emacs -Q -l ~/.emacs.d/straight/repos/straight.el/bootstrap.el`
 
+```
+(straight-use-package 'use-package)
+(setq straight-use-package-by-default t)
+(global-set-key (kbd "C-f") "\C-a\C-a\C-@\C-e")
+(global-set-key (kbd "C-q") 'kill-this-buffer)
+
+
+(when (string-equal system-type "darwin")
+  (setq mac-command-modifier 'meta
+  mac-option-modifier nil))
+
+(use-package ...)
+```
 
 TODO:
 - try without fork on helm-ag: https://github.com/Azkae/emacs-helm-ag/compare/master...emacsorphanage:helm-ag:master
