@@ -725,6 +725,7 @@ With argument ARG, do this that many times."
   :bind
   (("C-x g" . magit-status)
    ("C-x v l" . magit-log-buffer-file)))
+(setq smerge-command-prefix "\C-cv")
 
 ;; (defun conf--visit-pull-request-url-github ()
 ;;   "Visit the current branch's PR on Github."
