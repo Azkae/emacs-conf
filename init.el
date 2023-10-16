@@ -350,14 +350,23 @@
 ;; (setq conf--basic-completion-backends '(company-files (company-dabbrev-code company-keywords)))
 ;; (setq conf--default-completion-backends '(company-files company-capf (company-dabbrev-code company-keywords)))
 
+;; (defun conf--company-complete-common ()
+;;   (interactive)
+;;   ;; Skip calling company-complete-common if the prefix contains a parenthesis
+;;   (when (and company-common (not (string-match-p (regexp-quote "(") company-common)))
+;;       (call-interactively 'company-complete-common)))
+
 ;; (use-package company
 ;;   :bind
-;;   (("M-RET" . company-complete))
+;;   (("M-RET" . company-complete)
+;;    :map company-active-map
+;;    ("<tab>" . conf--company-complete-common))
 ;;   :config
 ;;   (setq company-idle-delay 0.01)
 ;;   (setq company-minimum-prefix-length 2)
 ;;   (setq company-frontends '(company-pseudo-tooltip-frontend
-;;                                company-echo-metadata-frontend))
+;;                             company-echo-metadata-frontend))
+;;   (setq company-transformers '(company-sort-prefer-same-case-prefix))
 ;;   (setq company-backends conf--default-completion-backends))
 ;; (global-company-mode)
 
