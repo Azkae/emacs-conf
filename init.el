@@ -65,7 +65,7 @@
 (global-subword-mode)
 
 ;; prefer vertical splits
-(setq split-width-threshold 80)
+(setq split-width-threshold 140)
 
 ;; TODO: use bind-key: https://melpa.org/#/bind-key
 
