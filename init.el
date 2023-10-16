@@ -1300,6 +1300,8 @@ variants of Typescript.")
 ;; (setq major-mode-remap-alist
 ;;  '((python-mode . python-ts-mode)))
 
+;; (setq treesit-extra-load-path '("/Users/ouabde_r/tree-sitter-module/dist"))
+
 (use-package fancy-compilation
   :commands (fancy-compilation-mode)
   :custom
