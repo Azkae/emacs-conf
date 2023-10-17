@@ -1311,6 +1311,13 @@ variants of Typescript.")
 
 ;; (setq treesit-extra-load-path '("/Users/ouabde_r/tree-sitter-module/dist"))
 
+;; Disable python-ts-mode:
+(defun remove-from-alist-by-value (alist value)
+  "Remove the first entry with VALUE from ALIST."
+  (cl-delete value alist :key (lambda (elt) (cdr elt)) :test #'equal))
+
+(setq auto-mode-alist (remove-from-alist-by-value auto-mode-alist 'python-ts-mode))
+
 (use-package fancy-compilation
   :commands (fancy-compilation-mode)
   :custom
