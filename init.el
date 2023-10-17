@@ -948,9 +948,16 @@ With argument ARG, do this that many times."
              (make-local-variable 'buffer-face-mode-face) 'conf--vterm-face)
             (buffer-face-mode t)))
 
+(defun conf--vterm-toggle()
+  (interactive)
+  (if (and (not (derived-mode-p 'vterm-mode))
+           (vterm-toggle--get-window))
+      (vterm-toggle-show)
+    (vterm-toggle)))
+
 (use-package vterm-toggle
   :bind
-  (("M-e" . vterm-toggle)
+  (("M-e" . conf--vterm-toggle)
    ("M-E" . vterm-toggle-cd)
    :map vterm-mode-map
    ("M-E" . vterm-toggle-insert-cd)
