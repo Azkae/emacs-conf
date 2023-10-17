@@ -856,6 +856,8 @@ With argument ARG, do this that many times."
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
 
+  (fset #'jsonrpc--log-event #'ignore)
+
   (add-to-list 'eglot-stay-out-of 'company-backends))
 
 (use-package clang-format)
