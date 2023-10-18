@@ -273,12 +273,10 @@
 
 (defun conf--next-buffer ()
   (interactive)
-  (next-buffer)
   (conf--skip-temp-buffers 'next-buffer))
 
 (defun conf--prev-buffer ()
   (interactive)
-  (previous-buffer)
   (conf--skip-temp-buffers 'previous-buffer))
 
 (defun kill-this-buffer-avoid-boring ()
