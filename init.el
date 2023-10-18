@@ -1333,5 +1333,10 @@ variants of Typescript.")
   :custom
   (dtrt-indent-global-mode t))
 
+(use-package wgrep
+  :custom
+  (wgrep-auto-save-buffer t))
+(use-package wgrep-helm)
+
 ;; load graphic settings
 (require 'graphics)
