@@ -966,7 +966,7 @@ With argument ARG, do this that many times."
   :config
   (setq vterm-toggle-hide-method 'quit-window)
   (setq vterm-toggle-reset-window-configration-after-exit nil)
-  :autoload vterm-toggle-cd-show
+  :autoload vterm-toggle-cd-show vterm-toggle--get-window
 
   ;;; TODO: try scope per project instead of a global shell
   ;; (setq vterm-toggle-scope 'project)
