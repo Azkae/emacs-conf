@@ -1,4 +1,4 @@
-(load-theme 'monokai t)
+(load-theme 'custom-monokai t)
 
 ;; (set-default-font "Fira Mono-13")
 (add-to-list 'default-frame-alist '(font . "Fira Mono"))

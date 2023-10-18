@@ -18,7 +18,7 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with GNU Emacs.
 
-(deftheme monokai
+(deftheme custom-monokai
   "Monokai color theme")
 
 (let ((monokai-blue-light "#89BDFF")
@@ -39,7 +39,7 @@
       (monokai-yellow-dark "#75715E")
       (monokai-yellow-light "#F8F8F2"))
   (custom-theme-set-faces
-   'monokai
+   'custom-monokai
    ;; Frame
    `(default ((t (:foreground ,monokai-yellow-light :background ,monokai-grey-dark))))
    `(cursor ((t (:foreground ,monokai-magenta))))
@@ -80,7 +80,7 @@
   (when (not window-system)
     (custom-set-faces '(default ((t (:background nil)))))))
 
-(provide-theme 'monokai)
+(provide-theme 'custom-monokai)
 
 ;; Local Variables:
 ;; no-byte-compile: t
