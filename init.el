@@ -732,18 +732,53 @@ With argument ARG, do this that many times."
    ("C-x v l" . magit-log-buffer-file)))
 (setq smerge-command-prefix "\C-cv")
 
+(use-package request)
+
+(defun conf--create-pull-request-github (repo branch)
+  "Create a new PR on Github."
+  (browse-url
+   (format "https://github.com/%s/pull/new/%s" repo branch)))
+
+(defun conf--show-pull-request-github (repo number)
+  "Visit the current branch's PR on Github."
+  (browse-url
+   (format "https://github.com/%s/pull/%s" repo number)))
 
 (defun conf--visit-pull-request-url-github ()
-  "Visit the current branch's PR on Github."
   (interactive)
-  (browse-url
-   (format "https://github.com/%s/pull/new/%s"
-           (replace-regexp-in-string
-            "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
-            (magit-get "remote"
-                       (magit-get-push-remote)
-                       "url"))
-           (magit-get-current-branch))))
+  (lexical-let ((repo (replace-regexp-in-string
+                "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
+                (magit-get "remote"
+                           (magit-get-push-remote)
+                           "url")))
+         (branch (magit-get-current-branch))
+         (commit (magit-rev-parse
+                  (and magit-copy-revision-abbreviated "--short")
+                  "HEAD")))
+    (request (format "https://api.github.com/repos/%s/commits/%s/pulls"
+                     repo commit)
+      :headers `(("Authorization" . ,(concat "Bearer " github-token)))
+      :parser 'json-read
+      :error (cl-function (lambda (&rest args &key error-thrown &allow-other-keys)
+                 (message "Got error: %S" error-thrown)))
+      :success (cl-function
+                (lambda (&key data &allow-other-keys)
+                  (if (not (equal (length data) 0))
+                      (let* ((id (cdr (assoc 'number (aref data 0)))))
+                        (conf--show-pull-request-github repo id))
+                    (conf--create-pull-request-github repo branch)))))))
+
+;; (defun conf--create-pull-request-github ()
+;;   "Visit the current branch's PR on Github."
+;;   (interactive)
+;;   (browse-url
+;;    (format "https://github.com/%s/pull/new/%s"
+;;            (replace-regexp-in-string
+;;             "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
+;;             (magit-get "remote"
+;;                        (magit-get-push-remote)
+;;                        "url"))
+;;            (magit-get-current-branch))))
 
 
 (defun conf--visit-pull-request-url-gitlab ()
