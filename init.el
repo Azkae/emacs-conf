@@ -1337,5 +1337,11 @@ variants of Typescript.")
   (wgrep-auto-save-buffer t))
 (use-package wgrep-helm)
 
+(defun load-if-exists (f)
+  (if (file-exists-p (expand-file-name f))
+      (load-file (expand-file-name f))))
+
+(load-if-exists "~/.emacs.d/secrets.el")
+
 ;; load graphic settings
 (require 'graphics)
