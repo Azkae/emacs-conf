@@ -82,7 +82,8 @@ In `.dir-locals.el`:
 ```
 
 ### Notes:
-*Iterm*
+For *Iterm*:
+
 In `Profiles` -> `Advanced` -> `Sementic History`:
 Set to `Run command`, with value: `$PATH_TO/emacsclient -n +\2 \1`
 
