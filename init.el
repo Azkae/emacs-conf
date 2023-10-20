@@ -1183,12 +1183,7 @@ variants of Typescript.")
         ;; ex: if the completion started from an empty string
         (if (not common)
             (conf--corfu-reset)
-          (let* ((first-parent (string-search "(" common))
-                 (first-angle-bracket (string-search "<" common))
-                 (endpt (or
-                         (and first-parent first-angle-bracket (min first-parent first-angle-bracket))
-                         first-parent
-                         first-angle-bracket)))
+          (let* ((endpt (string-match "[\\(|<]" common)))
             (when (and (> pt 0)
                        (stringp common)
                        (not (string= str common)))
