@@ -1,12 +1,26 @@
-## Basic configs
+# Emacs config
 
-This config includes:
+This is my personnal Emacs configuration.
+Using [`Straight`](https://github.com/radian-software/straight.el) to declare packages.
 
-* [`Helm`](https://github.com/emacs-helm/helm) with [helm-ag](https://github.com/syohex/emacs-helm-ag) for fast grep
-* [`Company-mode`](https://github.com/company-mode/company-mode) with [company-irony](https://github.com/Sarcasm/company-irony) for c/c++ completion
-* [`Elpy`](https://github.com/jorgenschaefer/elpy)
-* [`Multiple cursors`](https://github.com/magnars/multiple-cursors.el)
-* [`Projectile`](https://github.com/bbatsov/projectile)
+## Install
+
+Install emacs:
+```
+brew tap d12frosted/emacs-plus
+brew install emacs-plus --with-native-comp --with-no-frame-refocus
+```
+
+Apply helm patch for OSX:
+```
+cd ~/.emacs.d/straight/repos/helm
+git apply ~/emacs-conf/helm.patch
+```
+
+Run
+```
+M-x nerd-icons-install-fonts
+```
 
 ## Keybindings
 
@@ -67,23 +81,6 @@ In `.dir-locals.el`:
   (flycheck-checker . python-flake8)))
 ```
 
-Install emacs:
-```
-brew tap d12frosted/emacs-plus
-brew install emacs-plus --with-native-comp --with-no-frame-refocus
-```
-
-Apply helm patch for OSX:
-```
-cd ~/.emacs.d/straight/repos/helm
-git apply ~/emacs-conf/helm.patch
-```
-
-Run
-```
-M-x nerd-icons-install-fonts
-```
-
 ### Notes:
 *Iterm*
 In `Profiles` -> `Advanced` -> `Sementic History`:
@@ -113,3 +110,4 @@ TODO:
 - try consult & https://github.com/mhayashi1120/Emacs-wgrep to replace helm & helm-ag?
   see embark: https://github.com/oantolin/embark
   > If you use the grepping commands from the Consult package, consult-grep, consult-git-grep or consult-ripgrep, then you should install the embark-consult package, which adds support for exporting a list of grep results to an honest grep-mode buffer, on which you can even use wgrep if you wish.
+  ^ wgrep also works with helm
