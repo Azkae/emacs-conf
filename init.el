@@ -524,6 +524,8 @@ With argument ARG, do this that many times."
 (defun conf--vterm-toggle-insert-cd()
   (interactive)
   (conf--vterm-save-cd)
+  ;; If the helm session was started from a vterm buffer,
+  ;; insert the cd directly inside the vterm buffer
   (if (eq major-mode 'vterm-mode)
       (progn
         (vterm-send-string (concat " cd " (shell-quote-argument default-directory)) t)
