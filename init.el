@@ -996,14 +996,15 @@ With argument ARG, do this that many times."
         (vterm-send-return)))
 
 (defun conf--vterm-hide()
-  (vterm-toggle)
+  (quit-restore-window)
+  (vterm-toggle--bury-all-vterm)
   (let ((buf (vterm-toggle--recent-other-buffer)))
     (when buf
       (if (and (get-buffer-window buf)
                (not (eq (selected-window)
                         (get-buffer-window buf))))
           (select-window (get-buffer-window buf))
-        (switch-to-buffer-other-window buf)))))
+        (switch-to-buffer buf)))))
 
 (defun conf--vterm-toggle()
   (interactive)
