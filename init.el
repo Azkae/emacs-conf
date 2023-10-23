@@ -991,9 +991,7 @@ With argument ARG, do this that many times."
                  (when buf
                    (if (get-buffer-window buf)
                        (select-window (get-buffer-window buf))
-                     (if vterm-toggle-fullscreen-p
-                         (switch-to-buffer buf)
-                       (switch-to-buffer-other-window buf))))))
+                     (switch-to-buffer-other-window buf)))))
       (vterm-toggle))))
 
 (use-package vterm-toggle
