@@ -524,7 +524,11 @@ With argument ARG, do this that many times."
 (defun conf--vterm-toggle-insert-cd()
   (interactive)
   (conf--vterm-save-cd)
-  (call-interactively #'vterm-toggle-cd-show))
+  (if (eq major-mode 'vterm-mode)
+      (progn
+        (vterm-send-string (concat " cd " (shell-quote-argument default-directory)) t)
+        (vterm-send-return))
+    (call-interactively #'vterm-toggle-cd-show)))
 
 (defun open-vterm-action(basename)
   (interactive)
