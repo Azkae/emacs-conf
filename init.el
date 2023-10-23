@@ -523,11 +523,8 @@ With argument ARG, do this that many times."
 
 (defun conf--vterm-toggle-insert-cd()
   (interactive)
-  (if (eq major-mode 'vterm-mode)
-      (progn
-        (vterm-send-string (concat " cd " (shell-quote-argument default-directory)) t)
-        (vterm-send-return))
-    (call-interactively #'vterm-toggle-cd-show)))
+  (conf--vterm-save-cd)
+  (call-interactively #'vterm-toggle-cd-show))
 
 (defun open-vterm-action(basename)
   (interactive)
@@ -980,8 +977,21 @@ With argument ARG, do this that many times."
              (make-local-variable 'buffer-face-mode-face) 'conf--vterm-face)
             (buffer-face-mode t)))
 
+(defun conf--vterm-save-cd()
+  (interactive)
+    (let* ((dir (expand-file-name default-directory))
+         (cd-cmd (concat " cd " (shell-quote-argument dir))))
+    (setq conf--vterm-cd-command cd-cmd)))
+
+(defun conf--vterm-insert-cd()
+  (interactive)
+  (when conf--vterm-cd-command
+        (vterm-send-string conf--vterm-cd-command t)
+        (vterm-send-return)))
+
 (defun conf--vterm-toggle()
   (interactive)
+  (conf--vterm-save-cd)
   (if (and (not (derived-mode-p 'vterm-mode))
            (vterm-toggle--get-window))
       (vterm-toggle-show)
@@ -997,13 +1007,13 @@ With argument ARG, do this that many times."
 (use-package vterm-toggle
   :bind
   (("M-e" . conf--vterm-toggle)
-   ("M-E" . vterm-toggle-cd)
+   ("M-E" . (lambda () (interactive) (conf--vterm-save-cd) (vterm-toggle-cd)))
    :map vterm-mode-map
-   ("M-E" . vterm-toggle-insert-cd)
+   ("M-E" . conf--vterm-insert-cd)
    ("<M-right>" . vterm-toggle-forward)
    ("<M-left>" . vterm-toggle-backward)
    :map vterm-copy-mode-map
-   ("M-E" . (lambda () (interactive) (vterm-copy-mode -1) (vterm-toggle-insert-cd)))
+   ("M-E" . (lambda () (interactive) (vterm-copy-mode -1) (conf--vterm-insert-cd)))
    ("<M-right>" . vterm-toggle-forward)
    ("<M-left>" . vterm-toggle-backward))
   :config
