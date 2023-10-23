@@ -985,7 +985,16 @@ With argument ARG, do this that many times."
   (if (and (not (derived-mode-p 'vterm-mode))
            (vterm-toggle--get-window))
       (vterm-toggle-show)
-    (vterm-toggle)))
+    (if (derived-mode-p 'vterm-mode)
+        (progn (vterm-toggle)
+               (let ((buf (vterm-toggle--recent-other-buffer)))
+                 (when buf
+                   (if (get-buffer-window buf)
+                       (select-window (get-buffer-window buf))
+                     (if vterm-toggle-fullscreen-p
+                         (switch-to-buffer buf)
+                       (switch-to-buffer-other-window buf))))))
+      (vterm-toggle))))
 
 (use-package vterm-toggle
   :bind
@@ -993,10 +1002,14 @@ With argument ARG, do this that many times."
    ("M-E" . vterm-toggle-cd)
    :map vterm-mode-map
    ("M-E" . vterm-toggle-insert-cd)
+   ("<M-right>" . vterm-toggle-forward)
+   ("<M-left>" . vterm-toggle-backward)
    :map vterm-copy-mode-map
-   ("M-E" . (lambda () (interactive) (vterm-copy-mode -1) (vterm-toggle-insert-cd))))
+   ("M-E" . (lambda () (interactive) (vterm-copy-mode -1) (vterm-toggle-insert-cd)))
+   ("<M-right>" . vterm-toggle-forward)
+   ("<M-left>" . vterm-toggle-backward))
   :config
-  (setq vterm-toggle-hide-method 'quit-window)
+  (setq vterm-toggle-hide-method 'bury-all-vterm-buffer)
   (setq vterm-toggle-reset-window-configration-after-exit nil)
   :autoload vterm-toggle-cd-show vterm-toggle--get-window
 
@@ -1004,6 +1017,13 @@ With argument ARG, do this that many times."
   ;; (setq vterm-toggle-scope 'project)
   ;; (setq vterm-toggle-project-root nil)
   )
+
+(use-package multi-vterm
+  :bind
+  (:map vterm-mode-map
+        ("M-t" . multi-vterm)
+        :map vterm-copy-mode-map
+        ("M-t" . multi-vterm)))
 
 (use-package helm-xref)
 
