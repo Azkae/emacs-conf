@@ -985,7 +985,7 @@ With argument ARG, do this that many times."
 
 (defun conf--vterm-save-cd()
   (interactive)
-    (let* ((dir (expand-file-name default-directory))
+  (let* ((dir (expand-file-name default-directory))
          (cd-cmd (concat " cd " (shell-quote-argument dir))))
     (setq conf--vterm-cd-command cd-cmd)))
 
@@ -995,6 +995,16 @@ With argument ARG, do this that many times."
         (vterm-send-string conf--vterm-cd-command t)
         (vterm-send-return)))
 
+(defun conf--vterm-hide()
+  (vterm-toggle)
+  (let ((buf (vterm-toggle--recent-other-buffer)))
+    (when buf
+      (if (and (get-buffer-window buf)
+               (not (eq (selected-window)
+                        (get-buffer-window buf))))
+          (select-window (get-buffer-window buf))
+        (switch-to-buffer-other-window buf)))))
+
 (defun conf--vterm-toggle()
   (interactive)
   (conf--vterm-save-cd)
@@ -1002,12 +1012,7 @@ With argument ARG, do this that many times."
            (vterm-toggle--get-window))
       (vterm-toggle-show)
     (if (derived-mode-p 'vterm-mode)
-        (progn (vterm-toggle)
-               (let ((buf (vterm-toggle--recent-other-buffer)))
-                 (when buf
-                   (if (get-buffer-window buf)
-                       (select-window (get-buffer-window buf))
-                     (switch-to-buffer-other-window buf)))))
+        (conf--vterm-hide)
       (vterm-toggle))))
 
 (use-package vterm-toggle
