@@ -219,7 +219,7 @@
 (setq-default indent-tabs-mode nil)
 
 (add-hook 'c++-mode-hook
-      '(lambda()
+      #'(lambda()
         (font-lock-add-keywords
          nil '(;; complete some fundamental keywords
            ("\\<\\(void\\|unsigned\\|signed\\|char\\|short\\|bool\\|int\\|long\\|float\\|double\\)\\>" . font-lock-keyword-face)
@@ -1100,7 +1100,7 @@ With argument ARG, do this that many times."
       (org-hide-properties)))
 
   ;; call org-hide-properties after inserting a new node
-  (add-hook 'org-roam-post-node-insert-hook '(lambda (_ _) (org-hide-properties))))
+  (add-hook 'org-roam-post-node-insert-hook #'(lambda (_ _) (org-hide-properties))))
 
 (defun get-string-from-file (filePath)
   (with-temp-buffer
