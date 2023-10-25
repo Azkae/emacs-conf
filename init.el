@@ -1386,7 +1386,7 @@ variants of Typescript.")
   "Remove the first entry with VALUE from ALIST."
   (cl-delete value alist :key (lambda (elt) (cdr elt)) :test #'equal))
 
-(with-eval-after-load "python"
+(with-eval-after-load 'python
   (setq auto-mode-alist (remove-from-alist-by-value auto-mode-alist 'python-ts-mode)))
 
 (use-package fancy-compilation
