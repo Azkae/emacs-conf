@@ -1408,7 +1408,8 @@ variants of Typescript.")
 
 (use-package wgrep
   :custom
-  (wgrep-auto-save-buffer t))
+  (wgrep-auto-save-buffer t)
+  (wgrep-enable-key "\C-c\C-e"))
 (use-package wgrep-helm)
 
 (defun load-if-exists (f)
