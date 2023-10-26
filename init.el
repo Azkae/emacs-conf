@@ -1418,5 +1418,9 @@ variants of Typescript.")
 
 (load-if-exists "~/.emacs.d/secrets.el")
 
+(use-package browse-at-remote
+  :config
+  (defalias 'open-on-github #'browse-at-remote))
+
 ;; load graphic settings
 (require 'graphics)
