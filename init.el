@@ -1220,24 +1220,26 @@ variants of Typescript.")
              (candidates corfu--candidates)
              (common (try-completion str candidates)))
 
-        ;; if no common string is found, try re-fetching candidates,
-        ;; ex: if the completion started from an empty string
-        (if (not common)
-            (conf--corfu-reset)
-          (let* ((endpt (string-match "[\\(|<]" common)))
-            (when (and (> pt 0)
-                       (stringp common)
-                       (not (string= str common)))
-              ;; Handling of file completion (next 2 lines)
-              (if (string-suffix-p "/" common)
-                  (corfu-complete)
-                (if (and (string= common (car candidates))
-                         ;; remove next line if you want to end completion if the current prefix is equal to the first completion
-                         (not (string-prefix-p common (nth 1 candidates))))
-                    (progn
-                      (corfu--goto 0)
-                      (corfu-insert))
-                  (insert (substring common pt endpt)))))))))))
+        ;; Do not complete if the input contain a separator
+        (when (not (string-match-p (string corfu-separator) str))
+          ;; if no common string is found, try re-fetching candidates,
+          ;; ex: if the completion started from an empty string
+          (if (not common)
+              (conf--corfu-reset)
+            (let* ((endpt (string-match "[\\(|<]" common)))
+              (when (and (> pt 0)
+                         (stringp common)
+                         (not (string= str common)))
+                ;; Handling of file completion (next 2 lines)
+                (if (string-suffix-p "/" common)
+                    (corfu-complete)
+                  (if (and (string= common (car candidates))
+                           ;; remove next line if you want to end completion if the current prefix is equal to the first completion
+                           (not (string-prefix-p common (nth 1 candidates))))
+                      (progn
+                        (corfu--goto 0)
+                        (corfu-insert))
+                    (insert (substring common pt endpt))))))))))))
 
 (defun conf--corfu-insert ()
   (interactive)
@@ -1297,6 +1299,12 @@ variants of Typescript.")
   (global-corfu-mode)
   ;; (advice-add 'corfu--move-prefix-candidates-to-front :around 'conf--corfu-move-candidates-to-front)
   )
+
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
 
 (defun conf--setup-simple-completion()
   (setq-local completion-at-point-functions conf--basic-completion-functions))
