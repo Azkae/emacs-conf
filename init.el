@@ -28,6 +28,12 @@
 (add-to-list 'custom-theme-load-path conf--base-dir)
 (add-to-list 'load-path conf--base-dir)
 
+(defun load-if-exists (f)
+  (if (file-exists-p (expand-file-name f))
+      (load-file (expand-file-name f))))
+
+(load-if-exists "~/.emacs.d/secrets.el")
+
 ;; -------------------
 ;; base emacs settings
 ;; -------------------
@@ -1419,12 +1425,6 @@ variants of Typescript.")
   (wgrep-auto-save-buffer t)
   (wgrep-enable-key "\C-c\C-e"))
 (use-package wgrep-helm)
-
-(defun load-if-exists (f)
-  (if (file-exists-p (expand-file-name f))
-      (load-file (expand-file-name f))))
-
-(load-if-exists "~/.emacs.d/secrets.el")
 
 (use-package browse-at-remote
   :config
