@@ -73,7 +73,9 @@
    ;; Yasnippet
    `(yas/field-highlight-face ((t (:background ,monokai-gray-darker))))
    `(magit-diff-context-highlight ((t (:background "grey28"))))
-   `(magit-section-highlight ((t (:background "grey28"))))))
+   `(magit-section-highlight ((t (:background "grey28"))))
+   `(magit-diff-file-heading ((t (:weight nil :background "midnight blue"))))
+   `(magit-diff-file-heading-highlight ((t (:background "midnight blue"))))))
 
 ;;;###autoload
 (when load-file-name
