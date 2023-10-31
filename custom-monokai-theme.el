@@ -75,7 +75,7 @@
    `(magit-diff-context-highlight ((t (:background "grey28"))))
    `(magit-section-highlight ((t (:background "grey28"))))
    `(magit-diff-file-heading ((t (:weight nil :background "midnight blue"))))
-   `(magit-diff-file-heading-highlight ((t (:background "midnight blue"))))))
+   `(magit-diff-file-heading-highlight ((t (:background "blue"))))))
 
 ;;;###autoload
 (when load-file-name
