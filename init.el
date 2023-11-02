@@ -813,6 +813,64 @@ With argument ARG, do this that many times."
 
 (straight-use-package '(git-timemachine :type git :host github :repo "emacsmirror/git-timemachine"))
 
+(use-package magit-delta
+  :if (executable-find "delta")
+  ;; :hook (magit-mode . magit-delta-mode)
+  :bind
+  (:map magit-mode-map
+        ("," . #'conf--magit-delta-toggle)
+        )
+  :config
+
+  (defun conf--magit-delta-toggle ()
+    "Toggle magit-delta-mode and refresh magit."
+    (interactive)
+    (progn
+      (call-interactively 'magit-delta-mode)
+      (magit-refresh)))
+
+  ;; (with-eval-after-load 'magit-delta
+  ;;   (set-face-attribute 'magit-diff-added-highlight nil
+  ;;                       :background (face-attribute 'diff-added :background))
+  ;;   (set-face-attribute 'magit-diff-added nil
+  ;;                       :background (face-attribute 'diff-added :background))
+  ;;   (set-face-attribute 'magit-diff-removed-highlight nil
+  ;;                       :background (face-attribute 'diff-removed :background))
+  ;;   (set-face-attribute 'magit-diff-removed nil
+  ;;                       :background (face-attribute 'diff-removed :background)))
+
+  (add-hook 'magit-delta-mode-hook
+            (lambda ()
+              (setq
+               magit-delta-default-dark-theme "Sublime Snazzy"
+               magit-delta-default-light-theme "Github"
+               magit-delta-hide-plus-minus-markers nil
+               magit-delta-delta-args `("--max-line-distance" "0.6" "--true-color" "always" "--color-only"
+                                        "--plus-style" ,(format "syntax \"%s\"" (face-attribute 'diff-added :background))
+                                        "--plus-emph-style" ,(format "syntax \"%s\"" (face-attribute 'diff-refine-added :background))
+                                        "--minus-emph-style" ,(format "syntax \"%s\"" (face-attribute 'diff-refine-removed :background))
+                                        "--minus-style" ,(format "normal \"%s\"" (face-attribute 'diff-removed :background)))
+               )
+
+
+              (set-face-attribute 'magit-diff-added-highlight nil
+                                  :background (face-attribute 'diff-added :background))
+              (set-face-attribute 'magit-diff-added nil
+                                  :background (face-attribute 'diff-added :background))
+              (set-face-attribute 'magit-diff-removed-highlight nil
+                                  :background (face-attribute 'diff-removed :background))
+              (set-face-attribute 'magit-diff-removed nil
+                                  :background (face-attribute 'diff-removed :background))
+
+              (setq face-remapping-alist
+                    (seq-difference face-remapping-alist
+                                    '((magit-diff-removed . default)
+                                      (magit-diff-removed-highlight . default)
+                                      (magit-diff-added . default)
+                                      (magit-diff-added-highlight . default))))))
+  )
+
+
 ;; ;; dirlocals:
 ;; ((nil
 ;;   (python-shell-interpreter . "python_env")
