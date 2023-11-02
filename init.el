@@ -1026,6 +1026,7 @@ With argument ARG, do this that many times."
   ("M-z" . 'vterm-copy-mode)
   ("M-v" . (lambda () (interactive) (vterm-copy-mode -1) (vterm-yank)))
   ("C-c C-c" . (lambda () (interactive) (vterm-copy-mode -1) (vterm--self-insert)))
+  ("DEL" . (lambda () (interactive) (vterm-copy-mode -1) (vterm-send-backspace)))
   ("SPC" . 'vterm-copy-mode)
   )
   :config
