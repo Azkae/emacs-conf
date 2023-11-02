@@ -738,7 +738,9 @@ With argument ARG, do this that many times."
 (use-package magit
   :bind
   (("C-x g" . magit-status)
-   ("C-x v l" . magit-log-buffer-file)))
+   ("C-x v l" . magit-log-buffer-file))
+  :custom
+  (magit-diff-refine-hunk 'all))
 (setq smerge-command-prefix "\C-cv")
 
 (use-package request)
