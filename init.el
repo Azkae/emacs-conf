@@ -701,10 +701,10 @@ With argument ARG, do this that many times."
 (global-set-key (vector (list 'control mouse-wheel-down-event)) 'zoom-in)
 (global-set-key (vector (list 'control mouse-wheel-up-event)) 'zoom-out)
 
-(use-package git-gutter-fringe+
-  :diminish git-gutter+-mode
-  :config
-  (global-git-gutter+-mode))
+;; (use-package git-gutter-fringe+
+;;   :diminish git-gutter+-mode
+;;   :config
+;;   (global-git-gutter+-mode))
 
 ;; (use-package git-gutter-fringe
 ;;   :diminish git-gutter-mode
@@ -1496,6 +1496,10 @@ variants of Typescript.")
 (use-package browse-at-remote
   :config
   (defalias 'open-on-github #'browse-at-remote))
+
+(use-package diff-hl
+  :init
+  (global-diff-hl-mode))
 
 ;; load graphic settings
 (require 'graphics)
