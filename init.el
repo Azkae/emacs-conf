@@ -1268,6 +1268,14 @@ variants of Typescript.")
 ;;     (let ((message-log-max nil)
 ;;           (inhibit-message t))
 ;;       (apply undo-tree-save-history args)))
+
+;; custom
+;; (corfu-sort-function 'conf--corfu-sort)
+;; (corfu-sort-override-function 'conf--corfu-sort)
+;; (completion-styles '(basic))
+
+;; (advice-add 'corfu--move-prefix-candidates-to-front :around 'conf--corfu-move-candidates-to-front)
+
 ;; ;; --- !fix dot sorting ---
 
 
@@ -1363,12 +1371,8 @@ variants of Typescript.")
   (corfu-auto-delay 0.01)
   (corfu-auto-prefix 2)
   (corfu-preview-current nil)
-  ;; (corfu-sort-function 'conf--corfu-sort)
-  ;; (corfu-sort-override-function 'conf--corfu-sort)
-  ;; (completion-styles '(basic))
   :init
   (global-corfu-mode)
-  ;; (advice-add 'corfu--move-prefix-candidates-to-front :around 'conf--corfu-move-candidates-to-front)
   (defun corfu-enable-in-minibuffer ()
     "Enable Corfu in the minibuffer if `completion-at-point' is bound."
     (when (where-is-internal #'completion-at-point (list (current-local-map)))
