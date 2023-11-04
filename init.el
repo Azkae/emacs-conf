@@ -303,6 +303,8 @@
 ;; setup packages
 ;; --------------
 
+(use-package el-patch)
+
 (use-package org
   :config
   (defun conf--org-open-link-maybe()
@@ -1419,6 +1421,54 @@ variants of Typescript.")
   (comint-mode . (lambda () (setq comint-move-point-for-output t
                                   comint-scroll-to-bottom-on-input t)))
   )
+
+;; Fix lldb bt frame format, see PR: https://github.com/realgud/realgud-lldb/pull/12
+(el-patch-feature realgud-lldb)
+(with-eval-after-load 'realgud-lldb
+  (el-patch-defun realgud--lldb (&optional opt-cmd-line no-reset)
+                  "Invoke the lldb debugger and start the Emacs user interface.
+
+OPT-CMD-LINE is treated like a shell string; arguments are
+tokenized by `split-string-and-unquote'.
+
+Normally, command buffers are reused when the same debugger is
+reinvoked inside a command buffer with a similar command. If we
+discover that the buffer has prior command-buffer information and
+NO-RESET is nil, then that information which may point into other
+buffers and source buffers which may contain marks and fringe or
+marginal icons is reset. See `loc-changes-clear-buffer' to clear
+fringe and marginal icons.
+"
+                  (interactive)
+                  (let* ((cmd-str (or opt-cmd-line (realgud--lldb-query-cmdline "lldb")))
+	                     (cmd-args (split-string-and-unquote cmd-str))
+	                     (parsed-args (realgud--lldb-parse-cmd-args cmd-args))
+	                     (script-args (caddr parsed-args))
+	                     (script-name (car script-args))
+	                     (parsed-cmd-args
+	                      (cl-remove-if 'nil (realgud:flatten parsed-args)))
+	                     (cmd-buf (realgud:run-process realgud--lldb-command-name
+				                                       script-name parsed-cmd-args
+				                                       'realgud--lldb-minibuffer-history
+				                                       nil))
+	                     )
+                    (if cmd-buf
+	                    (with-current-buffer cmd-buf
+	                      (set (make-local-variable 'realgud--lldb-file-remap)
+	                           (make-hash-table :test 'equal))
+	                      ;; The following directs lldb to emit full paths
+	                      ;; when stopping at a breakpoint,
+	                      ;; which lets us find the file.
+	                      ;; Unfortunately lldb only emits base file names
+	                      ;; when setting breakpoints,
+	                      ;; so we still show an unhelpful prompt at that time.
+	                      (realgud-command (el-patch-swap "settings set frame-format frame #${frame.index}: ${frame.pc}{ ${module.file.basename}{\`${function.name}}}{ at ${line.file.fullpath}:${line.number}}\n" "settings set frame-format frame #${frame.index}: ${frame.pc}{ ${module.file.basename}{\`${function.name}}}{ at ${line.file.fullpath}:${line.number}}\\n")
+			                               nil nil nil)
+	                      (realgud:remove-ansi-schmutz)
+	                      )
+                      )
+                    )
+                  ))
 
 (use-package ts-fold
   :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold")
