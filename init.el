@@ -672,7 +672,7 @@ With argument ARG, do this that many times."
   ;; (define-key prog-mode-map (kbd "M-.") 'xref-find-definitions)
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   :custom
-  (dumb-jump-force-searcher 'rg))
+  (dumb-jump-force-searcher 'ag))
 
 (use-package symbol-overlay
   :bind
