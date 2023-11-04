@@ -1035,8 +1035,6 @@ With argument ARG, do this that many times."
   :config
   (define-key vterm-copy-mode-map [remap self-insert-command] #'(lambda() (interactive) (vterm-copy-mode -1)
                                                                   (vterm--self-insert)))
-  ;; (setq vterm-timer-delay 0.01)
-  ;; (setq vterm-timer-delay 0.08)
   (setq vterm-timer-delay 0.05)
   ;; (setq vterm-timer-delay 0.1)
   )
@@ -1100,12 +1098,7 @@ With argument ARG, do this that many times."
   :config
   (setq vterm-toggle-hide-method 'bury-all-vterm-buffer)
   (setq vterm-toggle-reset-window-configration-after-exit nil)
-  :autoload vterm-toggle-cd-show vterm-toggle--get-window
-
-  ;;; TODO: try scope per project instead of a global shell
-  ;; (setq vterm-toggle-scope 'project)
-  ;; (setq vterm-toggle-project-root nil)
-  )
+  :autoload vterm-toggle-cd-show vterm-toggle--get-window)
 
 (use-package multi-vterm
   :bind
