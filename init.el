@@ -1407,6 +1407,9 @@ variants of Typescript.")
 
 (use-package realgud)
 
+;; see projectile keybings:
+;;    ("M-p k" . projectile-run-compile)
+;;    ("M-p d" . projectile-run-lldb)
 (use-package realgud-lldb
   :bind
   (:map realgud--lldb-track-mode-map
@@ -1414,13 +1417,11 @@ variants of Typescript.")
         ("<M-down>" . realgud:cmd-newer-frame)
         :map comint-mode-map
         ("<up>"     . (lambda () (interactive) (comint-goto-process-mark) (comint-previous-input 1)))
-        ("<down>"   . (lambda () (interactive) (comint-goto-process-mark) (comint-next-input 1)))
-        )
+        ("<down>"   . (lambda () (interactive) (comint-goto-process-mark) (comint-next-input 1))))
   :commands realgud--lldb lldb
   :hook
   (comint-mode . (lambda () (setq comint-move-point-for-output t
-                                  comint-scroll-to-bottom-on-input t)))
-  )
+                                  comint-scroll-to-bottom-on-input t))))
 
 ;; Fix lldb bt frame format, see PR: https://github.com/realgud/realgud-lldb/pull/12
 (el-patch-feature realgud-lldb)
