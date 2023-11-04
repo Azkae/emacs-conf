@@ -11,12 +11,6 @@ brew tap d12frosted/emacs-plus
 brew install emacs-plus --with-native-comp --with-no-frame-refocus
 ```
 
-Apply helm patch for OSX:
-```
-cd ~/.emacs.d/straight/repos/helm
-git apply ~/emacs-conf/helm.patch
-```
-
 Run
 ```
 M-x nerd-icons-install-fonts
@@ -72,20 +66,17 @@ Keybinding | Description
 <kbd>C-j</kbd> | add a new cursor to the next point that match the selected region.
 <kbd>M-j</kbd> | add a new cursor to the next point that match the selected symbol.
 
-### Virtualenv
-
-In `.dir-locals.el`:
-```
-((python-mode
-  (eval . (pyvenv-activate "/path/to/venv/"))
-  (flycheck-checker . python-flake8)))
-```
-
 ### Notes:
 For *Iterm*:
 
 In `Profiles` -> `Advanced` -> `Sementic History`:
 Set to `Run command`, with value: `$PATH_TO/emacsclient -n +\2 \1`
+
+On emacs version 28 and lower, apply helm patch for OSX:
+```
+cd ~/.emacs.d/straight/repos/helm
+git apply ~/emacs-conf/helm.patch
+```
 
 ### How to reproduce bugs:
 `emacs -Q -l ~/.emacs.d/straight/repos/straight.el/bootstrap.el`
