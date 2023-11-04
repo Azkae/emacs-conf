@@ -835,21 +835,11 @@ With argument ARG, do this that many times."
       (call-interactively 'magit-delta-mode)
       (magit-refresh)))
 
-  ;; (with-eval-after-load 'magit-delta
-  ;;   (set-face-attribute 'magit-diff-added-highlight nil
-  ;;                       :background (face-attribute 'diff-added :background))
-  ;;   (set-face-attribute 'magit-diff-added nil
-  ;;                       :background (face-attribute 'diff-added :background))
-  ;;   (set-face-attribute 'magit-diff-removed-highlight nil
-  ;;                       :background (face-attribute 'diff-removed :background))
-  ;;   (set-face-attribute 'magit-diff-removed nil
-  ;;                       :background (face-attribute 'diff-removed :background)))
-
   (add-hook 'magit-delta-mode-hook
-            ;; For some reason (face-attribute 'diff-added :background) does not work if called top-level
             (lambda ()
               (if magit-delta-mode
                   (progn
+                    ;; For some reason (face-attribute 'diff-added :background) does not work if called top-level
                     (setq magit-delta-delta-args `("--max-line-distance" "0.6" "--true-color" "always" "--color-only"
                                                    "--plus-style" ,(format "syntax \"%s\"" (face-attribute 'diff-added :background))
                                                    "--plus-emph-style" ,(format "syntax \"%s\"" (face-attribute 'diff-refine-added :background))
