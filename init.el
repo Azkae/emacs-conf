@@ -615,8 +615,8 @@ With argument ARG, do this that many times."
     (helm-do-ag (projectile-project-root) nil (symbol-name (symbol-at-point))))
 
 (define-key text-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
-;; (define-key prog-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
-;; (define-key emacs-lisp-mode-map (kbd "M-.") 'xref-find-definitions)
+(define-key text-mode-map (kbd "M-?") 'helm-config--helm-do-ag-projectile-project-symbol)
+(define-key prog-mode-map (kbd "M-?") 'helm-config--helm-do-ag-projectile-project-symbol)
 
 (defun projectile-run-compile ()
   "Invoke `gdb' in the project's root."
@@ -938,7 +938,8 @@ With argument ARG, do this that many times."
   ;; :straight nil
   :bind
   (:map eglot-mode-map
-   ("M-." . xref-find-definitions))
+        ("M-." . xref-find-definitions)
+        ("M-?" . xref-find-references))
   :hook
   (c-mode . eglot-ensure)
   (c++-mode . eglot-ensure)
