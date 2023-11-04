@@ -615,6 +615,8 @@ With argument ARG, do this that many times."
     (helm-do-ag (projectile-project-root) nil (symbol-name (symbol-at-point))))
 
 (define-key text-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
+
+;; Waiting for dumb-jump to support xref-find-references: https://github.com/jacktasia/dumb-jump/issues/433
 (define-key text-mode-map (kbd "M-?") 'helm-config--helm-do-ag-projectile-project-symbol)
 (define-key prog-mode-map (kbd "M-?") 'helm-config--helm-do-ag-projectile-project-symbol)
 
