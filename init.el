@@ -807,8 +807,7 @@ With argument ARG, do this that many times."
   ;; :hook (magit-mode . magit-delta-mode)
   :bind
   (:map magit-mode-map
-        ("," . #'conf--magit-delta-toggle)
-        )
+        ("," . #'conf--magit-delta-toggle))
   :custom
   (magit-delta-default-dark-theme "Sublime Snazzy")
   (magit-delta-default-light-theme "Github")
