@@ -1116,7 +1116,10 @@ With argument ARG, do this that many times."
 
 (use-package pyvenv)
 
-(use-package kotlin-mode)
+(use-package kotlin-mode
+  :config
+  (modify-syntax-entry ?< "(>" kotlin-mode-syntax-table)
+  (modify-syntax-entry ?> ")<" kotlin-mode-syntax-table))
 
 (use-package groovy-mode)
 
