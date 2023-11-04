@@ -779,19 +779,6 @@ With argument ARG, do this that many times."
                         (conf--show-pull-request-github repo id))
                     (conf--create-pull-request-github repo branch)))))))
 
-;; (defun conf--create-pull-request-github ()
-;;   "Visit the current branch's PR on Github."
-;;   (interactive)
-;;   (browse-url
-;;    (format "https://github.com/%s/pull/new/%s"
-;;            (replace-regexp-in-string
-;;             "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
-;;             (magit-get "remote"
-;;                        (magit-get-push-remote)
-;;                        "url"))
-;;            (magit-get-current-branch))))
-
-
 (defun conf--visit-pull-request-url-gitlab ()
   "Visit the current branch's PR on Gitlab."
   (interactive)
