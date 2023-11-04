@@ -1369,6 +1369,14 @@ variants of Typescript.")
   :init
   (global-corfu-mode)
   ;; (advice-add 'corfu--move-prefix-candidates-to-front :around 'conf--corfu-move-candidates-to-front)
+  (defun corfu-enable-in-minibuffer ()
+    "Enable Corfu in the minibuffer if `completion-at-point' is bound."
+    (when (where-is-internal #'completion-at-point (list (current-local-map)))
+      ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
+      (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
+                  corfu-popupinfo-delay nil)
+      (corfu-mode 1)))
+  (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
   )
 
 (use-package orderless
