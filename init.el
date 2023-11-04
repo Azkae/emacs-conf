@@ -613,8 +613,8 @@ With argument ARG, do this that many times."
     (helm-do-ag (projectile-project-root) nil (symbol-name (symbol-at-point))))
 
 (define-key text-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
-(define-key prog-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
-(define-key emacs-lisp-mode-map (kbd "M-.") 'xref-find-definitions)
+;; (define-key prog-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
+;; (define-key emacs-lisp-mode-map (kbd "M-.") 'xref-find-definitions)
 
 (defun projectile-run-compile ()
   "Invoke `gdb' in the project's root."
@@ -666,6 +666,11 @@ With argument ARG, do this that many times."
 (helm-projectile-on)
 ;; must be binded after (helm-projectile-on) because it remap projectile keybindings
 (define-key projectile-mode-map [remap projectile-ag] 'helm-do-ag-project-root)
+
+(use-package dumb-jump
+  :init
+  ;; (define-key prog-mode-map (kbd "M-.") 'xref-find-definitions)
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate))
 
 (use-package symbol-overlay
   :bind
