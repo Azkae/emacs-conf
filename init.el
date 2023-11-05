@@ -1578,5 +1578,25 @@ fringe and marginal icons.
   (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
+;; Poetry project tracking
+
+(defvar conf--poetry-current-root nil)
+(defun conf--poetry-track-virtualenv()
+  (let ((root (locate-dominating-file default-directory "pyproject.toml")))
+    (when (and root (not (eq root conf--poetry-current-root)))
+      (let ((venv (string-trim (shell-command-to-string "poetry env info --path"))))
+        (message "Applying venv: %s" venv)
+        (setq conf--poetry-current-root root)
+        (pyvenv-activate venv)))))
+
+(define-minor-mode conf--poetry-tracking-mode
+  "Global mode to track poetry projects"
+  :global t
+  :group 'poetry
+  (if conf--poetry-tracking-mode
+      (add-hook 'projectile-after-switch-project-hook 'conf--poetry-track-virtualenv)
+    (remove-hook 'projectile-after-switch-project-hook 'conf--poetry-track-virtualenv)))
+(conf--poetry-tracking-mode)
+
 ;; load graphic settings
 (require 'graphics)
