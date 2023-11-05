@@ -479,13 +479,11 @@ With argument ARG, do this that many times."
   (setq
    helm-buffers-fuzzy-matching t
    helm-ff-newfile-prompt-p nil
-   helm-split-window-in-side-p t
+   helm-split-window-inside-p t
    helm-echo-input-in-header-line t
    ;; Disable helm in minibuffer region completion (eval-expression for example)
    helm-mode-handle-completion-in-region nil
-   helm-moccur-use-ioccur-style-keys nil
    helm-scroll-amount 6
-   helm-moccur-show-buffer-fontification t
    helm-find-files-ignore-thing-at-point t)
   (helm-mode))
 
