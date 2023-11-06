@@ -749,7 +749,8 @@ With argument ARG, do this that many times."
   (("C-x g" . magit-status)
    ("C-x v l" . magit-log-buffer-file))
   :custom
-  (magit-diff-refine-hunk 'all))
+  (magit-diff-refine-hunk 'all)
+  (magit-list-refs-sortby "-creatordate"))
 (setq smerge-command-prefix "\C-cv")
 
 (use-package request)
