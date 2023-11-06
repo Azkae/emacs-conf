@@ -1368,9 +1368,11 @@ variants of Typescript.")
   :init
   (global-corfu-mode)
   (defun corfu-enable-in-minibuffer ()
-    (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
-                corfu-popupinfo-delay nil)
-    (corfu-mode 1))
+    "Enable Corfu in the minibuffer no helm session are active."
+    (when (not helm-alive-p)
+      (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
+                  corfu-popupinfo-delay nil)
+      (corfu-mode 1)))
   (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
   )
 
