@@ -1521,6 +1521,7 @@ fringe and marginal icons.
   (cl-delete value alist :key (lambda (elt) (cdr elt)) :test #'equal))
 
 (defun remove-python-ts-mode ()
+  (interactive)
   (setq auto-mode-alist (remove-from-alist-by-value auto-mode-alist 'python-ts-mode)))
 
 (with-eval-after-load 'python
