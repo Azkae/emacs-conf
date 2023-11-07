@@ -259,8 +259,7 @@
         "\\*helm-.*\\*"
         "\\*helm .*\\*"
         "magit-process:.*"
-        "\\*help\\*"
-        "COMMIT_EDITMSG"))
+        "\\*help\\*"))
 
 (defun is-buffer-valid (buffer-name)
   (let ((valid-buffer t))
