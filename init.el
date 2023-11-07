@@ -225,7 +225,6 @@
 (setq-default tab-width 4)
 
 (setq c-default-style "linux")
-(setq-default indent-tabs-mode nil)
 
 (add-hook 'c++-mode-hook
       #'(lambda()
@@ -969,10 +968,13 @@ With argument ARG, do this that many times."
 
 (use-package clang-format)
 
-(use-package json-mode
+(use-package js
+  :straight nil
   :bind
-  (:map json-mode-map
-        ("M-." . 'helm-config--helm-do-ag-projectile-project-symbol)))
+  (:map js-json-mode-map
+        ("M-." . 'helm-config--helm-do-ag-projectile-project-symbol))
+  :hook
+  (js-json-mode . (lambda () (setq indent-tabs-mode nil))))
 
 (use-package rust-mode)
 
