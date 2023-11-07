@@ -50,6 +50,9 @@
 (require 'paren)
 (show-paren-mode)
 
+;; save minibuffer history
+(savehist-mode 1)
+
 (global-auto-revert-mode)
 (setq inhibit-startup-message t)
 (setq c-toggle-auto-newline t)
