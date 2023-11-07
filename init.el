@@ -1564,7 +1564,8 @@ fringe and marginal icons.
 ;; Note: use dtrt-indent-undo to undo the guess
 (use-package dtrt-indent
   :custom
-  (dtrt-indent-global-mode t))
+  (dtrt-indent-global-mode t)
+  (dtrt-indent-min-relevant-lines 1))
 
 (use-package wgrep
   :custom
