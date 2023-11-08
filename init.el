@@ -1584,6 +1584,14 @@ fringe and marginal icons.
   :custom
   (treesit-auto-langs '(typescript tsx)))
 
+;; TODO: disable eglot when viewing magit commit
+
+;; TODO: set treesitter face attributes
+ ;; '(tree-sitter-hl-face:constant ((t nil)))
+ ;; '(tree-sitter-hl-face:constant.builtin ((t (:inherit (font-lock-constant-face default)))))
+ ;; '(tree-sitter-hl-face:constructor ((t nil)))
+ ;; '(tree-sitter-hl-face:label ((t nil)))
+ ;; '(tree-sitter-hl-face:property ((t nil)))
 
 ;; load graphic settings
 (require 'graphics)
