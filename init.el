@@ -61,6 +61,8 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 (setq-default indent-tabs-mode nil)
 (setq native-comp-async-report-warnings-errors nil)
+(global-unset-key (kbd "C-z"))
+(normal-erase-is-backspace-mode 1)
 
 ;; speedup long lines
 (setq bidi-display-reordering nil)

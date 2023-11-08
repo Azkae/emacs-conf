@@ -11,9 +11,6 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-(global-unset-key (kbd "C-z"))
-(normal-erase-is-backspace-mode 1)
-
 (defun git-gutter-fringe-plus--set-faces (frame)
   (with-selected-frame frame
     (git-gutter-fr+-minimal)
