@@ -947,9 +947,8 @@ With argument ARG, do this that many times."
   :hook
   (c-mode . eglot-ensure)
   (c++-mode . eglot-ensure)
-  (typescript-mode . eglot-ensure)
-  (typescript-mode . conf--setup-simple-completion)
-  (python-mode . eglot-ensure)
+  ((typescript-ts-mode-hook tsx-ts-mode-hook) . eglot-ensure)
+  ((python-mode python-ts-mode) . eglot-ensure)
   :custom
   (eglot-report-progress t)
   ;; help with perf:
@@ -1193,36 +1192,12 @@ With argument ARG, do this that many times."
 (require 'tree-sitter)
 (require 'tree-sitter-langs)
 
-;; (use-package python-black
-;;   :demand t
-;;   :after python
-;;   :hook (python-mode . python-black-on-save-mode-enable-dwim))
-
-;; (use-package python-mode
-;;   :config
-;;   (modify-syntax-entry ?_ "_" python-mode-syntax-table)
-;;   :bind (:map python-mode-map
-;;               (("C-j" . nil))))
-
-(setq-default typescript-indent-level 4)
-
-(use-package typescript-mode
-  :config
-  (tree-sitter-require 'tsx)
-  (add-to-list 'tree-sitter-major-mode-language-alist '(typescript-tsx-mode . tsx)))
-
-(straight-use-package '(tsi :type git :host github :repo "orzechowskid/tsi.el"))
-(require 'tsi-typescript)
-
-(define-derived-mode typescript-tsx-mode typescript-mode "TSX"
-  "Major mode for editing TSX files.
-
-Refer to Typescript documentation for syntactic differences between normal and TSX
-variants of Typescript.")
-(add-to-list 'auto-mode-alist '("\\.tsx?\\'" . typescript-tsx-mode))
-
-(add-hook 'typescript-tsx-mode-hook 'tree-sitter-hl-mode)
-(add-hook 'typescript-tsx-mode-hook 'tsi-typescript-mode)
+(use-package typescript-ts-mode
+  :straight nil
+  :mode (("\\.ts\\'" . typescript-ts-mode)
+         ("\\.tsx\\'" . tsx-ts-mode))
+  :custom
+  (typescript-ts-mode-indent-offset 4))
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -1603,6 +1578,8 @@ fringe and marginal icons.
       (add-hook 'projectile-after-switch-project-hook 'conf--poetry-track-virtualenv)
     (remove-hook 'projectile-after-switch-project-hook 'conf--poetry-track-virtualenv)))
 (conf--poetry-tracking-mode)
+
+(use-package treesit-auto)
 
 ;; load graphic settings
 (require 'graphics)
