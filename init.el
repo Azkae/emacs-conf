@@ -1580,7 +1580,10 @@ fringe and marginal icons.
     (remove-hook 'projectile-after-switch-project-hook 'conf--poetry-track-virtualenv)))
 (conf--poetry-tracking-mode)
 
-(use-package treesit-auto)
+(use-package treesit-auto
+  :custom
+  (treesit-auto-langs '(typescript tsx)))
+
 
 ;; load graphic settings
 (require 'graphics)
