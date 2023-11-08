@@ -753,7 +753,8 @@ With argument ARG, do this that many times."
    ("C-x v l" . magit-log-buffer-file))
   :custom
   (magit-diff-refine-hunk 'all)
-  (magit-list-refs-sortby "-creatordate"))
+  (magit-list-refs-sortby "-creatordate")
+  (magit-diff-visit-avoid-head-blob t))
 (setq smerge-command-prefix "\C-cv")
 
 (use-package request)
