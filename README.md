@@ -14,6 +14,7 @@ brew install emacs-plus --with-native-comp --with-no-frame-refocus
 Run
 ```
 M-x nerd-icons-install-fonts
+M-x treesit-auto-install-all
 ```
 
 ## Keybindings
