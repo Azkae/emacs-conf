@@ -124,6 +124,8 @@
 (global-set-key (kbd "M-e") 'recenter)
 (global-set-key (kbd "M-N") 'goto-line)
 (global-set-key (kbd "M-k") 'compile)
+(global-set-key (kbd "M-z") 'undo-only)
+(global-set-key (kbd "M-Z") 'undo-redo)
 
 (defun move-up (amount)
   (condition-case nil
@@ -394,25 +396,7 @@
   :diminish ws-butler-mode
   :hook ((prog-mode text-mode) . ws-butler-mode))
 
-(use-package undo-tree
-  :diminish undo-tree-mode
-  :init
-  (global-undo-tree-mode 1)
-  :bind
-  (("M-Z" . redo))
-  :config
-  (setq undo-tree-auto-save-history nil)
-  (setq undo-tree-enable-undo-in-region nil)
-  (setq undo-tree-history-directory-alist '((".*" . "~/.emacs.d/undo")))
-  (defalias 'redo 'undo-tree-redo)
-
-  (defun my-undo-tree-save-history (undo-tree-save-history &rest args)
-    (let ((message-log-max nil)
-          (inhibit-message t))
-      (apply undo-tree-save-history args)))
-
-  (advice-add 'undo-tree-save-history :around 'my-undo-tree-save-history))
-
+(use-package vundo)
 
 (defun backward-delete-word (arg)
   "Delete characters backward until encountering the beginning of a word.
