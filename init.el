@@ -1171,7 +1171,7 @@ With argument ARG, do this that many times."
 (use-package tree-sitter-langs
   :hook
   (python-mode . tree-sitter-hl-mode)
-  (cc-mode . tree-sitter-hl-mode)
+  ((c-mode c++-mode) . tree-sitter-hl-mode)
   (python-mode . (lambda ()
                    (setq-local tree-sitter-hl-default-patterns tree-sitter-queries-python))))
 
