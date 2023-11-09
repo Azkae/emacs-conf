@@ -1449,6 +1449,8 @@ fringe and marginal icons.
   (("C-c C-d" . ts-fold-toggle)
   :map python-mode-map
   ("C-c C-d" . nil)
+  :map c++-mode-map
+  ("C-c C-d" . nil)
   :map python-ts-mode-map
   ("C-c C-d" . nil)))
 
