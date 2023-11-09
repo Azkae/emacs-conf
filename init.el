@@ -126,6 +126,7 @@
 (global-set-key (kbd "M-k") 'compile)
 (global-set-key (kbd "M-z") 'undo-only)
 (global-set-key (kbd "M-Z") 'undo-redo)
+(global-set-key (kbd "C-x C-c") nil)
 
 (defun move-up (amount)
   (condition-case nil
