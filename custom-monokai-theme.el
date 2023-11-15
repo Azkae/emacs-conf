@@ -75,7 +75,15 @@
    `(magit-diff-context-highlight ((t (:background "grey23"))))
    `(magit-section-highlight ((t (:background "grey28"))))
    `(magit-diff-file-heading ((t (:background "#164863"))))
-   `(magit-diff-file-heading-highlight ((t (:background "#427D9D"))))))
+   `(magit-diff-file-heading-highlight ((t (:background "#427D9D"))))
+   `(tree-sitter-hl-face:constant ((t nil)))
+   `(tree-sitter-hl-face:constant.builtin ((t (:inherit (font-lock-constant-face default)))))
+   `(tree-sitter-hl-face:constructor ((t nil)))
+   `(tree-sitter-hl-face:function.call ((t (:underline nil))))
+   `(tree-sitter-hl-face:label ((t nil)))
+   `(tree-sitter-hl-face:property ((t nil)))
+   `(tree-sitter-hl-face:type ((t (:inherit font-lock-type-face))))
+   `(tree-sitter-hl-face:type.builtin ((t (:inherit font-lock-type-face))))))
 
 ;;;###autoload
 (when load-file-name
