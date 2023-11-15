@@ -397,7 +397,9 @@
   :diminish ws-butler-mode
   :hook ((prog-mode text-mode) . ws-butler-mode))
 
-(use-package vundo)
+(use-package vundo
+  :bind
+  (("C-x u" . vundo)))
 
 (defun backward-delete-word (arg)
   "Delete characters backward until encountering the beginning of a word.
