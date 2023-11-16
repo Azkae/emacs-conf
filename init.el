@@ -879,7 +879,7 @@ With argument ARG, do this that many times."
   :bind
   (("M-q r" . quickrun))
   :config
-  (setq quickrun-timeout-seconds 99999999)
+  (setq quickrun-timeout-seconds -1)
   (add-hook 'quickrun-after-run-hook
             (lambda()
               (with-current-buffer quickrun--buffer-name
