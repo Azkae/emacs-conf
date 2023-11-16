@@ -810,7 +810,7 @@ With argument ARG, do this that many times."
   (:map magit-mode-map
         ("," . #'conf--magit-delta-toggle))
   :custom
-  (magit-delta-default-dark-theme "Sublime Snazzy")
+  (magit-delta-default-dark-theme "Monokai Extended")
   (magit-delta-default-light-theme "Github")
   (magit-delta-hide-plus-minus-markers nil)
   :config
