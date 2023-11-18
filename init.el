@@ -78,6 +78,10 @@
 ;; prefer vertical splits
 (setq split-width-threshold 140)
 
+;; Trackpad horizontal scrolling
+(setq mouse-wheel-tilt-scroll t)
+(setq mouse-wheel-flip-direction t)
+
 ;; TODO: use bind-key: https://melpa.org/#/bind-key
 
 ;; basic keybindings
