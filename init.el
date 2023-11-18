@@ -1522,7 +1522,7 @@ fringe and marginal icons.
                       (lambda (buf)
                         (quit-window nil (get-buffer-window buf)))
                       buffer)))
-(add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
+;; (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
 
 (with-eval-after-load 'compile
   (fancy-compilation-mode))
