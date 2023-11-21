@@ -958,7 +958,14 @@ With argument ARG, do this that many times."
 
   (fset #'jsonrpc--log-event #'ignore)
 
-  (add-to-list 'eglot-stay-out-of 'company-backends))
+  (add-to-list 'eglot-stay-out-of 'company-backends)
+
+  (defun conf--project-try-cargo-toml (dir)
+    "Try to locate a Rust project."
+    (when (locate-dominating-file dir "Cargo.toml")
+      `(transient . ,dir)))
+
+  (add-hook 'project-find-functions 'conf--project-try-cargo-toml nil nil))
 
 (use-package clang-format)
 
