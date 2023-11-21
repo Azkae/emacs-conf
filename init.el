@@ -352,7 +352,8 @@
 (use-package diminish)
 
 (diminish 'gcmh-mode)
-(diminish 'eldoc-mode)
+(with-eval-after-load 'eldoc
+  (diminish 'eldoc-mode))
 (diminish 'subword-mode)
 
 (add-hook 'cc-mode-hook (lambda () (abbrev-mode -1)))
