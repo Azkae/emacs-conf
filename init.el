@@ -1589,5 +1589,12 @@ fringe and marginal icons.
  ;; '(tree-sitter-hl-face:label ((t nil)))
  ;; '(tree-sitter-hl-face:property ((t nil)))
 
+(use-package buffer-move
+  :bind
+  ("<C-M-up>"    .  buf-move-up)
+  ("<C-M-down>"  .  buf-move-down)
+  ("<C-M-left>"  .  buf-move-left)
+  ("<C-M-right>" .  buf-move-right))
+
 ;; load graphic settings
 (require 'graphics)
