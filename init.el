@@ -942,6 +942,7 @@ With argument ARG, do this that many times."
   (c++-mode . eglot-ensure)
   ((typescript-ts-mode-hook tsx-ts-mode-hook) . eglot-ensure)
   ((python-mode python-ts-mode) . eglot-ensure)
+  (rust-mode . eglot-ensure)
   :custom
   (eglot-report-progress t)
   ;; help with perf:
