@@ -676,6 +676,10 @@ With argument ARG, do this that many times."
   ([f7] . symbol-overlay-put))
 
 (use-package cmake-mode
+  :bind
+  (:map cmake-mode-map
+        ;; dump-jump doesn't work on cmake
+        ("M-." . helm-config--helm-do-ag-projectile-project-symbol))
   :config
   (setq cmake-tab-width 4))
 
