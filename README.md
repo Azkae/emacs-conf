@@ -79,6 +79,11 @@ cd ~/.emacs.d/straight/repos/helm
 git apply ~/emacs-conf/helm.patch
 ```
 
+To fix lldb bug on MacOS Sonoma
+```
+rm ~/.emacs.d/debug-adapters/codelldb/extension/lldb/bin/debugserver
+```
+
 ### How to reproduce bugs:
 `emacs -Q -l ~/.emacs.d/straight/repos/straight.el/bootstrap.el`
 
