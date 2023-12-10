@@ -1609,5 +1609,18 @@ fringe and marginal icons.
   ("<C-M-left>"  .  buf-move-left)
   ("<C-M-right>" .  buf-move-right))
 
+(use-package dape
+  :hook
+  (dape-compile-compile-hooks . kill-buffer)
+  :custom
+  (dape-key-prefix "\C-xd")
+  :config
+  (repeat-mode 1))
+;; Build and run in debugger:
+;;   codelldb-cc :cwd "/path/base_dir" :program "/path/base_dir/program" :args ["test"] compile "make -k"
+
+;; Attach running process:
+;;   codelldb-cc :cwd "/path/base_dir" :program "/path/base_dir/program" :request "attach" :pid <pid>
+
 ;; load graphic settings
 (require 'graphics)
