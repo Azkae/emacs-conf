@@ -941,7 +941,8 @@ With argument ARG, do this that many times."
   :bind
   (:map eglot-mode-map
         ("M-." . xref-find-definitions)
-        ("M-?" . xref-find-references))
+        ("M-?" . xref-find-references)
+        ("<mouse-2>" . eglot-code-actions-at-mouse))
   :hook
   (c-mode . eglot-ensure)
   (c++-mode . eglot-ensure)
