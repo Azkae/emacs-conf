@@ -729,6 +729,7 @@ With argument ARG, do this that many times."
    ("M-j"      . mc/mark-next-symbol-like-this)
    ("C-n"      . mc/skip-to-next-like-this)
    ("C-S-n"    . mc/unmark-previous-like-this)
+   ("C-M-<mouse-1>" . mc/add-cursor-on-click)
    :map python-mode-map
    ("C-j"      . mc/mark-next-like-this)
    :map mc/keymap
