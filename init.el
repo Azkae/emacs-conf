@@ -1610,11 +1610,9 @@ fringe and marginal icons.
   ("<C-M-right>" .  buf-move-right))
 
 (use-package dape
-  :hook
-  (dape-compile-compile-hooks . kill-buffer)
-  :custom
-  (dape-key-prefix "\C-xd")
-  :config
+  :init
+  (setq dape-key-prefix "\C-xd")
+  (add-hook 'dape-compile-compile-hooks 'kill-buffer)
   (repeat-mode 1))
 ;; Build and run in debugger:
 ;;   codelldb-cc :cwd "/path/base_dir" :program "/path/base_dir/program" :args ["test"] compile "make -k"
