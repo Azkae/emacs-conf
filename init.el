@@ -21,6 +21,7 @@
 
 (straight-use-package 'use-package)
 (setq straight-use-package-by-default t)
+(setq use-package-always-demand t)
 (setq package-enable-at-startup nil)
 
 ;; set load path
