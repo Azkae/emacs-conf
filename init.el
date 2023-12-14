@@ -945,8 +945,8 @@ With argument ARG, do this that many times."
         ("M-?" . xref-find-references)
         ("<mouse-2>" . eglot-code-actions-at-mouse))
   :hook
-  (c-mode . eglot-ensure)
-  (c++-mode . eglot-ensure)
+  ((c-mode c++-mode c-ts-mode c++-ts-mode) . eglot-ensure)
+  ((c-mode c++-mode c-ts-mode c++-ts-mode) . (lambda () (setq-local eglot-ignored-server-capabilities '(:inlayHintProvider))))
   ((typescript-ts-mode-hook tsx-ts-mode-hook) . eglot-ensure)
   ((python-mode python-ts-mode) . eglot-ensure)
   (rust-mode . eglot-ensure)
@@ -959,7 +959,6 @@ With argument ARG, do this that many times."
   ;; (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed")))
   (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed" "--header-insertion-decorators=0" "--header-insertion=never")))
   (setq eldoc-echo-area-use-multiline-p 2)
-  (setq eglot-ignored-server-capabilities '(:inlayHintProvider))
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
 
