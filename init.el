@@ -1621,5 +1621,8 @@ With argument ARG, do this that many times."
 ;; Attach running process:
 ;;   codelldb-cc :cwd "/path/base_dir" :program "/path/base_dir/program" :request "attach" :pid <pid>
 
+(use-package gdscript-mode
+  :hook (gdscript-mode . eglot-ensure))
+
 ;; load graphic settings
 (require 'graphics)
