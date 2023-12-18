@@ -1624,5 +1624,9 @@ With argument ARG, do this that many times."
 (use-package gdscript-mode
   :hook (gdscript-mode . eglot-ensure))
 
+(use-package org-modern
+  :config
+  (global-org-modern-mode))
+
 ;; load graphic settings
 (require 'graphics)
