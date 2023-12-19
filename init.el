@@ -1616,5 +1616,11 @@ With argument ARG, do this that many times."
   :config
   (global-org-modern-mode))
 
+(use-package org-modern-indent
+  :straight (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")
+  :config
+  (setq org-startup-indented t)
+  (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
+
 ;; load graphic settings
 (require 'graphics)
