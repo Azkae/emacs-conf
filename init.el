@@ -331,6 +331,7 @@
   :config
   (setq org-startup-folded t)
   (setq org-confirm-babel-evaluate nil)
+  (setq org-support-shift-select t)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((dot . t) (python . t))))
