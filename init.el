@@ -327,7 +327,10 @@
   :bind
   (:map org-mode-map
         ("M-." . org-open-at-point)
-        ("M-<return>" . conf--org-open-link-maybe))
+        ("M-<return>" . conf--org-open-link-maybe)
+        ("M-<up>"     . (lambda () (interactive) (move-up 4)))
+        ("M-<down>"   . (lambda () (interactive) (move-down 4)))
+        )
   :config
   (setq org-startup-folded t)
   (setq org-confirm-babel-evaluate nil)
