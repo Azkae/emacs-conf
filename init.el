@@ -1604,7 +1604,10 @@ With argument ARG, do this that many times."
   :straight (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")
   :config
   (setq org-startup-indented t)
-  (add-hook 'org-mode-hook #'org-modern-indent-mode 90))
+  (add-hook 'org-mode-hook #'org-modern-indent-mode 90)
+  (set-face-attribute 'org-modern-bracket-line nil :family "Menlo"))
+
+;; TODO: try https://github.com/jdtsmith/indent-bars
 
 ;; load graphic settings
 (require 'graphics)
