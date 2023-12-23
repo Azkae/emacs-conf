@@ -147,6 +147,7 @@
 (global-set-key (kbd "M-<up>")   (lambda () (interactive) (move-up 4)))
 (global-set-key (kbd "M-<down>") (lambda () (interactive) (move-down 4)))
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
+(pixel-scroll-precision-mode)
 
 
 (defun copy-file-name-to-clipboard ()
