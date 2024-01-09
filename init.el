@@ -860,6 +860,7 @@ With argument ARG, do this that many times."
             (lambda()
               (with-current-buffer quickrun--buffer-name
                 (read-only-mode -1)
+                (end-of-buffer)
                 (insert "\n-- End --")
                 (read-only-mode +1))))
   )
