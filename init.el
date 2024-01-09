@@ -851,16 +851,6 @@ With argument ARG, do this that many times."
                                     :background conf--saved-magit-diff-removed))))
   )
 
-
-;; ;; dirlocals:
-;; ((nil
-;;   (python-shell-interpreter . "python_env")
-;;   (flycheck-pycheckers-venv-root . "/path/to/venv/bin")))
-
-;; python_env:
-;; source ~/signals/venv/bin/activate && python $*
-
-
 (use-package quickrun
   :bind
   (("M-q r" . quickrun))
