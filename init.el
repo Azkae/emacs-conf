@@ -1111,8 +1111,8 @@ With argument ARG, do this that many times."
   (org-roam-verbose nil)
   :bind
   (("C-c n f" . org-roam-node-find)
-   ("C-c n t" . org-roam-dailies-capture-today)
-   ("C-c n y" . org-roam-dailies-capture-yesterday)
+   ("C-c n t" . org-roam-dailies-goto-today)
+   ("C-c n y" . org-roam-dailies-goto-yesterday)
    ("C-c n g" . org-roam-graph)
    :map org-mode-map
    (("C-c n i" . org-roam-node-insert))
