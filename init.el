@@ -937,7 +937,20 @@ With argument ARG, do this that many times."
     (when (locate-dominating-file dir "Cargo.toml")
       `(transient . ,dir)))
 
-  (add-hook 'project-find-functions 'conf--project-try-cargo-toml nil nil))
+  (add-hook 'project-find-functions 'conf--project-try-cargo-toml nil nil)
+  (setq-default eglot-workspace-configuration
+                (lambda (&rest args)
+                  (let ((root (locate-dominating-file default-directory "pyproject.toml")))
+                    (when root
+                      (let ((process-environment (cl-remove-if (lambda (element) (string-prefix-p "VIRTUAL_ENV=" element))
+                                                               process-environment)))
+                        (let* ((venv-full-path (string-trim (shell-command-to-string "poetry env info --path")))
+                               (venv (file-name-nondirectory venv-full-path))
+                               (venv-path (file-name-directory venv-full-path)))
+                          `((:pyright .
+                                      (:venvPath ,venv-path
+                                       :venv ,venv)))))))))
+  )
 
 (use-package clang-format)
 
@@ -1540,11 +1553,13 @@ With argument ARG, do this that many times."
 (defvar conf--poetry-current-root nil)
 (defun conf--poetry-track-virtualenv()
   (let ((root (locate-dominating-file default-directory "pyproject.toml")))
-    (when (and root (not (eq root conf--poetry-current-root)))
-      (let ((venv (string-trim (shell-command-to-string "poetry env info --path"))))
-        (message "Applying venv: %s" venv)
-        (setq conf--poetry-current-root root)
-        (pyvenv-activate venv)))))
+    (when (and root (not (string= root conf--poetry-current-root)))
+      (let ((process-environment (cl-remove-if (lambda (element) (string-prefix-p "VIRTUAL_ENV=" element))
+                                               process-environment)))
+            (let ((venv (string-trim (shell-command-to-string "poetry env info --path"))))
+              (message "Applying venv: %s" venv)
+              (setq conf--poetry-current-root root)
+              (pyvenv-activate venv))))))
 
 (define-minor-mode conf--poetry-tracking-mode
   "Global mode to track poetry projects"
