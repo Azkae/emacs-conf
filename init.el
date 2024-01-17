@@ -376,7 +376,7 @@
 
 (use-package ws-butler
   :diminish ws-butler-mode
-  :hook ((prog-mode text-mode) . ws-butler-mode))
+  :hook (prog-mode . ws-butler-mode))
 
 (use-package vundo
   :bind
