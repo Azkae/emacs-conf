@@ -149,6 +149,7 @@
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (pixel-scroll-precision-mode)
 
+(setq frame-resize-pixelwise t)
 
 (defun copy-file-name-to-clipboard ()
   "Copy the current buffer file name to the clipboard."
