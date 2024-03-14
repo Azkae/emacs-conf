@@ -728,7 +728,10 @@ With argument ARG, do this that many times."
   :custom
   (magit-diff-refine-hunk 'all)
   (magit-list-refs-sortby "-creatordate")
-  (magit-diff-visit-avoid-head-blob t))
+  (magit-diff-visit-avoid-head-blob t)
+  (magit-auto-revert-immediately nil)
+  (magit-bury-buffer-function (lambda (_) (magit-mode-quit-window t)))
+  )
 (setq smerge-command-prefix "\C-cv")
 
 (use-package request)
