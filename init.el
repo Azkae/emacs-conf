@@ -743,13 +743,22 @@ With argument ARG, do this that many times."
   (browse-url
    (format "https://github.com/%s/pull/%s" repo number)))
 
+(defun conf--get-current-repo ()
+  (replace-regexp-in-string
+   "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
+   (magit-get "remote"
+              (magit-get-push-remote)
+              "url")))
+
+(defun conf--visit-circle-ci ()
+  (interactive)
+  (let ((repo (conf--get-current-repo))
+        (branch (magit-get-current-branch)))
+    (browse-url (format "https://app.circleci.com/pipelines/github/%s?branch=%s" repo branch))))
+
 (defun conf--visit-pull-request-url-github ()
   (interactive)
-  (lexical-let ((repo (replace-regexp-in-string
-                "\\`.+github\\.com:\\(.+\\)\\.git\\'" "\\1"
-                (magit-get "remote"
-                           (magit-get-push-remote)
-                           "url")))
+  (lexical-let ((repo (conf--get-current-repo))
          (branch (magit-get-current-branch))
          (commit (magit-rev-parse
                   (and magit-copy-revision-abbreviated "--short")
@@ -787,6 +796,10 @@ With argument ARG, do this that many times."
 (eval-after-load 'magit
   '(define-key magit-mode-map "h"
      #'conf--visit-pull-request-url-github))
+
+(eval-after-load 'magit
+  '(define-key magit-mode-map "H"
+     #'conf--visit-circle-ci))
 
 (straight-use-package '(git-timemachine :type git :host github :repo "emacsmirror/git-timemachine"))
 
