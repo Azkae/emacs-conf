@@ -807,6 +807,9 @@ With argument ARG, do this that many times."
 (straight-use-package '(git-timemachine :type git :host github :repo "emacsmirror/git-timemachine"))
 
 (use-package magit-delta
+  :straight (magit-delta :type git :host github :repo "dandavison/magit-delta"
+                     :fork (:host github :repo "jumper047/magit-delta"))
+
   :if (executable-find "delta")
   ;; :hook (magit-mode . magit-delta-mode)
   :bind
