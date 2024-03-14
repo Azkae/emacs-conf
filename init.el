@@ -1362,6 +1362,7 @@ With argument ARG, do this that many times."
                   corfu-popupinfo-delay nil)
       (corfu-mode 1)))
   (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
+  (add-hook 'after-save-hook #'corfu-quit)
   )
 
 (use-package orderless
