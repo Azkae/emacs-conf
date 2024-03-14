@@ -1395,6 +1395,7 @@ With argument ARG, do this that many times."
   (python-ts-mode . apheleia-mode)
   (c++-mode . apheleia-mode)
   (c++-ts-mode . apheleia-mode)
+  (terraform-mode . apheleia-mode)
   :init
   ;; (apheleia-global-mode +1)
   )
@@ -1637,6 +1638,9 @@ With argument ARG, do this that many times."
   (set-face-attribute 'org-modern-bracket-line nil :family "Menlo"))
 
 ;; TODO: try https://github.com/jdtsmith/indent-bars
+(use-package terraform-mode
+  :hook
+  (terraform-mode . eglot-ensure))
 
 ;; load graphic settings
 (require 'graphics)
