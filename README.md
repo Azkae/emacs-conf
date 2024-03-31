@@ -7,14 +7,25 @@ Using [`Straight`](https://github.com/radian-software/straight.el) to declare pa
 
 Install emacs:
 ```
+brew install libtool cmake
+
 brew tap d12frosted/emacs-plus
 brew install emacs-plus --with-native-comp --with-no-frame-refocus
+./install.sh
+# Put the following in your ~/.emacs:
+# (load-file "$(pwd)/init.el")
 ```
 
 Run
 ```
 M-x nerd-icons-install-fonts
 M-x treesit-auto-install-all
+```
+
+MacOS:
+```
+System Settings -> Keyboard shortcuts -> Input sources:
+Disable all ^Space to fix ctrl-space
 ```
 
 ## Keybindings
@@ -71,7 +82,7 @@ Keybinding | Description
 For *Iterm*:
 
 In `Profiles` -> `Advanced` -> `Sementic History`:
-Set to `Run command`, with value: `$PATH_TO/emacsclient -n +\2 \1`
+Set to `Run command`, with value: `$PATH_TO/emacsclient -n \2 \1`
 
 On emacs version 28 and lower, apply helm patch for OSX:
 ```
