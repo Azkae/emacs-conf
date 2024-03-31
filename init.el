@@ -1187,20 +1187,6 @@ With argument ARG, do this that many times."
     (insert-file-contents filePath)
     (buffer-string)))
 
-(setq tree-sitter-queries-python (get-string-from-file (format "%s/%s" conf--base-dir "tree-sitter/python.scm")))
-
-(use-package tree-sitter
-  :config)
-(use-package tree-sitter-langs
-  :hook
-  (python-mode . tree-sitter-hl-mode)
-  ((c-mode c++-mode) . tree-sitter-hl-mode)
-  (python-mode . (lambda ()
-                   (setq-local tree-sitter-hl-default-patterns tree-sitter-queries-python))))
-
-(require 'tree-sitter)
-(require 'tree-sitter-langs)
-
 (use-package typescript-ts-mode
   :straight nil
   :mode (("\\.ts\\'" . typescript-ts-mode)
@@ -1403,112 +1389,6 @@ With argument ARG, do this that many times."
   ;; (apheleia-global-mode +1)
   )
 
-;; (use-package realgud)
-
-;; ;; see projectile keybings:
-;; ;;    ("M-p k" . projectile-run-compile)
-;; ;;    ("M-p d" . projectile-run-lldb)
-;; (use-package realgud-lldb
-;;   :bind
-;;   (:map realgud--lldb-track-mode-map
-;;         ("<M-up>"   . realgud:cmd-older-frame)
-;;         ("<M-down>" . realgud:cmd-newer-frame)
-;;         :map comint-mode-map
-;;         ("<up>"     . (lambda () (interactive) (comint-goto-process-mark) (comint-previous-input 1)))
-;;         ("<down>"   . (lambda () (interactive) (comint-goto-process-mark) (comint-next-input 1))))
-;;   :commands realgud--lldb lldb
-;;   :hook
-;;   (comint-mode . (lambda () (setq comint-move-point-for-output t
-;;                                   comint-scroll-to-bottom-on-input t))))
-
-;; ;; Fix lldb bt frame format, see PR: https://github.com/realgud/realgud-lldb/pull/12
-;; (el-patch-feature realgud-lldb)
-;; (with-eval-after-load 'realgud-lldb
-;;   (el-patch-defun realgud--lldb (&optional opt-cmd-line no-reset)
-;;                   "Invoke the lldb debugger and start the Emacs user interface.
-
-;; OPT-CMD-LINE is treated like a shell string; arguments are
-;; tokenized by `split-string-and-unquote'.
-
-;; Normally, command buffers are reused when the same debugger is
-;; reinvoked inside a command buffer with a similar command. If we
-;; discover that the buffer has prior command-buffer information and
-;; NO-RESET is nil, then that information which may point into other
-;; buffers and source buffers which may contain marks and fringe or
-;; marginal icons is reset. See `loc-changes-clear-buffer' to clear
-;; fringe and marginal icons.
-;; "
-;;                   (interactive)
-;;                   (let* ((cmd-str (or opt-cmd-line (realgud--lldb-query-cmdline "lldb")))
-;; 	                     (cmd-args (split-string-and-unquote cmd-str))
-;; 	                     (parsed-args (realgud--lldb-parse-cmd-args cmd-args))
-;; 	                     (script-args (caddr parsed-args))
-;; 	                     (script-name (car script-args))
-;; 	                     (parsed-cmd-args
-;; 	                      (cl-remove-if 'nil (realgud:flatten parsed-args)))
-;; 	                     (cmd-buf (realgud:run-process realgud--lldb-command-name
-;; 				                                       script-name parsed-cmd-args
-;; 				                                       'realgud--lldb-minibuffer-history
-;; 				                                       nil))
-;; 	                     )
-;;                     (if cmd-buf
-;; 	                    (with-current-buffer cmd-buf
-;; 	                      (set (make-local-variable 'realgud--lldb-file-remap)
-;; 	                           (make-hash-table :test 'equal))
-;; 	                      ;; The following directs lldb to emit full paths
-;; 	                      ;; when stopping at a breakpoint,
-;; 	                      ;; which lets us find the file.
-;; 	                      ;; Unfortunately lldb only emits base file names
-;; 	                      ;; when setting breakpoints,
-;; 	                      ;; so we still show an unhelpful prompt at that time.
-;; 	                      (realgud-command (el-patch-swap "settings set frame-format frame #${frame.index}: ${frame.pc}{ ${module.file.basename}{\`${function.name}}}{ at ${line.file.fullpath}:${line.number}}\n" "settings set frame-format frame #${frame.index}: ${frame.pc}{ ${module.file.basename}{\`${function.name}}}{ at ${line.file.fullpath}:${line.number}}\\n")
-;; 			                               nil nil nil)
-;; 	                      (realgud:remove-ansi-schmutz)
-;; 	                      )
-;;                       )
-;;                     )
-;;                   ))
-
-(use-package ts-fold
-  :straight (ts-fold :type git :host github :repo "emacs-tree-sitter/ts-fold")
-  :bind
-  (("C-c C-d" . ts-fold-toggle)
-  :map python-mode-map
-  ("C-c C-d" . nil)
-  :map c++-mode-map
-  ("C-c C-d" . nil)
-  :map python-ts-mode-map
-  ("C-c C-d" . nil)))
-
-;; ;; Set native tree sitter language support
-;; ;; Install them with M-x treesit-install-language-grammar
-;; (setq treesit-language-source-alist
-;;    '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-;;      (cmake "https://github.com/uyha/tree-sitter-cmake")
-;;      (css "https://github.com/tree-sitter/tree-sitter-css")
-;;      (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-;;      (go "https://github.com/tree-sitter/tree-sitter-go")
-;;      (html "https://github.com/tree-sitter/tree-sitter-html")
-;;      (javascript "https://github.com/tree-sitter/tree-sitter-javascript" "master" "src")
-;;      (json "https://github.com/tree-sitter/tree-sitter-json")
-;;      (make "https://github.com/alemuller/tree-sitter-make")
-;;      (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-;;      (python "https://github.com/tree-sitter/tree-sitter-python")
-;;      (toml "https://github.com/tree-sitter/tree-sitter-toml")
-;;      (tsx "https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src")
-;;      (typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
-;;      (yaml "https://github.com/ikatyang/tree-sitter-yaml")
-;;      (c++ "https://github.com/tree-sitter/tree-sitter-cpp")))
-
-;; ;; Remap python-mode to python-ts-mode
-;; ;; You still need to adapt every hooks/map to the new mode
-;; ;; Eglot for instance
-;; ;; => Disabled for now
-;; (setq major-mode-remap-alist
-;;  '((python-mode . python-ts-mode)))
-
-;; (setq treesit-extra-load-path '("/Users/ouabde_r/tree-sitter-module/dist"))
-
 ;; Disable python-ts-mode:
 (defun remove-from-alist-by-value (alist value)
   "Remove the first entry with VALUE from ALIST."
@@ -1597,16 +1477,7 @@ With argument ARG, do this that many times."
 
 (use-package treesit-auto
   :custom
-  (treesit-auto-langs '(typescript tsx)))
-
-;; TODO: disable eglot when viewing magit commit
-
-;; TODO: set treesitter face attributes
- ;; '(tree-sitter-hl-face:constant ((t nil)))
- ;; '(tree-sitter-hl-face:constant.builtin ((t (:inherit (font-lock-constant-face default)))))
- ;; '(tree-sitter-hl-face:constructor ((t nil)))
- ;; '(tree-sitter-hl-face:label ((t nil)))
- ;; '(tree-sitter-hl-face:property ((t nil)))
+  (treesit-auto-langs '(typescript tsx python)))
 
 (use-package buffer-move
   :bind
