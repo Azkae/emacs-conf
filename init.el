@@ -453,6 +453,7 @@ With argument ARG, do this that many times."
    helm-ff-newfile-prompt-p nil
    helm-split-window-inside-p t
    helm-echo-input-in-header-line t
+   helm-move-to-line-cycle-in-source nil
    ;; Disable helm in minibuffer region completion (eval-expression for example)
    helm-mode-handle-completion-in-region nil
    helm-scroll-amount 6
@@ -885,7 +886,9 @@ With argument ARG, do this that many times."
                 (read-only-mode +1))))
   )
 
-(use-package yaml-mode)
+(use-package yaml-mode
+  :hook
+  (yaml-mode . toggle-truncate-lines))
 
 (use-package swift-mode)
 
