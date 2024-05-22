@@ -293,6 +293,20 @@
 ;; (setq gc-cons-threshold 100000000)
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
+(defun my-backward-kill-word ()
+  "Kill word backwards, and delete matching pair if at point."
+  (interactive)
+  (let ((pt (point)))
+    (when (and (electric-pair-mode)
+               (char-before)
+               (char-after)
+               (eq (matching-paren (char-before)) (char-after)))
+      (delete-char 1)
+      (delete-char -1))
+    (backward-kill-word 1)))
+
+(global-set-key (kbd "M-DEL") 'my-backward-kill-word)
+
 ;; --------------
 ;; setup packages
 ;; --------------
