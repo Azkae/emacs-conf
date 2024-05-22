@@ -1478,8 +1478,9 @@ With argument ARG, do this that many times."
 (defun conf--poetry-track-virtualenv()
   (let ((root (locate-dominating-file default-directory "pyproject.toml")))
     (when (and root (not (string= root conf--poetry-current-root)))
-      (let ((process-environment (cl-remove-if (lambda (element) (string-prefix-p "VIRTUAL_ENV=" element))
-                                               process-environment)))
+      (let ((process-environment (cl-remove-if
+                                  (lambda (element) (string-prefix-p "VIRTUAL_ENV=" element))
+                                  process-environment)))
             (let ((venv (string-trim (shell-command-to-string "poetry env info --path"))))
               (message "Applying venv: %s" venv)
               (setq conf--poetry-current-root root)
