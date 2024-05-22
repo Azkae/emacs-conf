@@ -1399,6 +1399,7 @@ With argument ARG, do this that many times."
   (c++-mode . apheleia-mode)
   (c++-ts-mode . apheleia-mode)
   (terraform-mode . apheleia-mode)
+  (typescript-ts-mode . apheleia-mode)
   :init
   ;; (apheleia-global-mode +1)
   )
