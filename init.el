@@ -1536,5 +1536,16 @@ With argument ARG, do this that many times."
   :hook
   (terraform-mode . eglot-ensure))
 
+
+(use-package casual
+  :bind
+  (:map calc-mode-map
+        ("SPC" . casual-main-menu)))
+
+;; Disable M-o key in html
+(eval-after-load 'mhtml-mode
+  (add-hook 'mhtml-mode-hook #'(lambda() (bind-key "M-o" nil mhtml-mode-map))))
+
+
 ;; load graphic settings
 (require 'graphics)
