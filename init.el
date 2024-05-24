@@ -1559,6 +1559,11 @@ With argument ARG, do this that many times."
 (eval-after-load 'mhtml-mode
   (add-hook 'mhtml-mode-hook #'(lambda() (bind-key "M-o" nil mhtml-mode-map))))
 
+(which-function-mode)
+
+;; (use-package breadcrumb
+;;   :config
+;;   (breadcrumb-mode))
 
 ;; load graphic settings
 (require 'graphics)
