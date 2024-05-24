@@ -104,6 +104,7 @@
 (global-unset-key (kbd "M-t"))
 
 (define-key key-translation-map (kbd "M-g") (kbd "C-g"))
+; (define-key crm-local-completion-map (kbd "M-v") nil)
 
 (require 'flymake)
 (define-key flymake-mode-map (kbd "C-c i l") 'flymake-show-diagnostics-buffer)
@@ -1531,11 +1532,23 @@ With argument ARG, do this that many times."
   (add-hook 'org-mode-hook #'org-modern-indent-mode 90)
   (set-face-attribute 'org-modern-bracket-line nil :family "Menlo"))
 
-;; TODO: try https://github.com/jdtsmith/indent-bars
 (use-package terraform-mode
   :hook
   (terraform-mode . eglot-ensure))
 
+;; (use-package treesitter-context
+;;   :straight (treesitter-context :type git :host github :repo "zbelial/treesitter-context.el")
+;;   :hook
+;;   (python-ts-mode . treesitter-context-mode)
+;;   :custom
+;;   (treesitter-context-background-color "#272822")
+;;   (treesitter-context-show-context-always nil)
+;;   (treesitter-context-show-line-number nil))
+
+;; ;; TODO: try https://github.com/jdtsmith/indent-bars
+;; TODO: disable eglot when viewing magit commit
+
+;; todo: try https://github.com/joaotavora/breadcrumb
 
 (use-package casual
   :bind
