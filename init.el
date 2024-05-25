@@ -1235,54 +1235,6 @@ With argument ARG, do this that many times."
 
 ;; (add-to-list 'eglot-ignored-server-capabilites :hoverProvider)
 
-(defun conf--corfu-complete ()
-  "Complete common prefix"
-  (interactive)
-  (if (yas--templates-for-key-at-point)
-      (progn (message "Use tab once again to expand snippet")
-             (corfu-quit))
-    (if (= corfu--total 1)
-        (progn
-          ;; Handling of file completion (next 2 lines)
-          (if (string-suffix-p "/" (car corfu--candidates))
-              (corfu-complete)
-            (corfu--goto 0)
-            (corfu-insert)))
-      (let* ((input (car corfu--input))
-             (str (if (thing-at-point 'filename) (file-name-nondirectory input) input))
-             (pt (length str))
-             ;; (candidates (mapcar 'conf--remove-leading-dot corfu--candidates))
-             (candidates corfu--candidates)
-             (common (try-completion str candidates)))
-
-        ;; Do not complete if the input contain a separator
-        (when (not (string-match-p (string corfu-separator) str))
-          ;; if no common string is found, try re-fetching candidates,
-          ;; ex: if the completion started from an empty string
-          (if (not common)
-              (conf--corfu-reset)
-            (let* ((endpt (string-match "[\\(|<]" common)))
-              (when (and (> pt 0)
-                         (stringp common)
-                         (not (string= str common)))
-                ;; Handling of file completion (next 2 lines)
-                (if (string-suffix-p "/" common)
-                    (corfu-complete)
-                  (if (and (string= common (car candidates))
-                           ;; remove next line if you want to end completion if the current prefix is equal to the first completion
-                           (not (string-prefix-p common (nth 1 candidates))))
-                      (progn
-                        (corfu--goto 0)
-                        (corfu-insert))
-                    (insert (substring common pt endpt))))))))))))
-
-(defun conf--corfu-insert ()
-  (interactive)
-  ;; Handling of file completion (next 2 lines)
-  (if (string-suffix-p "/" (nth corfu--index corfu--candidates))
-      (corfu-complete)
-    (corfu-insert)))
-
 (defun conf--corfu-active-p ()
   (and corfu-mode completion-in-region-mode))
 
@@ -1313,10 +1265,10 @@ With argument ARG, do this that many times."
         ("<remap> <move-beginning-of-line>" . nil)
         ("<remap> <move-end-of-line>" . nil)
         ("C-s" . corfu-insert-separator)
-        ("TAB" . conf--corfu-complete)
-        ("<tab>" . conf--corfu-complete)
-        ("RET" . conf--corfu-insert)
-        ("<ret>" . conf--corfu-insert)
+        ("TAB" . corfu-expand)
+        ("<tab>" . corfu-expand)
+        ("RET" . corfu-insert)
+        ("<ret>" . corfu-insert)
         ("M-RET" . conf--corfu-reset))
   :hook
   (corfu-mode . (lambda ()
@@ -1327,8 +1279,10 @@ With argument ARG, do this that many times."
   (corfu-auto-delay 0.01)
   (corfu-auto-prefix 2)
   (corfu-preview-current nil)
+  (corfu-popupinfo-delay '(1.5 . 0.0))
   :init
   (global-corfu-mode)
+  (corfu-popupinfo-mode)
   (defun corfu-enable-in-minibuffer ()
     "Enable Corfu in the minibuffer no helm session are active."
     (when (not helm-alive-p)
@@ -1339,9 +1293,14 @@ With argument ARG, do this that many times."
   (add-hook 'after-save-hook #'corfu-quit)
   )
 
+(add-to-list 'completion-styles-alist
+             '(tab completion-basic-try-completion ignore
+               "Completion style which provides TAB completion only."))
+
+
 (use-package orderless
   :init
-  (setq completion-styles '(orderless basic)
+  (setq completion-styles '(tab orderless basic)
         completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)))))
 

@@ -12,7 +12,7 @@
  ("cmake" . "b6ffbffaf26006a361c1330d0edce9a6314f58bb")
  ("company-mode" . "88f0b4d792dc409b5abf77c50a972b1b3722ad91")
  ("compat" . "30579d440be2512e8deda077d0499186c29ffffa")
- ("corfu" . "f658ae627508ba8104b640b4242a2a99716c58ea")
+ ("corfu" . "cdc3e13ad312f5f12b3f78f842fff0b398eb4473")
  ("dape" . "5558e1b9475a4a337f71f507514c426aafac7e36")
  ("dash.el" . "13f9fcd09d40132e9e1346a69e7b293d835a85f2")
  ("diff-hl" . "96620839430c1205cbb8c92dd54973397f70f9d2")
