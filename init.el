@@ -1067,7 +1067,7 @@
   )
 
 (defface conf--vterm-face
-  '((t :family "Menlo" :height 150))
+  '((t :family "Menlo" :height 120))
   "The basic fixed-pitch face."
   :group 'basic-faces)
 

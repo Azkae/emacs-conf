@@ -4,7 +4,7 @@
 ;; (add-to-list 'default-frame-alist '(font . "Fira Mono"))
 (add-to-list 'default-frame-alist '(cursor-color . "white"))
 
-(set-face-attribute 'default nil :height 160)
+(set-face-attribute 'default nil :height 120)
 
 (menu-bar-mode -1)
 (blink-cursor-mode 0)
