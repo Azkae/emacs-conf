@@ -294,19 +294,21 @@
 ;; (setq gc-cons-threshold 100000000)
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
 
-(defun my-backward-kill-word ()
-  "Kill word backwards, and delete matching pair if at point."
+(defun conf--backward-delete-word ()
+  "Delete word backwards, and delete matching pair if at point."
   (interactive)
   (let ((pt (point)))
     (when (and (electric-pair-mode)
                (char-before)
                (char-after)
-               (eq (matching-paren (char-before)) (char-after)))
+               (or (eq (matching-paren (char-before)) (char-after))
+                   (and (eq (char-before) (char-after))
+                        (eq (char-before) (string-to-char "\"")))))
       (delete-char 1)
       (delete-char -1))
-    (backward-kill-word 1)))
+    (delete-region (point) (progn (backward-word 1) (point)))))
 
-(global-set-key (kbd "M-DEL") 'my-backward-kill-word)
+(global-set-key (kbd "M-DEL") 'conf--backward-delete-word)
 
 ;; --------------
 ;; setup packages
@@ -398,12 +400,6 @@
   :bind
   (("C-x u" . vundo)))
 
-(defun backward-delete-word (arg)
-  "Delete characters backward until encountering the beginning of a word.
-With argument ARG, do this that many times."
-  (interactive "p")
-  (delete-region (point) (progn (backward-word arg) (point))))
-
 (defun delete-slash ()
   (search-backward "/")
   (delete-region (point) (point-max)))
@@ -436,7 +432,7 @@ With argument ARG, do this that many times."
    ("M-v"         . yank)
    ("C-i"         . helm-execute-persistent-action) ;tab
    ("M-z"         . helm-select-action) ;tab
-   ([M-backspace] . backward-delete-word)
+   ([M-backspace] . conf--backward-delete-word)
    ("<M-down>"    . helm-scroll-other-window)
    ("<M-up>"      . helm-scroll-other-window-down)
    ("DEL"         . nil)
@@ -641,7 +637,7 @@ With argument ARG, do this that many times."
   (:map helm-projectile-find-file-map
    ("<right>"     . nil)
    ("<left>"      . nil)
-   ([M-backspace] . backward-delete-word)
+   ([M-backspace] . conf--backward-delete-word)
    ("M-e"         . helm-config--ff-open-vterm)
    ("M-E"         . helm-config--ff-open-vterm-root)
    ("M-R"         . helm-config--ff-run-helm-ag-root)
