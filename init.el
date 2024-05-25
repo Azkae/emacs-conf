@@ -1235,36 +1235,6 @@ With argument ARG, do this that many times."
 
 ;; (add-to-list 'eglot-ignored-server-capabilites :hoverProvider)
 
-
-;; ;; --- fix dot sorting ---
-;; (defsubst conf--remove-leading-dot (v)
-;;   (string-remove-prefix "•" v))
-
-;; (defsubst conf--dot-length-string< (x y)
-;;   "Sorting predicate which compares X and Y first by length then by `string<'."
-;;   (let ((x_ (conf--remove-leading-dot x)) (y_ (conf--remove-leading-dot y)))
-;;     (or (< (length x_) (length y_)) (and (= (length x_) (length y_)) (string< x_ y_)))))
-
-;; (defun conf--corfu-sort (list)
-;;   "Sort LIST by length and alphabetically."
-;;   ;; (message "%s" (sort list 'conf--dot-length-string<))
-;;   (sort list 'conf--dot-length-string<))
-
-;; (defun conf--corfu-move-candidates-to-front (corfu--move-prefix-candidates-to-front &rest args)
-;;     (let ((message-log-max nil)
-;;           (inhibit-message t))
-;;       (apply undo-tree-save-history args)))
-
-;; custom
-;; (corfu-sort-function 'conf--corfu-sort)
-;; (corfu-sort-override-function 'conf--corfu-sort)
-;; (completion-styles '(basic))
-
-;; (advice-add 'corfu--move-prefix-candidates-to-front :around 'conf--corfu-move-candidates-to-front)
-
-;; ;; --- !fix dot sorting ---
-
-
 (defun conf--corfu-complete ()
   "Complete common prefix"
   (interactive)
