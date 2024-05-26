@@ -257,7 +257,7 @@
 
 (defun is-buffer-valid (buffer-name)
   (not (cl-loop for boring-buffer in boring-buffers
-           thereis (string-match boring-buffer buffer-name))))
+                thereis (string-match boring-buffer buffer-name))))
 
 (defun conf--skip-temp-buffers (func)
   (interactive)
