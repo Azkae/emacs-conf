@@ -106,8 +106,6 @@
 (define-key key-translation-map (kbd "M-g") (kbd "C-g"))
 ; (define-key crm-local-completion-map (kbd "M-v") nil)
 
-(require 'flymake)
-(setq flymake-indicator-type 'fringes)
 (define-key flymake-mode-map (kbd "C-c i l") 'flymake-show-diagnostics-buffer)
 
 (global-set-key (kbd "C-c p b") 'profiler-start)
@@ -313,6 +311,14 @@
 
 (use-package el-patch)
 
+(use-package flymake
+  :bind
+  (("C-c i f" . flymake-mode)
+   :map flycheck-mode-map
+   ("C-c i l" . flymake-show-buffer-diagnostics))
+  :custom
+  (flymake-indicator-type 'fringes))
+
 (defun conf--org-open-link-maybe()
   (interactive)
   (if (eq (car (org-element-context)) 'link)
@@ -375,19 +381,6 @@
 ;;   (setq company-transformers '(company-sort-prefer-same-case-prefix))
 ;;   (setq company-backends conf--default-completion-backends))
 ;; (global-company-mode)
-
-
-(use-package flycheck
-  :bind
-  (("C-c i f" . flycheck-mode)
-   :map flycheck-mode-map
-   ("C-c i l" . flycheck-list-errors))
-  :config
-  (setq flycheck-check-syntax-automatically '(save mode-enabled))
-
-  ;; :hook
-  ;; ((python-mode) . #'flycheck-mode)
-  )
 
 (use-package ws-butler
   :diminish ws-butler-mode
