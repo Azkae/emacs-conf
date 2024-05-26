@@ -1471,11 +1471,6 @@ length override, set to t for manual completion."
 ;;   (treesitter-context-show-context-always nil)
 ;;   (treesitter-context-show-line-number nil))
 
-;; ;; TODO: try https://github.com/jdtsmith/indent-bars
-;; TODO: disable eglot when viewing magit commit
-
-;; todo: try https://github.com/joaotavora/breadcrumb
-
 (use-package casual
   :bind
   (:map calc-mode-map
@@ -1490,6 +1485,9 @@ length override, set to t for manual completion."
 ;; (use-package breadcrumb
 ;;   :config
 ;;   (breadcrumb-mode))
+
+;; ;; TODO: try https://github.com/jdtsmith/indent-bars
+;; TODO: disable eglot when viewing magit commit
 
 ;; load graphic settings
 (require 'graphics)
