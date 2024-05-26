@@ -1490,7 +1490,8 @@ length override, set to t for manual completion."
   :config
   (setq org-startup-indented t)
   (add-hook 'org-mode-hook #'org-modern-indent-mode 90)
-  (set-face-attribute 'org-modern-bracket-line nil :family "Menlo"))
+  ;; (set-face-attribute 'org-modern-bracket-line nil :family "Menlo")
+  )
 
 (use-package terraform-mode
   :hook
