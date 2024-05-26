@@ -256,12 +256,8 @@
         "\\*help\\*"))
 
 (defun is-buffer-valid (buffer-name)
-  (let ((valid-buffer t))
-    (cl-loop for boring-buffer in boring-buffers
-             while valid-buffer do
-             (when (string-match boring-buffer buffer-name)
-               (setq valid-buffer nil)))
-    valid-buffer))
+  (not (cl-loop for boring-buffer in boring-buffers
+           thereis (string-match boring-buffer buffer-name))))
 
 (defun conf--skip-temp-buffers (func)
   (interactive)
