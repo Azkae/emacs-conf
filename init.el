@@ -107,6 +107,7 @@
 ; (define-key crm-local-completion-map (kbd "M-v") nil)
 
 (require 'flymake)
+(setq flymake-indicator-type 'fringes)
 (define-key flymake-mode-map (kbd "C-c i l") 'flymake-show-diagnostics-buffer)
 
 (global-set-key (kbd "C-c p b") 'profiler-start)
