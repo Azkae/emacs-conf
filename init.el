@@ -303,6 +303,10 @@
 
 (global-set-key (kbd "M-DEL") 'conf--backward-delete-word)
 
+(setq undo-limit 1600000
+      undo-strong-limit 2400000
+      undo-outer-limit 240000000)
+
 ;; --------------
 ;; setup packages
 ;; --------------
