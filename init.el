@@ -106,8 +106,6 @@
 (define-key key-translation-map (kbd "M-g") (kbd "C-g"))
 ; (define-key crm-local-completion-map (kbd "M-v") nil)
 
-(define-key flymake-mode-map (kbd "C-c i l") 'flymake-show-diagnostics-buffer)
-
 (global-set-key (kbd "C-c p b") 'profiler-start)
 (global-set-key (kbd "C-c p r") 'profiler-report)
 (global-set-key (kbd "C-c p e") 'profiler-stop)
@@ -314,7 +312,7 @@
 (use-package flymake
   :bind
   (("C-c i f" . flymake-mode)
-   :map flycheck-mode-map
+   :map flymake-mode-map
    ("C-c i l" . flymake-show-buffer-diagnostics))
   :custom
   (flymake-indicator-type 'fringes))
