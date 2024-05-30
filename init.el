@@ -464,10 +464,10 @@
 
 ;; (add-hook 'helm-minibuffer-set-up-hook 'remove-helm-smartparens)
 
-(defun remove-helm-electric-pair ()
-  (electric-pair-local-mode -1))
+;; (defun remove-helm-electric-pair ()
+;;   (electric-pair-local-mode -1))
 
-(add-hook 'helm-minibuffer-set-up-hook 'remove-helm-electric-pair)
+;; (add-hook 'helm-minibuffer-set-up-hook 'remove-helm-electric-pair)
 
 (defun helm-config--helm-do-ag-on-file-maybe(basename)
   (interactive)
