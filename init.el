@@ -709,7 +709,7 @@
   (magit-diff-visit-avoid-head-blob t)
   (magit-auto-revert-immediately nil)
   (magit-bury-buffer-function (lambda (_) (magit-mode-quit-window t)))
-  )
+  (vc-display-status nil))
 (setq smerge-command-prefix "\C-cv")
 
 (use-package request)
