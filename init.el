@@ -1427,12 +1427,38 @@ length override, set to t for manual completion."
   :custom
   (treesit-auto-langs '(typescript tsx python)))
 
-(use-package buffer-move
-  :bind
-  ("<C-M-up>"    .  buf-move-up)
-  ("<C-M-down>"  .  buf-move-down)
-  ("<C-M-left>"  .  buf-move-left)
-  ("<C-M-right>" .  buf-move-right))
+(defun conf--move-buffer-left ()
+  (interactive)
+  (let* ((buf (current-buffer)))
+    (conf--prev-buffer)
+    (windmove-left)
+    (switch-to-buffer buf)))
+
+(defun conf--move-buffer-right ()
+  (interactive)
+  (let* ((buf (current-buffer)))
+    (conf--prev-buffer)
+    (windmove-right)
+    (switch-to-buffer buf)))
+
+(defun conf--move-buffer-up ()
+  (interactive)
+  (let* ((buf (current-buffer)))
+    (conf--prev-buffer)
+    (windmove-up)
+    (switch-to-buffer buf)))
+
+(defun conf--move-buffer-down ()
+  (interactive)
+  (let* ((buf (current-buffer)))
+    (conf--prev-buffer)
+    (windmove-down)
+    (switch-to-buffer buf)))
+
+(global-set-key (kbd "<C-M-left>") 'conf--move-buffer-left)
+(global-set-key (kbd "<C-M-right>") 'conf--move-buffer-right)
+(global-set-key (kbd "<C-M-up>") 'conf--move-buffer-up)
+(global-set-key (kbd "<C-M-down>") 'conf--move-buffer-down)
 
 (use-package dape
   :init
