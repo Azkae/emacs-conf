@@ -1427,33 +1427,30 @@ length override, set to t for manual completion."
   :custom
   (treesit-auto-langs '(typescript tsx python)))
 
+(defun conf--move-buffer (dir)
+  (let* ((buf (current-buffer))
+         (window (windmove-find-other-window dir)))
+    (when (and window (not (window-minibuffer-p window)))
+      (conf--prev-buffer)
+      (windmove-do-window-select dir)
+      (switch-to-buffer buf))))
+
 (defun conf--move-buffer-left ()
   (interactive)
-  (let* ((buf (current-buffer)))
-    (conf--prev-buffer)
-    (windmove-left)
-    (switch-to-buffer buf)))
+  (conf--move-buffer 'left))
 
 (defun conf--move-buffer-right ()
   (interactive)
-  (let* ((buf (current-buffer)))
-    (conf--prev-buffer)
-    (windmove-right)
-    (switch-to-buffer buf)))
+  (conf--move-buffer 'right))
 
 (defun conf--move-buffer-up ()
   (interactive)
-  (let* ((buf (current-buffer)))
-    (conf--prev-buffer)
-    (windmove-up)
-    (switch-to-buffer buf)))
+  (conf--move-buffer 'up))
 
 (defun conf--move-buffer-down ()
   (interactive)
-  (let* ((buf (current-buffer)))
-    (conf--prev-buffer)
-    (windmove-down)
-    (switch-to-buffer buf)))
+  (conf--move-buffer 'down))
+
 
 (global-set-key (kbd "<C-M-left>") 'conf--move-buffer-left)
 (global-set-key (kbd "<C-M-right>") 'conf--move-buffer-right)
