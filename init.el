@@ -1513,6 +1513,11 @@ length override, set to t for manual completion."
 
 (which-function-mode)
 
+(eval-after-load 'nxml-mode
+  (modify-syntax-entry ?< "." nxml-mode-syntax-table)
+  (modify-syntax-entry ?> "." nxml-mode-syntax-table)
+  (modify-syntax-entry ?/ "." nxml-mode-syntax-table))
+
 ;; (use-package breadcrumb
 ;;   :config
 ;;   (breadcrumb-mode))
