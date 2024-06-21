@@ -654,11 +654,12 @@
 
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
-  :config
-  (setq doom-modeline-lsp t)
-  (setq doom-modeline-vcs-max-length 32)
-  (setq doom-modeline-buffer-encoding 'nondefault)
-  (setq doom-modeline-buffer-file-name-style 'relative-from-project))
+  :custom
+  (doom-modeline-lsp t)
+  (doom-modeline-vcs-max-length 32)
+  (doom-modeline-buffer-encoding 'nondefault)
+  (doom-modeline-buffer-file-name-style 'relative-from-project)
+  (doom-modeline-env-version nil))
 
 (use-package all-the-icons
   :if (display-graphic-p))
