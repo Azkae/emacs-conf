@@ -715,7 +715,7 @@
   (magit-diff-refine-hunk 'all)
   (magit-list-refs-sortby "-creatordate")
   (magit-diff-visit-avoid-head-blob t)
-  (magit-auto-revert-immediately nil)
+  (magit-auto-revert-immediately t)
   (magit-bury-buffer-function (lambda (_) (magit-mode-quit-window t)))
   (vc-display-status nil))
 (setq smerge-command-prefix "\C-cv")
