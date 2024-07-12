@@ -305,8 +305,8 @@
 
 ;; Avoid inadvertently changing font size
 (global-set-key (kbd "<pinch>") 'ignore)
-(global-set-key (kbd "<C-wheel-up>") 'ignore)
-(global-set-key (kbd "<C-wheel-down>") 'ignore)
+(global-set-key (kbd "C-<wheel-up>") 'ignore)
+(global-set-key (kbd "C-<wheel-down>") 'ignore)
 
 ;; --------------
 ;; setup packages
