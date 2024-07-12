@@ -643,7 +643,9 @@
 
 (use-package symbol-overlay
   :bind
-  ([f7] . symbol-overlay-put))
+  ([f7] . symbol-overlay-put)
+  :custom
+  (symbol-overlay-inhibit-map t))
 
 (use-package cmake-mode
   :bind
