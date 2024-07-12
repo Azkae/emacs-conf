@@ -1504,15 +1504,6 @@ length override, set to t for manual completion."
   :hook
   (terraform-mode . eglot-ensure))
 
-;; (use-package treesitter-context
-;;   :straight (treesitter-context :type git :host github :repo "zbelial/treesitter-context.el")
-;;   :hook
-;;   (python-ts-mode . treesitter-context-mode)
-;;   :custom
-;;   (treesitter-context-background-color "#272822")
-;;   (treesitter-context-show-context-always nil)
-;;   (treesitter-context-show-line-number nil))
-
 (use-package casual
   :bind
   (:map calc-mode-map
@@ -1529,9 +1520,12 @@ length override, set to t for manual completion."
   (modify-syntax-entry ?> "." nxml-mode-syntax-table)
   (modify-syntax-entry ?/ "." nxml-mode-syntax-table))
 
-;; (use-package breadcrumb
-;;   :config
-;;   (breadcrumb-mode))
+(use-package treesit-fold
+  :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold")
+  :config
+  (global-treesit-fold-mode))
+
+
 
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: disable eglot when viewing magit commit
