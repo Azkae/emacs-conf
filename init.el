@@ -249,6 +249,9 @@
         "\\*helm-.*\\*"
         "\\*helm .*\\*"
         "magit-process:.*"
+        "\\*Flymake .*\\*"
+        "\\*apheleia-.*\\*"
+        "\\*Native-compile-Log\\*"
         "\\*help\\*"))
 
 (defun is-buffer-valid (buffer-name)
