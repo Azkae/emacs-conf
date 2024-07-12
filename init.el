@@ -123,12 +123,9 @@
 (global-set-key (kbd "M-v") 'yank)
 (global-set-key (kbd "M-d") "\C-a\C-@\C-e")
 (global-set-key (kbd "M-s") 'save-buffer)
-(global-set-key (kbd "M-z") 'undo)
 (global-set-key (kbd "M-e") 'recenter)
 (global-set-key (kbd "M-N") 'goto-line)
 (global-set-key (kbd "M-k") 'compile)
-(global-set-key (kbd "M-z") 'undo-only)
-(global-set-key (kbd "M-Z") 'undo-redo)
 (global-set-key (kbd "C-x C-c") nil)
 
 (defun move-up (amount)
@@ -306,10 +303,6 @@
 
 (global-set-key (kbd "M-DEL") 'conf--backward-delete-word)
 
-(setq undo-limit 1600000
-      undo-strong-limit 2400000
-      undo-outer-limit 240000000)
-
 ;; Avoid inadvertently changing font size
 (global-set-key (kbd "<pinch>") 'ignore)
 (global-set-key (kbd "<C-wheel-up>") 'ignore)
@@ -320,6 +313,18 @@
 ;; --------------
 
 (use-package el-patch)
+
+(setq undo-limit 67108864) ; 64mb.
+(setq undo-strong-limit 100663296) ; 96mb.
+(setq undo-outer-limit 1006632960) ; 960mb.
+
+(use-package undo-fu
+  :custom
+  (undo-fu-ignore-keyboard-quit t)
+  :config
+  (global-unset-key (kbd "C-z"))
+  (global-set-key (kbd "C-z")   'undo-fu-only-undo)
+  (global-set-key (kbd "C-S-z") 'undo-fu-only-redo))
 
 (use-package flymake
   :bind
