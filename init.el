@@ -322,9 +322,9 @@
   :custom
   (undo-fu-ignore-keyboard-quit t)
   :config
-  (global-unset-key (kbd "C-z"))
-  (global-set-key (kbd "C-z")   'undo-fu-only-undo)
-  (global-set-key (kbd "C-S-z") 'undo-fu-only-redo))
+  (global-unset-key (kbd "M-z"))
+  (global-set-key (kbd "M-z")   'undo-fu-only-undo)
+  (global-set-key (kbd "M-Z") 'undo-fu-only-redo))
 
 (use-package flymake
   :bind
