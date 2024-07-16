@@ -1525,7 +1525,9 @@ length override, set to t for manual completion."
   :config
   (global-treesit-fold-mode))
 
-
+(use-package csv-mode
+  :hook
+  (csv-mode . csv-align-mode))
 
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: disable eglot when viewing magit commit
