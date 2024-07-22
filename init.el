@@ -771,7 +771,7 @@
       :success (cl-function
                 (lambda (&key data &allow-other-keys)
                   (if (not (equal (length data) 0))
-                      (let* ((id (cdr (assoc 'number (aref data 0)))))
+                      (let* ((id (alist-get 'number (aref data 0))))
                         (conf--show-pull-request-github repo id))
                     (conf--create-pull-request-github repo branch)))))))
 
