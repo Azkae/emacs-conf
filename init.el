@@ -1295,7 +1295,7 @@ length override, set to t for manual completion."
   (corfu-auto-delay 0.01)
   (corfu-auto-prefix 2)
   (corfu-preview-current nil)
-  (corfu-popupinfo-delay '(1.0 . 0.0))
+  (corfu-popupinfo-delay '(0.5 . 0.0))
   (corfu-on-exact-match nil)
   :init
   (global-corfu-mode)
