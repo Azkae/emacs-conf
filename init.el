@@ -1529,6 +1529,10 @@ length override, set to t for manual completion."
   :hook
   (csv-mode . csv-align-mode))
 
+(use-package nerd-icons-corfu
+  :config
+  (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: disable eglot when viewing magit commit
 
