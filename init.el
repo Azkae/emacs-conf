@@ -1395,7 +1395,8 @@ length override, set to t for manual completion."
   :diminish dtrt-indent-mode
   :custom
   (dtrt-indent-global-mode t)
-  (dtrt-indent-min-relevant-lines 1))
+  (dtrt-indent-min-relevant-lines 1)
+  (dtrt-indent-verbosity 0))
 
 (use-package wgrep
   :custom
