@@ -1546,3 +1546,4 @@ length override, set to t for manual completion."
 
 ;; load graphic settings
 (require 'graphics)
+(require 'custom-python-highlighting)
