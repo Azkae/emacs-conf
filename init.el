@@ -333,7 +333,8 @@
    :map flymake-mode-map
    ("C-c i l" . flymake-show-buffer-diagnostics))
   :custom
-  (flymake-indicator-type 'fringes))
+  (flymake-indicator-type 'fringes)
+  (flymake-show-diagnostics-at-end-of-line nil))
 
 (defun conf--org-open-link-maybe()
   (interactive)
