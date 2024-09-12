@@ -1354,20 +1354,6 @@ length override, set to t for manual completion."
   ;; (apheleia-global-mode +1)
   )
 
-;; Disable python-ts-mode:
-(defun remove-from-alist-by-value (alist value)
-  "Remove the first entry with VALUE from ALIST."
-  (cl-delete value alist :key (lambda (elt) (cdr elt)) :test #'equal))
-
-(defun remove-python-ts-mode ()
-  (interactive)
-  (setq auto-mode-alist (remove-from-alist-by-value auto-mode-alist 'python-ts-mode)))
-
-(with-eval-after-load 'python
-  (remove-python-ts-mode))
-
-(add-hook 'python-mode 'remove-python-ts-mode)
-
 (use-package fancy-compilation
   :commands (fancy-compilation-mode)
   :custom
