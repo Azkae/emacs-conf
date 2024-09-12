@@ -157,7 +157,7 @@
       (message "Copied buffer file name '%s' to the clipboard." filename))))
 
 (global-set-key (kbd "M-q") nil)
-(define-key python-ts-mode-map (kbd "M-q") nil)
+(define-key prog-mode-map (kbd "M-q") nil)
 (global-set-key (kbd "M-q M-c") 'copy-file-name-to-clipboard)
 
 ;; moving windows
