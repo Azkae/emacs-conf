@@ -1536,8 +1536,12 @@ length override, set to t for manual completion."
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
+(defalias 'conf--insert-emoji 'ns-do-show-character-palette)
+
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: disable eglot when viewing magit commit
+;; TODO: test direnv
+;; TODO (longshot): try meowing https://github.com/meow-edit/meow
 
 ;; load graphic settings
 (require 'graphics)
