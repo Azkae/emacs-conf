@@ -335,7 +335,8 @@
    ("C-c i l" . flymake-show-buffer-diagnostics))
   :custom
   (flymake-indicator-type 'fringes)
-  (flymake-show-diagnostics-at-end-of-line nil))
+  (flymake-show-diagnostics-at-end-of-line 'short)
+  (flymake-no-changes-timeout nil))
 
 (defun conf--org-open-link-maybe()
   (interactive)
@@ -970,8 +971,18 @@
                                (venv-path (file-name-directory venv-full-path)))
                           `((:pyright .
                                       (:venvPath ,venv-path
-                                       :venv ,venv)))))))))
-  )
+                                                 :venv ,venv)))))))))
+
+  ;; Enable flymake only on same:
+  ;; This allows to trigger flymake only when the sever published diagnostics
+  (cl-defmethod eglot-handle-notification :after
+    (_server (_method (eql textDocument/publishDiagnostics)) &key uri
+             &allow-other-keys)
+    (when-let ((buffer (find-buffer-visiting (eglot-uri-to-path uri))))
+      (with-current-buffer buffer
+        (if (and (eq nil flymake-no-changes-timeout)
+                 (not (buffer-modified-p)))
+            (flymake-start t))))))
 
 (use-package clang-format)
 
