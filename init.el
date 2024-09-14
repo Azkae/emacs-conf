@@ -1538,6 +1538,8 @@ length override, set to t for manual completion."
 
 (defalias 'conf--insert-emoji 'ns-do-show-character-palette)
 
+(use-package gptel)
+
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: disable eglot when viewing magit commit
 ;; TODO: test direnv
