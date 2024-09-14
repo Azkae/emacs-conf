@@ -38,7 +38,8 @@ Keybinding | Description
 <kbd>C-d</kbd> | duplicate current line
 <kbd>C-q</kbd> | kill buffer
 <kbd>M-[UP-DOWN]</kbd> | scroll buffer
-<kbd>M-S-[arrow]</kbd> | jump to window to the left/right/up/down
+<kbd>C-M-[arrow]</kbd> | move the window to the left/right/up/down
+<kbd>M-q-[arrow]</kbd> | jump to window to the left/right/up/down
 
 ### Helm
 
