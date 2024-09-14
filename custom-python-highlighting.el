@@ -166,6 +166,7 @@
 
    :feature 'variable
    :language 'python
-   '((identifier) @python--treesit-fontify-variable)))
+   '((identifier) @python--treesit-fontify-variable))
+    "Tree-sitter font-lock settings.")
 
 (provide 'custom-python-highlighting)
