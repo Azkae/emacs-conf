@@ -10,7 +10,7 @@ Install emacs:
 brew install libtool cmake
 
 brew tap d12frosted/emacs-plus
-brew install emacs-plus --with-native-comp --with-no-frame-refocus
+brew install emacs-plus --with-native-comp
 ./install.sh
 # Put the following in your ~/.emacs:
 # (load-file "$(pwd)/init.el")
