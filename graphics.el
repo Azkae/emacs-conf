@@ -119,6 +119,8 @@
   (with-selected-frame frame
     (set-face-attribute 'show-paren-match    nil :background "steelblue3")
     (set-face-attribute 'ansi-color-slow-blink nil :box nil)
+    (set-face-attribute 'pulse-highlight-face    nil :background "#49483E")
+    (set-face-attribute 'pulse-highlight-start-face    nil :background "#49483E")
     (when (>= emacs-major-version 29)
       (set-face-attribute 'font-lock-property-use-face nil :inherit nil))))
 
