@@ -313,7 +313,9 @@
 ;; setup packages
 ;; --------------
 
-(use-package el-patch)
+(use-package el-patch
+  :custom
+  (el-patch-use-aggressive-defvar t))
 
 (setq undo-limit 67108864) ; 64mb.
 (setq undo-strong-limit 100663296) ; 96mb.

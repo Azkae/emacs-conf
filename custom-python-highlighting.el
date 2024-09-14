@@ -1,4 +1,6 @@
-(setq python--treesit-settings
+(el-patch-feature python)
+
+(el-patch-defvar python--treesit-settings
   (treesit-font-lock-rules
    :feature 'comment
    :language 'python
@@ -22,9 +24,10 @@
       name: (identifier) @font-lock-function-name-face)
      (class_definition
       name: (identifier) @font-lock-type-face)
-     ;; (parameters (identifier) @font-lock-variable-name-face)
-     ;; (parameters (typed_parameter (identifier) @font-lock-variable-name-face))
-     ;; (parameters (default_parameter name: (identifier) @font-lock-variable-name-face))
+     (el-patch-remove
+       (parameters (identifier) @font-lock-variable-name-face)
+       (parameters (typed_parameter (identifier) @font-lock-variable-name-face))
+       (parameters (default_parameter name: (identifier) @font-lock-variable-name-face)))
      )
 
    :feature 'builtin
