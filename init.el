@@ -679,7 +679,7 @@
   :bind
   (:map cmake-mode-map
         ;; dump-jump doesn't work on cmake
-        ("M-." . helm-config--helm-do-ag-projectile-project-symbol))
+        ("M-." . conf--consult-ripgrep))
   :config
   (setq cmake-tab-width 4))
 
@@ -1033,7 +1033,7 @@
   :straight nil
   :bind
   (:map js-json-mode-map
-        ("M-." . 'helm-config--helm-do-ag-projectile-project-symbol))
+        ("M-." . 'conf--consult-ripgrep))
   :hook
   (js-json-mode . (lambda () (setq indent-tabs-mode nil))))
 
@@ -1626,9 +1626,18 @@ length override, set to t for manual completion."
   ;; (vertico-resize t) ;; Grow and shrink the Vertico minibuffer
   ;; (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
     ;; Show more candidates
-  (vertico-count 30)
+  (vertico-count 25)
   (vertico-resize nil)
   (projectile-completion-system 'default)
+  :bind
+  (:map vertico-map
+        ("M-p" . previous-history-element)
+        ("M-n" . next-history-element)
+        ("M-<up>" . scroll-other-window-down)
+        ("M-<down>" . scroll-other-window))
+  (:map minibuffer-mode-map
+        ("M-p" . previous-history-element)
+        ("M-n" . next-history-element))
   :init
   (vertico-mode))
 
