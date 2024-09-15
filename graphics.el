@@ -19,29 +19,29 @@
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
 
-(defun helm--set-faces (frame)
-  (with-selected-frame frame
-    (set-face-attribute 'helm-ff-directory nil :foreground "Cyan" :weight 'bold
-			:background nil)
-    (set-face-attribute 'helm-ff-dotted-directory nil :foreground "White"
-			:background nil)
-    (set-face-attribute 'helm-ff-dotted-symlink-directory nil :foreground "Magenta"
-			:background nil)
-    (set-face-attribute 'helm-ff-executable nil :foreground "Orange"
-			:background nil)
-    (set-face-attribute 'helm-ff-file nil :foreground "White"
-			:background nil)
-    (set-face-attribute 'helm-ff-symlink nil :foreground "Magenta"
-			:background nil)
-    (set-face-attribute 'helm-locate-finish nil :foreground "Black" :weight 'bold
-			:background "Yellow")
-    (set-face-attribute 'helm-moccur-buffer nil :foreground "BlueViolet"
-			:background nil :underline nil)))
+;; (defun helm--set-faces (frame)
+;;   (with-selected-frame frame
+;;     (set-face-attribute 'helm-ff-directory nil :foreground "Cyan" :weight 'bold
+;; 			:background nil)
+;;     (set-face-attribute 'helm-ff-dotted-directory nil :foreground "White"
+;; 			:background nil)
+;;     (set-face-attribute 'helm-ff-dotted-symlink-directory nil :foreground "Magenta"
+;; 			:background nil)
+;;     (set-face-attribute 'helm-ff-executable nil :foreground "Orange"
+;; 			:background nil)
+;;     (set-face-attribute 'helm-ff-file nil :foreground "White"
+;; 			:background nil)
+;;     (set-face-attribute 'helm-ff-symlink nil :foreground "Magenta"
+;; 			:background nil)
+;;     (set-face-attribute 'helm-locate-finish nil :foreground "Black" :weight 'bold
+;; 			:background "Yellow")
+;;     (set-face-attribute 'helm-moccur-buffer nil :foreground "BlueViolet"
+;; 			:background nil :underline nil)))
 
-(eval-after-load 'helm
-  '(progn
-     (helm--set-faces (selected-frame))
-     (add-hook 'after-make-frame-functions 'helm--set-faces)))
+;; (eval-after-load 'helm
+;;   '(progn
+;;      (helm--set-faces (selected-frame))
+;;      (add-hook 'after-make-frame-functions 'helm--set-faces)))
 
 (defun corfu--set-faces (frame)
   (with-selected-frame frame

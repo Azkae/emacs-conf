@@ -414,197 +414,196 @@
   (delete-slash)
   (insert "/"))
 
-;; performance regression on helm on mac os.
-;; run on helm repo:
-;; git revert 1ecefa3840aa5bdd8d4959d2c4efd3ea0e433f64 && git reset HEAD~1
-(use-package helm
-  :diminish helm-mode
-  :bind
-  (("M-f"         . helm-occur)
-   ("C-x C-f"     . helm-find-files)
-   ("C-x b"       . helm-mini)
-   ("C-b"         . helm-resume)
-   ("C-p"         . helm-buffers-list)
-   ("M-X"         . helm-M-x)
-   ("M-o"         . helm-find-files)
-   ("M-O"         . helm-buffers-list)
-   ("C-x c M-y"   . helm-show-kill-ring)
-   :map helm-map
-   ("<right>"     . nil)
-   ("<left>"      . nil)
-   ("M-v"         . yank)
-   ("C-i"         . helm-execute-persistent-action) ;tab
-   ("M-z"         . helm-select-action) ;tab
-   ([M-backspace] . conf--backward-delete-word)
-   ("<M-down>"    . helm-scroll-other-window)
-   ("<M-up>"      . helm-scroll-other-window-down)
-   ("DEL"         . nil)
-   :map helm-occur-map
-   ("<right>"     . nil)
-   ("<left>"      . nil)
-   ("<M-down>"    . helm-scroll-other-window)
-   ("<M-up>"      . helm-scroll-other-window-down)
-   :map helm-find-files-map
-   ("<M-down>"    . helm-scroll-other-window)
-   ("<M-up>"      . helm-scroll-other-window-down)
-   ("M-e"         . helm-config--ff-open-vterm)
-   ("C-x g"       . helm-config--ff-open-magit)
-   ("M-E"         . helm-config--ff-open-vterm)
-   ("M-r"         . helm-ff-run-rename-file)
-   ("DEL"         . nil)
-   ([M-backspace] . delete-until-slash)
-   :map helm-read-file-map
-   ([M-backspace] . delete-until-slash)
-   :map helm-grep-map
-   ("<M-down>"    . helm-scroll-other-window)
-   ("<M-up>"      . helm-scroll-other-window-down)
-   ("<right>"     . nil)
-   ("<left>"      . nil)
-   ("DEL"         . nil))
-  :config
-  (setq
-   helm-buffers-fuzzy-matching t
-   helm-ff-newfile-prompt-p nil
-   helm-split-window-inside-p t
-   helm-echo-input-in-header-line t
-   helm-move-to-line-cycle-in-source nil
-   ;; Disable helm in minibuffer region completion (eval-expression for example)
-   helm-mode-handle-completion-in-region nil
-   helm-scroll-amount 6
-   helm-find-files-ignore-thing-at-point t
-   helm-allow-mouse nil)
-  (helm-mode))
+;; ;; performance regression on helm on mac os.
+;; ;; run on helm repo:
+;; ;; git revert 1ecefa3840aa5bdd8d4959d2c4efd3ea0e433f64 && git reset HEAD~1
+;; (use-package helm
+;;   :diminish helm-mode
+;;   :bind
+;;   (("M-f"         . helm-occur)
+;;    ("C-x C-f"     . helm-find-files)
+;;    ("C-x b"       . helm-mini)
+;;    ("C-b"         . helm-resume)
+;;    ("C-p"         . helm-buffers-list)
+;;    ("M-X"         . helm-M-x)
+;;    ("M-o"         . helm-find-files)
+;;    ("M-O"         . helm-buffers-list)
+;;    ("C-x c M-y"   . helm-show-kill-ring)
+;;    :map helm-map
+;;    ("<right>"     . nil)
+;;    ("<left>"      . nil)
+;;    ("M-v"         . yank)
+;;    ("C-i"         . helm-execute-persistent-action) ;tab
+;;    ("M-z"         . helm-select-action) ;tab
+;;    ([M-backspace] . conf--backward-delete-word)
+;;    ("<M-down>"    . helm-scroll-other-window)
+;;    ("<M-up>"      . helm-scroll-other-window-down)
+;;    ("DEL"         . nil)
+;;    :map helm-occur-map
+;;    ("<right>"     . nil)
+;;    ("<left>"      . nil)
+;;    ("<M-down>"    . helm-scroll-other-window)
+;;    ("<M-up>"      . helm-scroll-other-window-down)
+;;    :map helm-find-files-map
+;;    ("<M-down>"    . helm-scroll-other-window)
+;;    ("<M-up>"      . helm-scroll-other-window-down)
+;;    ("M-e"         . helm-config--ff-open-vterm)
+;;    ("C-x g"       . helm-config--ff-open-magit)
+;;    ("M-E"         . helm-config--ff-open-vterm)
+;;    ("M-r"         . helm-ff-run-rename-file)
+;;    ("DEL"         . nil)
+;;    ([M-backspace] . delete-until-slash)
+;;    :map helm-read-file-map
+;;    ([M-backspace] . delete-until-slash)
+;;    :map helm-grep-map
+;;    ("<M-down>"    . helm-scroll-other-window)
+;;    ("<M-up>"      . helm-scroll-other-window-down)
+;;    ("<right>"     . nil)
+;;    ("<left>"      . nil)
+;;    ("DEL"         . nil))
+;;   :config
+;;   (setq
+;;    helm-buffers-fuzzy-matching t
+;;    helm-ff-newfile-prompt-p nil
+;;    helm-split-window-inside-p t
+;;    helm-echo-input-in-header-line t
+;;    helm-move-to-line-cycle-in-source nil
+;;    ;; Disable helm in minibuffer region completion (eval-expression for example)
+;;    helm-mode-handle-completion-in-region nil
+;;    helm-scroll-amount 6
+;;    helm-find-files-ignore-thing-at-point t)
+;;   (helm-mode))
 
-;; see https://gist.github.com/PaulCapestany/15d6f04077c1a9bc98968a778d60956e to use ripgrep?
-(use-package helm-ag
-  :straight (helm-ag :type git :host github :repo "emacsorphanage/helm-ag"
-                     :fork (:host github :repo "Azkae/emacs-helm-ag"))
-  :bind
-  (("M-R"         . helm-do-ag)
-   ("M-F"         . helm-do-ag-buffers)
-   :map helm-find-files-map
-   ("M-R"         . helm-config--ff-run-helm-ag)
-   :map helm-ag-mode-map
-   ("<right>"     . nil)
-   ("<left>"      . nil)
-   :map helm-do-ag-map
-   ("<right>"     . nil)
-   ("<left>"      . nil)
-   :map helm-ag-edit-map
-   ("RET"         . helm-ag-mode-jump-other-window))
-  :custom
-  ;; (helm-ag-base-command "rg --vimgrep --no-heading --smart-case")
-  (helm-ag-base-command "ag --nocolor --nogroup")
-  )
+;; ;; see https://gist.github.com/PaulCapestany/15d6f04077c1a9bc98968a778d60956e to use ripgrep?
+;; (use-package helm-ag
+;;   :straight (helm-ag :type git :host github :repo "emacsorphanage/helm-ag"
+;;                      :fork (:host github :repo "Azkae/emacs-helm-ag"))
+;;   :bind
+;;   (("M-R"         . helm-do-ag)
+;;    ("M-F"         . helm-do-ag-buffers)
+;;    :map helm-find-files-map
+;;    ("M-R"         . helm-config--ff-run-helm-ag)
+;;    :map helm-ag-mode-map
+;;    ("<right>"     . nil)
+;;    ("<left>"      . nil)
+;;    :map helm-do-ag-map
+;;    ("<right>"     . nil)
+;;    ("<left>"      . nil)
+;;    :map helm-ag-edit-map
+;;    ("RET"         . helm-ag-mode-jump-other-window))
+;;   :custom
+;;   ;; (helm-ag-base-command "rg --vimgrep --no-heading --smart-case")
+;;   (helm-ag-base-command "ag --nocolor --nogroup")
+;;   )
 
-;; (defun remove-helm-smartparens ()
-;;   (smartparens-mode -1))
+;; ;; (defun remove-helm-smartparens ()
+;; ;;   (smartparens-mode -1))
 
-;; (add-hook 'helm-minibuffer-set-up-hook 'remove-helm-smartparens)
+;; ;; (add-hook 'helm-minibuffer-set-up-hook 'remove-helm-smartparens)
 
-;; (defun remove-helm-electric-pair ()
-;;   (electric-pair-local-mode -1))
+;; ;; (defun remove-helm-electric-pair ()
+;; ;;   (electric-pair-local-mode -1))
 
-;; (add-hook 'helm-minibuffer-set-up-hook 'remove-helm-electric-pair)
+;; ;; (add-hook 'helm-minibuffer-set-up-hook 'remove-helm-electric-pair)
 
-(defun helm-config--helm-do-ag-on-file-maybe(basename)
-  (interactive)
-  (let* ((basename (expand-file-name basename))
-         (basename (if (not (file-directory-p basename))
-                       (file-name-directory basename)
-                     basename)))
-    (helm-do-ag basename)))
+;; (defun helm-config--helm-do-ag-on-file-maybe(basename)
+;;   (interactive)
+;;   (let* ((basename (expand-file-name basename))
+;;          (basename (if (not (file-directory-p basename))
+;;                        (file-name-directory basename)
+;;                      basename)))
+;;     (helm-do-ag basename)))
 
-(defun conf--vterm-toggle-insert-cd()
-  (interactive)
-  (conf--vterm-save-cd)
-  ;; If the helm session was started from a vterm buffer,
-  ;; insert the cd directly inside the vterm buffer
-  (if (eq major-mode 'vterm-mode)
-      (progn
-        (vterm-send-string (concat " cd " (shell-quote-argument default-directory)) t)
-        (vterm-send-return))
-    (call-interactively #'vterm-toggle-cd-show)))
+;; (defun conf--vterm-toggle-insert-cd()
+;;   (interactive)
+;;   (conf--vterm-save-cd)
+;;   ;; If the helm session was started from a vterm buffer,
+;;   ;; insert the cd directly inside the vterm buffer
+;;   (if (eq major-mode 'vterm-mode)
+;;       (progn
+;;         (vterm-send-string (concat " cd " (shell-quote-argument default-directory)) t)
+;;         (vterm-send-return))
+;;     (call-interactively #'vterm-toggle-cd-show)))
 
-(defun open-vterm-action(basename)
-  (interactive)
-  (let* ((basename (expand-file-name basename))
-         (basename (if (not (file-directory-p basename))
-                       (file-name-directory basename)
-                     basename))
-         (default-directory basename))
+;; (defun open-vterm-action(basename)
+;;   (interactive)
+;;   (let* ((basename (expand-file-name basename))
+;;          (basename (if (not (file-directory-p basename))
+;;                        (file-name-directory basename)
+;;                      basename))
+;;          (default-directory basename))
 
-    (conf--vterm-toggle-insert-cd)))
+;;     (conf--vterm-toggle-insert-cd)))
 
-(defun open-magit-action(basename)
-  (interactive)
-  (let* ((basename (expand-file-name basename))
-         (basename (if (not (file-directory-p basename))
-                       (file-name-directory basename)
-                     basename))
-         (default-directory basename))
+;; (defun open-magit-action(basename)
+;;   (interactive)
+;;   (let* ((basename (expand-file-name basename))
+;;          (basename (if (not (file-directory-p basename))
+;;                        (file-name-directory basename)
+;;                      basename))
+;;          (default-directory basename))
 
-    (call-interactively #'magit)))
+;;     (call-interactively #'magit)))
 
-(defun helm-config--helm-do-ag-on-project-root(basename)
-  (interactive)
-  (helm-do-ag (projectile-project-root)))
+;; (defun helm-config--helm-do-ag-on-project-root(basename)
+;;   (interactive)
+;;   (helm-do-ag (projectile-project-root)))
 
-(defun open-vterm-on-project-root-action(basename)
-  (interactive)
-  (let* ((default-directory (projectile-project-root)))
-    (conf--vterm-toggle-insert-cd)))
+;; (defun open-vterm-on-project-root-action(basename)
+;;   (interactive)
+;;   (let* ((default-directory (projectile-project-root)))
+;;     (conf--vterm-toggle-insert-cd)))
 
-(defun helm-config--ff-open-magit()
-  (interactive)
-  (with-helm-alive-p
-    (helm-exit-and-execute-action 'open-magit-action)))
+;; (defun helm-config--ff-open-magit()
+;;   (interactive)
+;;   (with-helm-alive-p
+;;     (helm-exit-and-execute-action 'open-magit-action)))
 
-(defun helm-config--ff-open-vterm()
-  (interactive)
-  (with-helm-alive-p
-    (helm-exit-and-execute-action 'open-vterm-action)))
+;; (defun helm-config--ff-open-vterm()
+;;   (interactive)
+;;   (with-helm-alive-p
+;;     (helm-exit-and-execute-action 'open-vterm-action)))
 
-(defun helm-config--ff-open-vterm-root()
-  (interactive)
-  (with-helm-alive-p
-    (helm-exit-and-execute-action 'open-vterm-on-project-root-action)))
+;; (defun helm-config--ff-open-vterm-root()
+;;   (interactive)
+;;   (with-helm-alive-p
+;;     (helm-exit-and-execute-action 'open-vterm-on-project-root-action)))
 
-(defun helm-config--ff-run-helm-ag()
-  (interactive)
-  (with-helm-alive-p
-    (helm-exit-and-execute-action 'helm-config--helm-do-ag-on-file-maybe)))
+;; (defun helm-config--ff-run-helm-ag()
+;;   (interactive)
+;;   (with-helm-alive-p
+;;     (helm-exit-and-execute-action 'helm-config--helm-do-ag-on-file-maybe)))
 
-(defun helm-config--ff-run-helm-ag-root()
-  (interactive)
-  (with-helm-alive-p
-    (helm-exit-and-execute-action 'helm-config--helm-do-ag-on-project-root)))
+;; (defun helm-config--ff-run-helm-ag-root()
+;;   (interactive)
+;;   (with-helm-alive-p
+;;     (helm-exit-and-execute-action 'helm-config--helm-do-ag-on-project-root)))
 
-(add-hook
- 'helm-find-files-after-init-hook
- (lambda ()
-   (helm-add-action-to-source "Find AG" 'helm-config--helm-do-ag-on-file-maybe helm-source-find-files)
-   (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-find-files)
-   (helm-add-action-to-source "Open magit" 'open-magit-action helm-source-find-files)))
+;; (add-hook
+;;  'helm-find-files-after-init-hook
+;;  (lambda ()
+;;    (helm-add-action-to-source "Find AG" 'helm-config--helm-do-ag-on-file-maybe helm-source-find-files)
+;;    (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-find-files)
+;;    (helm-add-action-to-source "Open magit" 'open-magit-action helm-source-find-files)))
 
-(with-eval-after-load "helm-projectile"
-  (helm-add-action-to-source "Find AG" 'helm-config--helm-do-ag-on-file-maybe helm-source-projectile-projects)
-  (helm-add-action-to-source "Find AG" 'helm-config--helm-do-ag-on-project-root helm-source-projectile-files-list)
-  (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-projectile-projects)
-  (helm-add-action-to-source "Open vterm on project root" 'open-vterm-on-project-root-action helm-source-projectile-files-list)
-  (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-projectile-files-list)
-  (helm-add-action-to-source "Open magit" 'open-magit-action helm-source-projectile-files-list)
-  (helm-add-action-to-source "Open magit" 'open-magit-action helm-source-projectile-projects))
+;; (with-eval-after-load "helm-projectile"
+;;   (helm-add-action-to-source "Find AG" 'helm-config--helm-do-ag-on-file-maybe helm-source-projectile-projects)
+;;   (helm-add-action-to-source "Find AG" 'helm-config--helm-do-ag-on-project-root helm-source-projectile-files-list)
+;;   (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-projectile-projects)
+;;   (helm-add-action-to-source "Open vterm on project root" 'open-vterm-on-project-root-action helm-source-projectile-files-list)
+;;   (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-projectile-files-list)
+;;   (helm-add-action-to-source "Open magit" 'open-magit-action helm-source-projectile-files-list)
+;;   (helm-add-action-to-source "Open magit" 'open-magit-action helm-source-projectile-projects))
 
-(defun helm-config--helm-do-ag-projectile-project-symbol ()
-  (interactive)
-    (helm-do-ag (projectile-project-root) nil (symbol-name (symbol-at-point))))
+;; (defun helm-config--helm-do-ag-projectile-project-symbol ()
+;;   (interactive)
+;;     (helm-do-ag (projectile-project-root) nil (symbol-name (symbol-at-point))))
 
-(define-key text-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
+;; (define-key text-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
 
-;; Waiting for dumb-jump to support xref-find-references: https://github.com/jacktasia/dumb-jump/issues/433
-(define-key text-mode-map (kbd "M-?") 'helm-config--helm-do-ag-projectile-project-symbol)
-(define-key prog-mode-map (kbd "M-?") 'helm-config--helm-do-ag-projectile-project-symbol)
+;; ;; Waiting for dumb-jump to support xref-find-references: https://github.com/jacktasia/dumb-jump/issues/433
+;; (define-key text-mode-map (kbd "M-?") 'helm-config--helm-do-ag-projectile-project-symbol)
+;; (define-key prog-mode-map (kbd "M-?") 'helm-config--helm-do-ag-projectile-project-symbol)
 
 (defun projectile-run-compile ()
   "Invoke `gdb' in the project's root."
@@ -635,27 +634,27 @@
               (remove-hook 'find-file-hook #'projectile-cache-files-find-file-hook t)
               (remove-hook 'find-file-hook #'projectile-visit-project-tags-table t))))
 
-(setq helm-projectile-fuzzy-match nil)
-(use-package helm-projectile
-  :bind
-  (:map helm-projectile-find-file-map
-   ("<right>"     . nil)
-   ("<left>"      . nil)
-   ([M-backspace] . conf--backward-delete-word)
-   ("M-e"         . helm-config--ff-open-vterm)
-   ("M-E"         . helm-config--ff-open-vterm-root)
-   ("M-R"         . helm-config--ff-run-helm-ag-root)
-   ("M-p"         . previous-history-element)
-   ("C-x g"       . helm-config--ff-open-magit)
-   :map helm-projectile-projects-map
-   ("M-e"         . helm-config--ff-open-vterm)
-   ("M-R"         . helm-config--ff-run-helm-ag)
-   ("C-x g"       . helm-config--ff-open-magit))
-  :config
-  (setq projectile-completion-system 'helm))
-(helm-projectile-on)
-;; must be binded after (helm-projectile-on) because it remap projectile keybindings
-(define-key projectile-mode-map [remap projectile-ag] 'helm-do-ag-project-root)
+;; (setq helm-projectile-fuzzy-match nil)
+;; (use-package helm-projectile
+;;   :bind
+;;   (:map helm-projectile-find-file-map
+;;    ("<right>"     . nil)
+;;    ("<left>"      . nil)
+;;    ([M-backspace] . conf--backward-delete-word)
+;;    ("M-e"         . helm-config--ff-open-vterm)
+;;    ("M-E"         . helm-config--ff-open-vterm-root)
+;;    ("M-R"         . helm-config--ff-run-helm-ag-root)
+;;    ("M-p"         . previous-history-element)
+;;    ("C-x g"       . helm-config--ff-open-magit)
+;;    :map helm-projectile-projects-map
+;;    ("M-e"         . helm-config--ff-open-vterm)
+;;    ("M-R"         . helm-config--ff-run-helm-ag)
+;;    ("C-x g"       . helm-config--ff-open-magit))
+;;   :config
+;;   (setq projectile-completion-system 'helm))
+;; (helm-projectile-on)
+;; ;; must be binded after (helm-projectile-on) because it remap projectile keybindings
+;; (define-key projectile-mode-map [remap projectile-ag] 'helm-do-ag-project-root)
 
 (use-package dumb-jump
   :init
@@ -1362,7 +1361,7 @@ length override, set to t for manual completion."
       (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
                   corfu-popupinfo-delay nil)
       (corfu-mode 1)))
-  (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
+  ;; (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
   (add-hook 'after-save-hook #'corfu-quit)
   )
 
@@ -1611,6 +1610,206 @@ length override, set to t for manual completion."
 ;;   ;; Add other languages as needed
 ;;   (indent-bars-treesit-scope '((python function_definition class_definition for_statement
 ;; 	  if_statement with_statement while_statement))))
+
+
+;; Enable vertico
+(use-package vertico
+  :custom
+  ;; (vertico-scroll-margin 0) ;; Different scroll margin
+  ;; (vertico-count 20) ;; Show more candidates
+  ;; (vertico-resize t) ;; Grow and shrink the Vertico minibuffer
+  ;; (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
+    ;; Show more candidates
+  (vertico-count 30)
+  (projectile-completion-system 'default)
+  :init
+  (vertico-mode))
+
+;; A few more useful configurations...
+(use-package emacs
+  :custom
+  ;; Support opening new minibuffers from inside existing minibuffers.
+  (enable-recursive-minibuffers t)
+  ;; Hide commands in M-x which do not work in the current mode.  Vertico
+  ;; commands are hidden in normal buffers. This setting is useful beyond
+  ;; Vertico.
+  (read-extended-command-predicate #'command-completion-default-include-p)
+  :init
+  ;; Add prompt indicator to `completing-read-multiple'.
+  ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
+  (defun crm-indicator (args)
+    (cons (format "[CRM%s] %s"
+                  (replace-regexp-in-string
+                   "\\`\\[.*?]\\*\\|\\[.*?]\\*\\'" ""
+                   crm-separator)
+                  (car args))
+          (cdr args)))
+  (advice-add #'completing-read-multiple :filter-args #'crm-indicator)
+
+  ;; Do not allow the cursor in the minibuffer prompt
+  (setq minibuffer-prompt-properties
+        '(read-only t cursor-intangible t face minibuffer-prompt))
+  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode))
+
+(defun conf--consult-ripgrep ()
+  (interactive)
+  (consult-ripgrep nil (thing-at-point 'symbol)))
+
+(use-package consult
+  :bind
+  (
+   ("M-f"         . consult-line)
+   ;; ("C-x C-f"     . helm-find-files)
+   ("C-x b"       . consult-buffer)
+   ;; ("C-b"         . helm-resume)
+   ;; ("C-p"         . helm-buffers-list)
+   ("M-R"         . consult-ripgrep)
+   ("M-X"         . execute-extended-command)
+   ("M-o"         . find-file)
+   ("M-O"         . consult-buffer)
+   ;; :map prog-mode-map
+   ;; ("M-."         . conf--consult-ripgrep)
+   :map minibuffer-local-filename-completion-map
+   ([M-backspace] . delete-until-slash)
+   )
+  :config
+  (setq consult-line-start-from-top 't))
+
+(consult-customize
+ consult-ripgrep consult-git-grep consult-grep
+ consult-bookmark consult-recent-file consult-xref
+ consult--source-bookmark consult--source-file-register
+ consult--source-recent-file consult--source-project-recent-file
+ :preview-key '(:debounce 0.01 any)) ;; Option 1: Delay preview
+
+
+;; (use-package consult-ag
+;;   :bind
+;;   (("M-R" . consult-ag)))
+
+
+(use-package marginalia
+  ;; Either bind `marginalia-cycle' globally or only in the minibuffer
+  :bind (("M-A" . marginalia-cycle)
+         :map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
+
+  ;; The :init configuration is always executed (Not lazy!)
+  :init
+
+  ;; Must be in the :init section of use-package such that the mode gets
+  ;; enabled right away. Note that this forces loading the package.
+  (marginalia-mode))
+
+(use-package embark
+  :bind
+  (("M-/" . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+  :init
+
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+
+  ;; Show the Embark target at point via Eldoc.  You may adjust the Eldoc
+  ;; strategy, if you want to see the documentation from multiple providers.
+  (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
+  ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
+
+  :config
+  (setq embark-help-key "?")
+
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
+(defvar consult--previous-point nil
+    "Location of point before entering minibuffer.
+Used to preselect nearest headings and imenu items.")
+
+(defun consult--set-previous-point (&optional arg1 arg2)
+  "Save location of point. Used before entering the minibuffer."
+  (setq consult--previous-point (point)))
+
+(advice-add #'consult-org-heading :before #'consult--set-previous-point)
+(advice-add #'consult-outline :before #'consult--set-previous-point)
+(advice-add #'consult-line :before #'consult--set-previous-point)
+
+
+(advice-add #'vertico--update :around #'conf--consult-vertico-update-selection)
+(advice-add #'vertico--recompute :after #'conf--vertico-set-update-selection)
+
+(defun conf--vertico-set-update-selection(&rest _)
+  (setq conf--vertico-update-selection t))
+
+
+;; (defun closest-integer-index (target int-list predicate)
+;;   "Return the index of the closest integer to TARGET in INT-LIST."
+;;   (let ((closest-index 0)
+;;         (closest (funcall predicate (car int-list)))
+;;         (index 0))
+;;     (dolist (elem int-list)
+;;       (let ((num (funcall predicate elem)))
+;;        (when (< (abs (- num target)) (abs (- closest target)))
+;;         (setq closest num
+;;               closest-index index)))
+;;       (setq index (1+ index)))
+;;     closest-index))
+
+(defun closest-integer-index-sorted (target int-list predicate)
+  "Return the index of the closest integer to TARGET in a sorted INT-LIST using PREDICATE to extract integer values."
+  (let ((left 0)
+        (right (1- (length int-list))))
+    ;; Binary search to narrow down the closest index
+    (while (< left right)
+      (let* ((mid (floor (+ left right) 2))
+             (mid-value (funcall predicate (nth mid int-list))))
+        (if (< target mid-value)
+            (setq right mid)
+          (setq left (1+ mid)))))
+    ;; After binary search, `left` is close to the target; check the nearest index
+    (let ((closest left)
+          (closest-value (funcall predicate (nth left int-list))))
+      (when (and (> left 0)
+                 (< (abs (- target (funcall predicate (nth (1- left) int-list))))
+                    (abs (- target closest-value))))
+        (setq closest (1- left)))
+      closest)))
+
+
+(defun conf--consult-vertico-update-selection (orig-fun &rest args)
+  "Pick the nearest candidate rather than the first after updating candidates."
+  (setq conf--vertico-update-selection nil)
+  (let ((result (apply orig-fun args)))  ;; Call the original function with its arguments
+
+    (when (and conf--vertico-update-selection consult--previous-point vertico--candidates
+               (memq current-minibuffer-command
+                     '(consult-org-heading consult-outline consult-line))
+               (memq last-command '(self-insert-command backward-delete-char)))
+      (setq vertico--index
+            (max 0 ; if none above, choose the first below
+                 (or (closest-integer-index-sorted
+                      consult--previous-point
+                      vertico--candidates
+                      (lambda (cand)
+                        (cl-case current-minibuffer-command
+                          (consult-outline
+                           (car (consult--get-location cand)))
+                          (consult-org-heading
+                           (get-text-property 0 'consult--candidate cand))
+                          (consult-line
+                           (car (consult--get-location cand))))))
+                     (length vertico--candidates)))))
+
+    result))
 
 
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars

@@ -121,3 +121,12 @@ TODO:
   see embark: https://github.com/oantolin/embark
   > If you use the grepping commands from the Consult package, consult-grep, consult-git-grep or consult-ripgrep, then you should install the embark-consult package, which adds support for exporting a list of grep results to an honest grep-mode buffer, on which you can even use wgrep if you wish.
   ^ wgrep also works with helm
+
+
+Vertico / Consult notes:
+Run ripgrep with embark:
+- "M-/ C R"
+
+Vertico / Consult toto:
+- Support M-<backspace> in find file:
+  there isn't a mode map for find-files... so maybe bind in minibuffer and check if there is a / before suppressing up to / ?
