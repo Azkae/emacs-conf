@@ -414,6 +414,12 @@
   (delete-slash)
   (insert "/"))
 
+(defun delete-until-slash-maybe ()
+  (interactive)
+  (if (eq 'file (vertico--metadata-get 'category))
+      (delete-until-slash)
+    (conf--backward-delete-word)))
+
 ;; ;; performance regression on helm on mac os.
 ;; ;; run on helm repo:
 ;; ;; git revert 1ecefa3840aa5bdd8d4959d2c4efd3ea0e433f64 && git reset HEAD~1
@@ -1621,6 +1627,7 @@ length override, set to t for manual completion."
   ;; (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
     ;; Show more candidates
   (vertico-count 30)
+  (vertico-resize nil)
   (projectile-completion-system 'default)
   :init
   (vertico-mode))
@@ -1667,13 +1674,14 @@ length override, set to t for manual completion."
    ("M-X"         . execute-extended-command)
    ("M-o"         . find-file)
    ("M-O"         . consult-buffer)
-   ;; :map prog-mode-map
+   :map prog-mode-map
    ;; ("M-."         . conf--consult-ripgrep)
-   :map minibuffer-local-filename-completion-map
-   ([M-backspace] . delete-until-slash)
+   :map minibuffer-local-map
+   ([M-backspace] . delete-until-slash-maybe)
    )
   :config
   (setq consult-line-start-from-top 't))
+
 
 (consult-customize
  consult-ripgrep consult-git-grep consult-grep
