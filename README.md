@@ -127,6 +127,5 @@ Vertico / Consult notes:
 Run ripgrep with embark:
 - "M-/ C R"
 
-Vertico / Consult toto:
-- Support M-<backspace> in find file:
-  there isn't a mode map for find-files... so maybe bind in minibuffer and check if there is a / before suppressing up to / ?
+Vertico / Consult TODO:
+- Fix projectile switch project not including the current project
