@@ -333,9 +333,18 @@
   (global-set-key (kbd "M-z")   'undo-fu-only-undo)
   (global-set-key (kbd "M-Z") 'undo-fu-only-redo))
 
+(defun conf--toggle-flymake-end-of-line ()
+  (interactive)
+  (if (eq flymake-show-diagnostics-at-end-of-line nil)
+      (setq-local flymake-show-diagnostics-at-end-of-line 'short)
+    (setq-local flymake-show-diagnostics-at-end-of-line nil))
+  (flymake-mode -1)
+  (flymake-mode 1))
+
 (use-package flymake
   :bind
   (("C-c i f" . flymake-mode)
+   ("C-c i r" . conf--toggle-flymake-end-of-line)
    :map flymake-mode-map
    ("C-c i l" . flymake-show-buffer-diagnostics))
   :custom
