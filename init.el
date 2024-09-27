@@ -942,7 +942,7 @@
 (use-package dockerfile-mode)
 
 (use-package eglot
-  ;; :straight nil
+  :straight nil
   :bind
   (:map eglot-mode-map
         ("M-." . xref-find-definitions)
