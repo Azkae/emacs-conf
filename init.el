@@ -1523,10 +1523,10 @@ length override, set to t for manual completion."
   :hook
   (terraform-mode . eglot-ensure))
 
-(use-package casual
+(use-package casual-calc
   :bind
   (:map calc-mode-map
-        ("SPC" . casual-main-menu)))
+        ("SPC" . casual-calc-tmenu)))
 
 ;; Disable M-o key in html
 (eval-after-load 'mhtml-mode
