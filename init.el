@@ -1000,6 +1000,21 @@
                  (not (buffer-modified-p)))
             (flymake-start t))))))
 
+(el-patch-feature eglot)
+
+;; Will be fixed in next emacs/eglot release
+;; See: https://github.com/emacs-mirror/emacs/commit/29d50e245f84d62a9cf4ce00593ea4c63fc4f44d
+(with-eval-after-load 'eglot
+  (el-patch-defun eglot--signal-textDocument/didOpen ()
+    "Send textDocument/didOpen to server."
+    (el-patch-add (eglot--track-changes-fetch eglot--track-changes))
+    (setq eglot--recent-changes nil
+          eglot--versioned-identifier 0
+          eglot--TextDocumentIdentifier-cache nil)
+    (jsonrpc-notify
+     (eglot--current-server-or-lose)
+     :textDocument/didOpen `(:textDocument ,(eglot--TextDocumentItem)))))
+
 (use-package clang-format)
 
 (use-package js
