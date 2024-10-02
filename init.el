@@ -289,7 +289,7 @@
 
 ;; better performance
 ;; (setq gc-cons-threshold 100000000)
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
+(setq read-process-output-max (* 64 1024)) ;; 64k
 
 (defun conf--backward-delete-word ()
   "Delete word backwards, and delete matching pair if at point."
