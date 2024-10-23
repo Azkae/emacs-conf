@@ -335,25 +335,25 @@
   (global-set-key (kbd "M-z")   'undo-fu-only-undo)
   (global-set-key (kbd "M-Z") 'undo-fu-only-redo))
 
-(defun conf--toggle-flymake-end-of-line ()
-  (interactive)
-  (if (eq flymake-show-diagnostics-at-end-of-line nil)
-      (progn (message "Enabled end-of-line diagnostics")
-             (setq-local flymake-show-diagnostics-at-end-of-line 'short))
-    (message "Disabled end-of-line diagnostics")
-    (setq-local flymake-show-diagnostics-at-end-of-line nil))
-  (flymake-mode -1)
-  (flymake-mode 1))
+;; (defun conf--toggle-flymake-end-of-line ()
+;;   (interactive)
+;;   (if (eq flymake-show-diagnostics-at-end-of-line nil)
+;;       (progn (message "Enabled end-of-line diagnostics")
+;;              (setq-local flymake-show-diagnostics-at-end-of-line 'short))
+;;     (message "Disabled end-of-line diagnostics")
+;;     (setq-local flymake-show-diagnostics-at-end-of-line nil))
+;;   (flymake-mode -1)
+;;   (flymake-mode 1))
 
 (use-package flymake
   :bind
   (("C-c i f" . flymake-mode)
-   ("C-c i r" . conf--toggle-flymake-end-of-line)
+   ;; ("C-c i r" . conf--toggle-flymake-end-of-line)
    :map flymake-mode-map
    ("C-c i l" . flymake-show-buffer-diagnostics))
   :custom
   (flymake-indicator-type 'fringes)
-  (flymake-show-diagnostics-at-end-of-line 'short)
+  ;; (flymake-show-diagnostics-at-end-of-line 'short)
   (flymake-no-changes-timeout nil))
 
 (defun conf--org-open-link-maybe()
@@ -998,9 +998,12 @@
              &allow-other-keys)
     (when-let ((buffer (find-buffer-visiting (eglot-uri-to-path uri))))
       (with-current-buffer buffer
-        (if (and (eq nil flymake-no-changes-timeout)
-                 (not (buffer-modified-p)))
-            (flymake-start t))))))
+        (when (and (eq nil flymake-no-changes-timeout)
+                   (not (buffer-modified-p)))
+          (flymake-start t)
+          (when (bound-and-true-p sideline-mode)
+            (sideline--reset)
+            (sideline-render)))))))
 
 (el-patch-feature eglot)
 
@@ -1572,6 +1575,20 @@ length override, set to t for manual completion."
 (defalias 'conf--insert-emoji 'ns-do-show-character-palette)
 
 (use-package gptel)
+
+(use-package sideline-flymake
+  :hook (flymake-mode . sideline-mode)
+  :init
+  (setq sideline-flymake-display-mode 'line) ; 'point to show errors only on point
+                                              ; 'line to show errors on the current line
+  (setq sideline-backends-right '(sideline-flymake))
+  (setq sideline-force-display-if-exceeds nil)
+  (setq sideline-order-right 'down)
+
+  (defun conf--sideline-stop-p ()
+    (or (buffer-modified-p) (sideline-stop-p)))
+  (setq sideline-inhibit-display-function #'conf--sideline-stop-p)
+  )
 
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: disable eglot when viewing magit commit
