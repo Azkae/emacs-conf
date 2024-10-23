@@ -1454,7 +1454,7 @@ length override, set to t for manual completion."
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
   :custom
   ;; TODO: re-enable when issue https://github.com/dgutov/diff-hl/issues/213 is fixed
-  (diff-hl-update-async nil)
+  (diff-hl-update-async t)
   (diff-hl-disable-on-remote t))
 
 ;; Poetry project tracking
