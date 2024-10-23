@@ -471,7 +471,8 @@
    ;; Disable helm in minibuffer region completion (eval-expression for example)
    helm-mode-handle-completion-in-region nil
    helm-scroll-amount 6
-   helm-find-files-ignore-thing-at-point t)
+   helm-find-files-ignore-thing-at-point t
+   helm-allow-mouse nil)
   (helm-mode))
 
 ;; see https://gist.github.com/PaulCapestany/15d6f04077c1a9bc98968a778d60956e to use ripgrep?
