@@ -130,6 +130,8 @@
 (global-set-key (kbd "M-N") 'goto-line)
 (global-set-key (kbd "M-k") 'compile)
 (global-set-key (kbd "C-x C-c") nil)
+(global-set-key (kbd "C-S-x C-S-c") 'save-buffers-kill-terminal)
+
 
 (defun move-up (amount)
   (condition-case nil
