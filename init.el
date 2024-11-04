@@ -1598,6 +1598,8 @@ length override, set to t for manual completion."
   (setq sideline-inhibit-display-function #'conf--sideline-stop-p)
   )
 
+(use-package elysium)
+
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: disable eglot when viewing magit commit
 ;; TODO: test direnv
