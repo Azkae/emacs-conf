@@ -74,7 +74,8 @@
     (when (>= emacs-major-version 29)
       (set-face-attribute 'font-lock-property-use-face nil :inherit nil))
     (when (>= emacs-major-version 30)
-      (set-face-attribute 'flymake-note-echo-at-eol nil :foreground "gray42"))))
+      (set-face-attribute 'flymake-note-echo-at-eol nil :foreground "gray42"))
+    (set-face-attribute 'highlight nil :background "#49483E")))
 
 (basic--set-faces (selected-frame))
 (add-hook 'after-make-frame-functions 'basic--set-faces)
