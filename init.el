@@ -1578,11 +1578,11 @@ length override, set to t for manual completion."
 (use-package gptel)
 
 (use-package sideline
-  ;; :straight (sideline :type git :host github :repo "emacs-sideline/sideline"
-  ;;                     :fork (:host github :repo "Azkae/sideline"))
   :custom
   (sideline-truncate t)
-  (sideline-truncate-suffix "…"))
+  (sideline-truncate-suffix "…")
+  :init
+  (add-hook 'after-save-hook #'sideline-render-this))
 
 (use-package sideline-flymake
   :hook (flymake-mode . sideline-mode)
