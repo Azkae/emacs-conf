@@ -1807,10 +1807,10 @@ Used to preselect nearest headings and imenu items.")
   (setq conf--vertico-update-selection nil)
   (let ((result (apply orig-fun args)))  ;; Call the original function with its arguments
 
-    (when (and conf--vertico-update-selection consult--previous-point vertico--candidates
+    (when (and conf--vertico-update-selection
+               consult--previous-point vertico--candidates
                (memq current-minibuffer-command
-                     '(consult-org-heading consult-outline consult-line))
-               (memq last-command '(self-insert-command backward-delete-char)))
+                     '(consult-org-heading consult-outline consult-line)))
       (setq vertico--index
             (max 0 ; if none above, choose the first below
                  (or (closest-integer-index-sorted
