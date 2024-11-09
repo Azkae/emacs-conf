@@ -1243,7 +1243,9 @@
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
-(use-package markdown-mode)
+(use-package markdown-mode
+  :custom
+  (markdown-fontify-code-blocks-natively t))
 
 (use-package with-editor
   :hook
