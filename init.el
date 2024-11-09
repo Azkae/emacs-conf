@@ -1603,6 +1603,16 @@ length override, set to t for manual completion."
 
 (use-package elysium)
 
+
+;; (use-package indent-bars
+;;   :custom
+;;   (indent-bars-treesit-support t)
+;;   (indent-bars-treesit-ignore-blank-lines-types '("module"))
+;;   ;; Add other languages as needed
+;;   (indent-bars-treesit-scope '((python function_definition class_definition for_statement
+;; 	  if_statement with_statement while_statement))))
+
+
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: disable eglot when viewing magit commit
 ;; TODO: test direnv
