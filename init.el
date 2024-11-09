@@ -895,6 +895,7 @@
   (("M-q r" . quickrun))
   :config
   (setq quickrun-timeout-seconds -1)
+  (setq quickrun-truncate-lines nil)
   (add-hook 'quickrun-after-run-hook
             (lambda()
               (with-current-buffer quickrun--buffer-name
