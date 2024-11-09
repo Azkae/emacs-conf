@@ -1,13 +1,18 @@
 (load-theme 'custom-monokai t)
 
-(if (find-font (font-spec :name "Fira Mono"))
-    (progn
-      (set-frame-font "Fira Mono-13" nil t)
-      (add-to-list 'default-frame-alist '(font . "Fira Mono")))
-  (message "Fira Mono not found"))
+(defun conf--setup-font ()
+  (if (find-font (font-spec :name "Fira Mono"))
+      (progn
+        (message "Using Fira Mono")
+        (set-frame-font "Fira Mono-13" nil t)
+        (add-to-list 'default-frame-alist '(font . "Fira Mono")))
+    (message "Fira Mono not found"))
 
-(add-to-list 'default-frame-alist '(cursor-color . "white"))
-(set-face-attribute 'default nil :height 140)
+  (add-to-list 'default-frame-alist '(cursor-color . "white"))
+  (set-face-attribute 'default nil :height 140))
+
+(conf--setup-font)
+(add-hook 'after-make-frame-functions 'conf--setup-font)
 
 (menu-bar-mode -1)
 (blink-cursor-mode 0)
