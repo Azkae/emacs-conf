@@ -1634,7 +1634,8 @@ length override, set to t for manual completion."
         ("M-p" . previous-history-element)
         ("M-n" . next-history-element)
         ("M-<up>" . scroll-other-window-down)
-        ("M-<down>" . scroll-other-window))
+        ("M-<down>" . scroll-other-window)
+        ("C-SPC" . embark-select))
   (:map minibuffer-mode-map
         ("M-p" . previous-history-element)
         ("M-n" . next-history-element))
