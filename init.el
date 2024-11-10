@@ -629,11 +629,13 @@
   :bind
   (:map projectile-mode-map
    ("M-p k" . projectile-run-compile)
-   ("M-p d" . projectile-run-lldb))
+   ("M-p d" . projectile-run-lldb)
+   ("M-p s s" . consult-ripgrep))
   :config
   (projectile-global-mode)
   (setq projectile-enable-caching nil
-        projectile-svn-command projectile-generic-command)
+        projectile-svn-command projectile-generic-command
+        projectile-current-project-on-switch 'keep)
   (setq projectile-mode-line "Projectile") ;avoid lag in tramp
   (add-hook 'projectile-mode-hook
             (lambda ()
@@ -918,12 +920,12 @@
 
 (use-package cython-mode)
 
-(use-package helm-tramp
-  :bind
-  (("C-c s" . helm-tramp))
-  :config
-  (setq tramp-default-method "ssh")
-  (defun package-installed-p (v) nil))
+;; (use-package helm-tramp
+;;   :bind
+;;   (("C-c s" . helm-tramp))
+;;   :config
+;;   (setq tramp-default-method "ssh")
+;;   (defun package-installed-p (v) nil))
 
 (use-package glsl-mode)
 
@@ -1175,7 +1177,7 @@
         :map vterm-copy-mode-map
         ("M-t" . multi-vterm)))
 
-(use-package helm-xref)
+;; (use-package helm-xref)
 
 (use-package pyvenv)
 
@@ -1270,7 +1272,9 @@
 
 (use-package eldoc-box
   :bind
-  (("M-§" . eldoc-box-help-at-point)))
+  (("M-§" . eldoc-box-help-at-point))
+  :custom
+  (eldoc-idle-delay 0.1))
 
 ;; (add-to-list 'eglot-ignored-server-capabilites :hoverProvider)
 
@@ -1627,20 +1631,38 @@ length override, set to t for manual completion."
   ;; (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
     ;; Show more candidates
   (vertico-count 25)
+  (vertico-scroll-margin 5)
   (vertico-resize nil)
   (projectile-completion-system 'default)
   :bind
+  ("C-z" . vertico-suspend)
+  ("M-b" . vertico-repeat)
+  ("M-B" . vertico-repeat-select)
   (:map vertico-map
         ("M-p" . previous-history-element)
         ("M-n" . next-history-element)
-        ("M-<up>" . scroll-other-window-down)
-        ("M-<down>" . scroll-other-window)
-        ("C-SPC" . embark-select))
+        ;; ("M-r" . nil)
+        ("M-<up>" . (lambda() (interactive) (scroll-other-window-down 5)))
+        ("M-<down>" . (lambda() (interactive) (scroll-other-window 5)))
+        ("C-SPC" . embark-select)
+        ("M-p" . previous-history-element)
+        ("M-n" . next-history-element))
   (:map minibuffer-mode-map
         ("M-p" . previous-history-element)
         ("M-n" . next-history-element))
   :init
-  (vertico-mode))
+  (vertico-mode)
+  (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
+
+  (defun conf--minibuffer-complete-or-insert-directory ()
+    (interactive)
+    (if (eq (vertico--metadata-get 'category) 'file)
+        (vertico-insert)
+      (minibuffer-complete)))
+
+  (keymap-set vertico-map "TAB" #'conf--minibuffer-complete-or-insert-directory)
+  ;; (vertico-buffer-mode)
+  )
 
 ;; A few more useful configurations...
 (use-package emacs
@@ -1672,15 +1694,37 @@ length override, set to t for manual completion."
   (interactive)
   (consult-ripgrep nil (thing-at-point 'symbol)))
 
+(defun conf--minibuffer-keyboard-quit ()
+  "Abort recursive edit.
+In Delete Selection mode, if the mark is active, just deactivate it;
+then \\[keyboard-quit] to abort the minibuffer."
+  (interactive)
+  (when (and delete-selection-mode (region-active-p))
+    (setq deactivate-mark t))
+  (abort-minibuffers))
+
+
+(defun conf--select-directory-and-ripgrep ()
+  "Select a directory and start consult-ripgrep in it."
+  (interactive)
+  (if (and (bound-and-true-p vertico--input) (minibufferp))
+      (when (eq (vertico--metadata-get 'category) 'project-file)
+        (lexical-let* ((candidate (vertico--candidate))
+                       (project-path (projectile-project-root candidate)))
+          (run-with-timer 0.01 nil (lambda () (consult-ripgrep project-path)))
+          (abort-recursive-edit)))
+    (let ((dir (read-directory-name "Select directory: ")))
+      (consult-ripgrep dir))))
+
 (use-package consult
   :bind
   (
-   ("M-f"         . consult-line)
+   ("M-f"         . conf--consult-line)
    ;; ("C-x C-f"     . helm-find-files)
    ("C-x b"       . consult-buffer)
    ;; ("C-b"         . helm-resume)
    ;; ("C-p"         . helm-buffers-list)
-   ("M-R"         . consult-ripgrep)
+   ("M-R"         . conf--select-directory-and-ripgrep)
    ("M-X"         . execute-extended-command)
    ("M-o"         . find-file)
    ("M-O"         . consult-buffer)
@@ -1688,10 +1732,17 @@ length override, set to t for manual completion."
    ;; ("M-."         . conf--consult-ripgrep)
    :map minibuffer-local-map
    ([M-backspace] . delete-until-slash-maybe)
+   ("C-g" . conf--minibuffer-keyboard-quit)
+   ("M-g" . conf--minibuffer-keyboard-quit)
    )
+  :custom
+  (consult-async-input-debounce 0.1)
+  (consult-line-start-from-top 't)
   :config
-  (setq consult-line-start-from-top 't))
-
+  (with-eval-after-load 'consult
+    (copy-face 'consult-line-number-prefix 'consult-line-number-wrapped))
+  (setq xref-show-xrefs-function 'consult-xref)
+  (setq xref-show-definitions-function 'consult-xref))
 
 (consult-customize
  consult-ripgrep consult-git-grep consult-grep
@@ -1726,7 +1777,6 @@ length override, set to t for manual completion."
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
   :init
-
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
 
@@ -1738,6 +1788,7 @@ length override, set to t for manual completion."
   :config
   (setq embark-help-key "?")
 
+  (remove-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
@@ -1769,20 +1820,7 @@ Used to preselect nearest headings and imenu items.")
   (setq conf--vertico-update-selection t))
 
 
-;; (defun closest-integer-index (target int-list predicate)
-;;   "Return the index of the closest integer to TARGET in INT-LIST."
-;;   (let ((closest-index 0)
-;;         (closest (funcall predicate (car int-list)))
-;;         (index 0))
-;;     (dolist (elem int-list)
-;;       (let ((num (funcall predicate elem)))
-;;        (when (< (abs (- num target)) (abs (- closest target)))
-;;         (setq closest num
-;;               closest-index index)))
-;;       (setq index (1+ index)))
-;;     closest-index))
-
-(defun closest-integer-index-sorted (target int-list predicate)
+(defun conf--closest-integer-index-sorted (target int-list predicate)
   "Return the index of the closest integer to TARGET in a sorted INT-LIST using PREDICATE to extract integer values."
   (let ((left 0)
         (right (1- (length int-list))))
@@ -1803,31 +1841,184 @@ Used to preselect nearest headings and imenu items.")
       closest)))
 
 
+(defvar conf--minibuffer-command-stack nil
+  "Stack of commands that opened each minibuffer session, tracked by depth.")
+
+(defun conf--push-minibuffer-command ()
+  "Push the command that opens the minibuffer onto `conf--minibuffer-command-stack`."
+  (push this-command conf--minibuffer-command-stack))
+
+(defun conf--pop-minibuffer-command ()
+  "Pop the last command from `conf--minibuffer-command-stack` upon minibuffer exit."
+  (when conf--minibuffer-command-stack
+    (pop conf--minibuffer-command-stack)))
+
+;; Add hooks to track entering and exiting minibuffers
+(add-hook 'minibuffer-setup-hook #'conf--push-minibuffer-command)
+(add-hook 'minibuffer-exit-hook #'conf--pop-minibuffer-command)
+
+(require 'embark-consult)
 (defun conf--consult-vertico-update-selection (orig-fun &rest args)
   "Pick the nearest candidate rather than the first after updating candidates."
   (setq conf--vertico-update-selection nil)
-  (let ((result (apply orig-fun args)))  ;; Call the original function with its arguments
+  (let ((result (apply orig-fun args))
+        (conf--current-minibuffer-command (car conf--minibuffer-command-stack)))
 
+    ;; (message "conf--vertico-update-selection: %s" conf--vertico-update-selection)
     (when (and conf--vertico-update-selection
                consult--previous-point vertico--candidates
-               (memq current-minibuffer-command
-                     '(consult-org-heading consult-outline consult-line)))
+               (memq conf--current-minibuffer-command
+                     '(consult-org-heading consult-outline consult-line conf--consult-line)))
       (setq vertico--index
             (max 0 ; if none above, choose the first below
-                 (or (closest-integer-index-sorted
+                 (or (conf--closest-integer-index-sorted
                       consult--previous-point
                       vertico--candidates
                       (lambda (cand)
-                        (cl-case current-minibuffer-command
+                        (cl-case conf--current-minibuffer-command
                           (consult-outline
                            (car (consult--get-location cand)))
                           (consult-org-heading
                            (get-text-property 0 'consult--candidate cand))
                           (consult-line
-                           (car (consult--get-location cand))))))
+                           (car (consult--get-location cand)))
+                          (conf--consult-line
+                           (car (consult--get-location cand)))
+                          (t (error "Missing conf--consult-vertico-update-selection config")))))
                      (length vertico--candidates)))))
 
     result))
+
+
+
+(defun conf--consult-line ()
+  "Call `consult-line` with candidates filtered by the symbol at point by default."
+  (interactive)
+  (let* ((symbol (thing-at-point 'symbol))
+         (initial (when symbol (regexp-quote symbol))))
+    (if initial
+        (minibuffer-with-setup-hook
+            (lambda ()
+              (insert initial)
+              (set-mark (point-max))
+              (goto-char (point-min)))
+          (consult-line))
+      (consult-line))))
+
+(require 'vertico-multiform)
+(vertico-multiform-mode +1)
+(define-key vertico-multiform-map (kbd "M-R") nil)
+(defvar +vertico-transform-functions nil)
+
+(cl-defmethod vertico--format-candidate :around
+  (cand prefix suffix index start &context ((not +vertico-transform-functions) null))
+  (dolist (fun (ensure-list +vertico-transform-functions))
+    (setq cand (funcall fun cand)))
+  (cl-call-next-method cand prefix suffix index start))
+
+(defun +vertico-highlight-directory (file)
+  "If FILE ends with a slash, highlight it as a directory."
+  (if (string-suffix-p "/" file)
+      (propertize file 'face 'marginalia-file-priv-dir) ; or face 'dired-directory
+    file))
+
+;; function to highlight enabled modes similar to counsel-M-x
+(defun +vertico-highlight-enabled-mode (cmd)
+  "If MODE is enabled, highlight it as font-lock-constant-face."
+  (let ((sym (intern cmd)))
+    (if (or (eq sym major-mode)
+            (and
+             (memq sym minor-mode-list)
+             (boundp sym)))
+      (propertize cmd 'face 'font-lock-constant-face)
+      cmd)))
+
+(add-to-list 'vertico-multiform-categories
+             '(file
+               ;; (vertico-sort-function . sort-directories-first)
+               (+vertico-transform-functions . +vertico-highlight-directory)))
+
+(add-to-list 'vertico-multiform-commands
+             '(execute-extended-command
+               ;; reverse
+               (+vertico-transform-functions . +vertico-highlight-enabled-mode)))
+
+
+(defun conf--embark-consult-export-xref (items)
+  "Create a grep-like buffer listing ITEMS from xref."
+  (embark-consult--export-grep
+   :header "Exported xref results:\n\n"
+   :lines items
+   :insert
+   (lambda (items)
+     (let ((count 0))
+       (dolist (item items)
+         (let* ((xref (get-text-property 0 'consult-xref item))
+                (loc (xref-item-location xref))
+                (file (or (xref-file-location-file loc) ""))
+                (line (xref-location-line loc))
+                (summary (xref-item-summary xref)))
+           (insert (format "%s:%d:%s\n" file line summary))
+           (cl-incf count)))
+       count))
+   :footer #'ignore))
+
+;; export grep result with consult-line
+(setf (alist-get 'consult-location embark-exporters-alist)
+      #'embark-consult-export-location-grep)
+(setf (alist-get 'consult-xref embark-exporters-alist)
+      #'conf--embark-consult-export-xref)
+
+(define-key embark-file-map "g" #'magit)
+(add-to-list 'embark-pre-action-hooks '(magit embark--universal-argument))
+(add-to-list 'embark-around-action-hooks '(magit embark--cd))
+
+(define-key embark-file-map "M-e" #'conf--vterm-toggle)
+(add-to-list 'embark-pre-action-hooks '(conf--vterm-toggle embark--universal-argument))
+(add-to-list 'embark-around-action-hooks '(conf--vterm-toggle embark--cd))
+
+(defun rename-file-and-buffer (old-name new-name &optional ok-if-already-exists)
+  "Rename OLD-NAME to NEW-NAME, updating associated buffer if it exists."
+  (interactive
+   (let* ((old (read-file-name "File: " nil (buffer-file-name) t))
+          (new (read-file-name (format "Rename '%s' to file: " old) (file-name-directory old))))
+     (list old new current-prefix-arg)))
+
+  (rename-file old-name new-name ok-if-already-exists)
+
+  (let ((buf (find-buffer-visiting old-name)))
+    (when buf
+      (with-current-buffer buf
+        (set-visited-file-name new-name nil t)
+        (rename-buffer new-name)
+        (set-buffer-modified-p nil)
+        (message "Renamed buffer associated with '%s' to '%s'" old-name new-name)))))
+
+(define-key embark-file-map "r" #'rename-file-and-buffer)
+(add-to-list 'embark-post-action-hooks '(rename-file-and-buffer embark--restart))
+
+(defun delete-file-and-buffer (filename delete-buffer)
+  "Delete the file FILENAME and its associated buffer, if any."
+  (interactive
+   (let* ((filename (read-file-name "Delete file: " nil nil t))
+          (buffer (find-buffer-visiting filename))
+          (delete-buffer (and buffer
+                              (y-or-n-p (format "Delete buffer '%s' too? "
+                                                (buffer-name buffer))))))
+     (list filename delete-buffer)))
+  (when filename
+    (delete-file filename)
+    (message "Deleted file %s" filename)
+    (when delete-buffer
+      (kill-buffer (find-buffer-visiting filename))
+      (message "Deleted buffer associated with %s" filename))))
+
+(define-key embark-file-map "d" #'delete-file-and-buffer)
+(add-to-list 'embark-post-action-hooks '(delete-file-and-buffer embark--restart))
+(add-to-list 'embark-pre-action-hooks '(delete-file-and-buffer embark--confirm))
+
+
+;; (add-to-list 'embark-keymap-alist '(project-file embark-file-map))
 
 
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
