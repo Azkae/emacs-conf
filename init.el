@@ -1984,6 +1984,12 @@ Used to preselect nearest headings and imenu items.")
           (new (read-file-name (format "Rename '%s' to file: " old) (file-name-directory old))))
      (list old new current-prefix-arg)))
 
+  (when (not (file-directory-p (file-name-directory new-name)))
+    (if (y-or-n-p (format "Create directory '%s'? "
+                          (file-name-directory new-name)))
+        (make-directory (file-name-directory new-name))
+      (error "Cancelled")))
+
   (rename-file old-name new-name ok-if-already-exists)
 
   (let ((buf (find-buffer-visiting old-name)))
