@@ -1735,6 +1735,7 @@ then \\[keyboard-quit] to abort the minibuffer."
   :custom
   (consult-async-input-debounce 0.1)
   (consult-line-start-from-top 't)
+  (consult-narrow-key "<")
   :config
   (with-eval-after-load 'consult
     (copy-face 'consult-line-number-prefix 'consult-line-number-wrapped))
