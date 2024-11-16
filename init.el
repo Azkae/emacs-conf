@@ -1642,9 +1642,9 @@ length override, set to t for manual completion."
         ("C-SPC" . embark-select)
         ("M-p" . previous-history-element)
         ("M-n" . next-history-element))
-  (:map minibuffer-mode-map
-        ("M-p" . previous-history-element)
-        ("M-n" . next-history-element))
+  (:map minibuffer-local-map
+        ("C-p" . previous-history-element)
+        ("C-n" . next-history-element))
   :init
   (vertico-mode)
   (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
