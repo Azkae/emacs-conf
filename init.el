@@ -1,4 +1,4 @@
-;;; emacs-conf --- Summary
+;;; emacs-conf --- Summary -*- lexical-binding: t; -*-
 ;;; Commentary:
 ;;
 ;;; Code:
@@ -520,16 +520,16 @@
 ;;                      basename)))
 ;;     (helm-do-ag basename)))
 
-;; (defun conf--vterm-toggle-insert-cd()
-;;   (interactive)
-;;   (conf--vterm-save-cd)
-;;   ;; If the helm session was started from a vterm buffer,
-;;   ;; insert the cd directly inside the vterm buffer
-;;   (if (eq major-mode 'vterm-mode)
-;;       (progn
-;;         (vterm-send-string (concat " cd " (shell-quote-argument default-directory)) t)
-;;         (vterm-send-return))
-;;     (call-interactively #'vterm-toggle-cd-show)))
+(defun conf--vterm-toggle-insert-cd()
+  (interactive)
+  (conf--vterm-save-cd)
+  ;; If the helm session was started from a vterm buffer,
+  ;; insert the cd directly inside the vterm buffer
+  (if (eq major-mode 'vterm-mode)
+      (progn
+        (vterm-send-string (concat " cd " (shell-quote-argument default-directory)) t)
+        (vterm-send-return))
+    (call-interactively #'vterm-toggle-cd-show)))
 
 ;; (defun open-vterm-action(basename)
 ;;   (interactive)
@@ -1657,10 +1657,8 @@ length override, set to t for manual completion."
 
   (keymap-set vertico-map "TAB" #'conf--minibuffer-complete-or-insert-directory))
 
-;; A few more useful configurations...
 (use-package emacs
   :custom
-  ;; Support opening new minibuffers from inside existing minibuffers.
   (enable-recursive-minibuffers t)
   ;; Hide commands in M-x which do not work in the current mode.  Vertico
   ;; commands are hidden in normal buffers. This setting is useful beyond
@@ -1696,18 +1694,46 @@ then \\[keyboard-quit] to abort the minibuffer."
     (setq deactivate-mark t))
   (abort-minibuffers))
 
+(defun conf--minibuffer-candidate ()
+  (if (and (bound-and-true-p vertico--input) (minibufferp))
+      (cons (vertico--metadata-get 'category) (vertico--candidate))
+    nil))
+
+(defun conf--minibuffer-selected-directory-maybe ()
+  (let ((minibuffer-candidate (conf--minibuffer-candidate)))
+    (when minibuffer-candidate
+      (pcase (car minibuffer-candidate)
+        ('project-file (projectile-project-root (cdr minibuffer-candidate)))
+        ('file (let ((path (cdr minibuffer-candidate)))
+                 (if (not (file-directory-p path))
+                        (file-name-directory path)
+                      path)))))))
+
+(defun conf--exit-minibuffer-and-execute (func)
+  (run-with-timer 0 nil func)
+  (abort-recursive-edit))
 
 (defun conf--select-directory-and-ripgrep ()
-  "Select a directory and start consult-ripgrep in it."
   (interactive)
-  (if (and (bound-and-true-p vertico--input) (minibufferp))
-      (when (eq (vertico--metadata-get 'category) 'project-file)
-        (lexical-let* ((candidate (vertico--candidate))
-                       (project-path (projectile-project-root candidate)))
-          (run-with-timer 0.01 nil (lambda () (consult-ripgrep project-path)))
-          (abort-recursive-edit)))
-    (let ((dir (read-directory-name "Select directory: ")))
-      (consult-ripgrep dir))))
+  (let ((path (or (conf--minibuffer-selected-directory-maybe)
+                  (read-directory-name "Select directory: "))))
+    (conf--exit-minibuffer-and-execute (lambda () (consult-ripgrep path)))))
+
+(defun conf--magit-in-selected-directory ()
+  (interactive)
+  (if-let* ((selected-path (conf--minibuffer-selected-directory-maybe)))
+      (conf--exit-minibuffer-and-execute
+       (lambda () (let ((default-directory selected-path))
+                    (magit))))
+    (conf--exit-minibuffer-and-execute (lambda () (magit)))))
+
+(defun conf--vterm-in-selected-directory ()
+  (interactive)
+  (if-let* ((selected-path (conf--minibuffer-selected-directory-maybe)))
+      (conf--exit-minibuffer-and-execute
+       (lambda () (let ((default-directory selected-path))
+                    (conf--vterm-toggle-insert-cd))))
+    (conf--exit-minibuffer-and-execute (lambda () (conf--vterm-toggle)))))
 
 (defun conf--debug-category()
   (interactive)
@@ -1717,10 +1743,7 @@ then \\[keyboard-quit] to abort the minibuffer."
   :bind
   (
    ("M-f"         . conf--consult-line)
-   ;; ("C-x C-f"     . helm-find-files)
    ("C-x b"       . consult-buffer)
-   ;; ("C-b"         . helm-resume)
-   ;; ("C-p"         . helm-buffers-list)
    ("M-R"         . conf--select-directory-and-ripgrep)
    ("M-X"         . execute-extended-command)
    ("M-o"         . find-file)
@@ -1731,6 +1754,8 @@ then \\[keyboard-quit] to abort the minibuffer."
    ([M-backspace] . delete-until-slash-maybe)
    ("C-g" . conf--minibuffer-keyboard-quit)
    ("M-g" . conf--minibuffer-keyboard-quit)
+   ("C-x g" . conf--magit-in-selected-directory)
+   ("M-e" . conf--vterm-in-selected-directory)
    )
   :custom
   (consult-async-input-debounce 0.1)
@@ -1867,8 +1892,6 @@ Used to preselect nearest headings and imenu items.")
 
     result))
 
-
-
 (defun conf--consult-line ()
   "Call `consult-line` with candidates filtered by the symbol at point by default."
   (interactive)
@@ -1958,7 +1981,9 @@ Used to preselect nearest headings and imenu items.")
 (defun rename-file-and-buffer (old-name new-name &optional ok-if-already-exists)
   "Rename OLD-NAME to NEW-NAME, updating associated buffer if it exists."
   (interactive
-   (let* ((old (read-file-name "File: " nil (buffer-file-name) t))
+   (let* ((old (read-file-name (format "Rename file ('%s' by default): "
+                                       (file-name-nondirectory (buffer-file-name)))
+                               nil (buffer-file-name) t))
           (new (read-file-name (format "Rename '%s' to file: " old) (file-name-directory old))))
      (list old new current-prefix-arg)))
 

@@ -1,3 +1,5 @@
+;;  -*- lexical-binding: t; -*-
+
 (load-theme 'custom-monokai t)
 
 (defun conf--setup-font ()
