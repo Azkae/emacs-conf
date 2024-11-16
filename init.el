@@ -2028,6 +2028,26 @@ Used to preselect nearest headings and imenu items.")
 (add-to-list 'embark-post-action-hooks '(delete-file-and-buffer embark--restart))
 (add-to-list 'embark-pre-action-hooks '(delete-file-and-buffer embark--confirm))
 
+(defun copy-file-in-directory (old-name new-name &optional ok-if-already-exists)
+  "Rename OLD-NAME to NEW-NAME, updating associated buffer if it exists."
+  (interactive
+   (let* ((old (read-file-name (format "Copy file ('%s' by default): "
+                                       (file-name-nondirectory (buffer-file-name)))
+                               nil (buffer-file-name) t))
+          (new (read-file-name (format "Copy '%s' to file: " old) (file-name-directory old))))
+     (list old new current-prefix-arg)))
+
+  (when (not (file-directory-p (file-name-directory new-name)))
+    (if (y-or-n-p (format "Create directory '%s'? "
+                          (file-name-directory new-name)))
+        (make-directory (file-name-directory new-name))
+      (error "Cancelled")))
+
+  (copy-file old-name new-name ok-if-already-exists))
+
+(define-key embark-file-map "c" #'copy-file-in-directory)
+(add-to-list 'embark-post-action-hooks '(copy-file-in-directory embark--restart))
+
 
 ;; (add-to-list 'embark-keymap-alist '(project-file embark-file-map))
 
