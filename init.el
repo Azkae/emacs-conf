@@ -1625,11 +1625,6 @@ length override, set to t for manual completion."
 ;; Enable vertico
 (use-package vertico
   :custom
-  ;; (vertico-scroll-margin 0) ;; Different scroll margin
-  ;; (vertico-count 20) ;; Show more candidates
-  ;; (vertico-resize t) ;; Grow and shrink the Vertico minibuffer
-  ;; (vertico-cycle t) ;; Enable cycling for `vertico-next/previous'
-    ;; Show more candidates
   (vertico-count 25)
   (vertico-scroll-margin 5)
   (vertico-resize nil)
@@ -1660,9 +1655,7 @@ length override, set to t for manual completion."
         (vertico-insert)
       (minibuffer-complete)))
 
-  (keymap-set vertico-map "TAB" #'conf--minibuffer-complete-or-insert-directory)
-  ;; (vertico-buffer-mode)
-  )
+  (keymap-set vertico-map "TAB" #'conf--minibuffer-complete-or-insert-directory))
 
 ;; A few more useful configurations...
 (use-package emacs
@@ -1716,6 +1709,10 @@ then \\[keyboard-quit] to abort the minibuffer."
     (let ((dir (read-directory-name "Select directory: ")))
       (consult-ripgrep dir))))
 
+(defun conf--debug-category()
+  (interactive)
+  (message (format "Current category: %s" (vertico--metadata-get 'category))))
+
 (use-package consult
   :bind
   (
@@ -1752,22 +1749,11 @@ then \\[keyboard-quit] to abort the minibuffer."
  :preview-key '(:debounce 0.01 any)) ;; Option 1: Delay preview
 
 
-;; (use-package consult-ag
-;;   :bind
-;;   (("M-R" . consult-ag)))
-
-
 (use-package marginalia
-  ;; Either bind `marginalia-cycle' globally or only in the minibuffer
   :bind (("M-A" . marginalia-cycle)
          :map minibuffer-local-map
          ("M-A" . marginalia-cycle))
-
-  ;; The :init configuration is always executed (Not lazy!)
   :init
-
-  ;; Must be in the :init section of use-package such that the mode gets
-  ;; enabled right away. Note that this forces loading the package.
   (marginalia-mode))
 
 (use-package embark
@@ -1777,18 +1763,9 @@ then \\[keyboard-quit] to abort the minibuffer."
    ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
   :init
-  ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
-
-  ;; Show the Embark target at point via Eldoc.  You may adjust the Eldoc
-  ;; strategy, if you want to see the documentation from multiple providers.
-  (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
-  ;; (setq eldoc-documentation-strategy #'eldoc-documentation-compose-eagerly)
-
   :config
   (setq embark-help-key "?")
-
-  (remove-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
@@ -2006,7 +1983,9 @@ Used to preselect nearest headings and imenu items.")
 (defun delete-file-and-buffer (filename delete-buffer)
   "Delete the file FILENAME and its associated buffer, if any."
   (interactive
-   (let* ((filename (read-file-name "Delete file: " nil nil t))
+   (let* ((filename (read-file-name (format "Delete file ('%s' by default): "
+                                            (file-name-nondirectory (buffer-file-name)))
+                                    nil (buffer-file-name) t))
           (buffer (find-buffer-visiting filename))
           (delete-buffer (and buffer
                               (y-or-n-p (format "Delete buffer '%s' too? "

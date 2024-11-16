@@ -122,16 +122,10 @@ TODO:
   > If you use the grepping commands from the Consult package, consult-grep, consult-git-grep or consult-ripgrep, then you should install the embark-consult package, which adds support for exporting a list of grep results to an honest grep-mode buffer, on which you can even use wgrep if you wish.
   ^ wgrep also works with helm
 
-
-Vertico / Consult notes:
-Run ripgrep with embark:
-- "M-/ C R"
-
 Vertico / Consult - Big TODO:
 - M-p for previous history is not working
-- Update embark action rename file & delete file to update associated buffers
 - Add back vterm M-e shortcuts
-- Show unsaved file differently in consult-buffers
+- Show unsaved file differently in consult-buffers (see how vertico-multi colorize activated command modes)
 
 Not sure that need fixing, vertico default might be better, we just need a way so embark-act on the current file?
 - Fix find-file file sorting?
