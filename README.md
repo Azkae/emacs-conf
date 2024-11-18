@@ -126,6 +126,7 @@ Vertico / Consult - Big TODO:
 - M-p for previous history is not working
 - Fix copy-face not working at launch
 - Show unsaved file differently in consult-buffers (see how vertico-multi colorize activated command modes)
+- Fix text in read only on vertico-repeat
 
 Not sure that need fixing, vertico default might be better, we just need a way so embark-act on the current file?
 - Fix find-file file sorting?

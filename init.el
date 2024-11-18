@@ -1341,6 +1341,8 @@ length override, set to t for manual completion."
   (:map corfu-map
         ("C-a" . nil)
         ("C-e" . nil)
+        ("C-j" . corfu-next)
+        ("C-k" . corfu-previous)
         ("<remap> <move-beginning-of-line>" . nil)
         ("<remap> <move-end-of-line>" . nil)
         ("C-s" . corfu-insert-separator)
@@ -1641,7 +1643,9 @@ length override, set to t for manual completion."
         ("M-<down>" . (lambda() (interactive) (scroll-other-window 5)))
         ("C-SPC" . embark-select)
         ("M-p" . previous-history-element)
-        ("M-n" . next-history-element))
+        ("M-n" . next-history-element)
+        ("C-j" . next-line)
+        ("C-k" . previous-line))
   (:map minibuffer-local-map
         ("C-p" . previous-history-element)
         ("C-n" . next-history-element))
@@ -1764,6 +1768,7 @@ then \\[keyboard-quit] to abort the minibuffer."
   :config
   (with-eval-after-load 'consult
     (copy-face 'consult-line-number-prefix 'consult-line-number-wrapped))
+  (add-hook 'after-init-hook (lambda () (copy-face 'consult-line-number-prefix 'consult-line-number-wrapped)))
   (setq xref-show-xrefs-function 'consult-xref)
   (setq xref-show-definitions-function 'consult-xref))
 
@@ -1782,6 +1787,11 @@ then \\[keyboard-quit] to abort the minibuffer."
   :init
   (marginalia-mode))
 
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+
 (use-package embark
   :bind
   (("M-/" . embark-act)         ;; pick some comfortable binding
@@ -1797,11 +1807,6 @@ then \\[keyboard-quit] to abort the minibuffer."
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
                  (window-parameters (mode-line-format . none)))))
-
-;; Consult users will also want the embark-consult package.
-(use-package embark-consult
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
 
 (defvar consult--previous-point nil
     "Location of point before entering minibuffer.
@@ -2048,6 +2053,110 @@ Used to preselect nearest headings and imenu items.")
 (define-key embark-file-map "c" #'copy-file-in-directory)
 (add-to-list 'embark-post-action-hooks '(copy-file-in-directory embark--restart))
 
+
+(use-package meow
+  :config
+  (setq meow--kbd-forward-char "C-%")
+  (global-set-key (kbd meow--kbd-forward-char) 'forward-char)
+
+  (setq meow--kbd-delete-char "C-$")
+  (global-set-key (kbd meow--kbd-delete-char) 'delete-char)
+
+  (defun meow-setup ()
+    (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
+    (meow-motion-overwrite-define-key
+     '("j" . meow-next)
+     '("k" . meow-prev)
+     '("<escape>" . ignore))
+    (meow-leader-define-key
+     ;; SPC j/k will run the original command in MOTION state.
+     '("j" . "H-j")
+     '("k" . "H-k")
+     ;; Use SPC (0-9) for digit arguments.
+     '("&" . meow-digit-argument)
+     '("é" . meow-digit-argument)
+     '("\"" . meow-digit-argument)
+     '("'" . meow-digit-argument)
+     '("(" . meow-digit-argument)
+     '("-" . meow-digit-argument)
+     '("è" . meow-digit-argument)
+     '("_" . meow-digit-argument)
+     '("ç" . meow-digit-argument)
+     '("à" . meow-digit-argument)
+     '("/" . meow-keypad-describe-key)
+     '("?" . meow-cheatsheet))
+    (meow-normal-define-key
+     '("à" . meow-expand-0)
+     '("&" . meow-expand-1)
+     '("é" . meow-expand-2)
+     '("\"" . meow-expand-3)
+     '("'" . meow-expand-4)
+     '("(" . meow-expand-5)
+     '("-" . meow-expand-6)
+     '("è" . meow-expand-7)
+     '("_" . meow-expand-8)
+     '("ç" . meow-expand-9)
+
+     '("" . negative-argument)
+     '(";" . meow-reverse)
+     '("," . meow-inner-of-thing)
+     '("." . meow-bounds-of-thing)
+     '("[" . meow-beginning-of-thing)
+     '("]" . meow-end-of-thing)
+     '("a" . meow-append)
+     '("A" . meow-open-below)
+     '("b" . meow-back-word)
+     '("B" . meow-back-symbol)
+     '("c" . meow-change)
+     '("d" . meow-delete)
+     '("D" . meow-backward-delete)
+     '("e" . meow-next-word)
+     '("E" . meow-next-symbol)
+     '("f" . meow-find)
+     '("g" . meow-cancel-selection)
+     '("G" . meow-grab)
+     '("h" . meow-left)
+     '("H" . meow-left-expand)
+     '("i" . meow-insert)
+     '("I" . meow-open-above)
+     '("j" . meow-next)
+     '("M-j" . meow-next)
+     '("J" . meow-next-expand)
+     '("k" . meow-prev)
+     '("M-k" . meow-prev)
+     '("K" . meow-prev-expand)
+     '("l" . meow-right)
+     '("L" . meow-right-expand)
+     '("m" . meow-join)
+     '("n" . meow-search)
+     '("o" . meow-block)
+     '("O" . meow-to-block)
+     '("p" . meow-yank)
+     '("q" . meow-quit)
+     '("Q" . meow-goto-line)
+     '("r" . meow-replace)
+     '("R" . meow-swap-grab)
+     '("s" . meow-kill)
+     '("t" . meow-till)
+     '("u" . meow-undo)
+     '("U" . undo-fu-only-redo)
+     '("v" . meow-visit)
+     '("w" . meow-mark-word)
+     '("W" . meow-mark-symbol)
+     '("x" . meow-line)
+     '("X" . meow-goto-line)
+     '("y" . meow-save)
+     '("Y" . meow-sync-grab)
+     '("z" . meow-pop-selection)
+     '("'" . repeat)
+     '("<escape>" . ignore)))
+  (meow-setup))
+
+
+(use-package meow-vterm
+  :straight (meow-vterm :type git :host github :repo "accelbread/meow-vterm")
+  :init
+  (meow-vterm-enable))
 
 ;; (add-to-list 'embark-keymap-alist '(project-file embark-file-map))
 
