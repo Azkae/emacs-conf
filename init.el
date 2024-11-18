@@ -1645,7 +1645,9 @@ length override, set to t for manual completion."
         ("M-p" . previous-history-element)
         ("M-n" . next-history-element)
         ("C-j" . next-line)
-        ("C-k" . previous-line))
+        ("C-k" . previous-line)
+        ("C-h" . left-char)
+        ("C-l" . right-char))
   (:map minibuffer-local-map
         ("C-p" . previous-history-element)
         ("C-n" . next-history-element))
@@ -2053,7 +2055,6 @@ Used to preselect nearest headings and imenu items.")
 (define-key embark-file-map "c" #'copy-file-in-directory)
 (add-to-list 'embark-post-action-hooks '(copy-file-in-directory embark--restart))
 
-
 (use-package meow
   :config
   (setq meow--kbd-forward-char "C-%")
@@ -2061,6 +2062,13 @@ Used to preselect nearest headings and imenu items.")
 
   (setq meow--kbd-delete-char "C-$")
   (global-set-key (kbd meow--kbd-delete-char) 'delete-char)
+
+  (setq meow-expand-hint-counts
+        '((word . 0)
+          (line . 0)
+          (block . 0)
+          (find . 0)
+          (till . 0)))
 
   (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
@@ -2157,9 +2165,6 @@ Used to preselect nearest headings and imenu items.")
   :straight (meow-vterm :type git :host github :repo "accelbread/meow-vterm")
   :init
   (meow-vterm-enable))
-
-;; (add-to-list 'embark-keymap-alist '(project-file embark-file-map))
-
 
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: disable eglot when viewing magit commit
