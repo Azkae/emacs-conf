@@ -91,6 +91,7 @@
 ;; basic keybindings
 (global-set-key (kbd "C-f") "\C-a\C-a\C-@\C-e")
 (global-set-key [C-return] 'newline)
+(global-set-key (kbd "C-h") nil)
 
 (global-set-key (kbd "M-$") 'shrink-window)
 (global-set-key (kbd "M-*") 'enlarge-window)
@@ -113,6 +114,8 @@
 (global-set-key (kbd "C-c p r") 'profiler-report)
 (global-set-key (kbd "C-c p e") 'profiler-stop)
 
+(global-set-key (kbd "C-x C-o") 'other-window)
+
 ;; don't ask confirmation for kill-buffer with process
 (setq kill-buffer-query-functions (delq 'process-kill-buffer-query-function kill-buffer-query-functions))
 
@@ -126,7 +129,6 @@
 (global-set-key (kbd "M-v") 'yank)
 (global-set-key (kbd "M-d") "\C-a\C-@\C-e")
 (global-set-key (kbd "M-s") 'save-buffer)
-(global-set-key (kbd "M-e") 'recenter)
 (global-set-key (kbd "M-N") 'goto-line)
 (global-set-key (kbd "M-k") 'compile)
 (global-set-key (kbd "C-x C-c") nil)
@@ -146,6 +148,8 @@
 
 (global-set-key (kbd "M-<up>")   (lambda () (interactive) (move-up 4)))
 (global-set-key (kbd "M-<down>") (lambda () (interactive) (move-down 4)))
+(global-set-key (kbd "M-j")   (lambda () (interactive) (move-up 4)))
+(global-set-key (kbd "M-k") (lambda () (interactive) (move-down 4)))
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (pixel-scroll-precision-mode)
 
@@ -728,13 +732,10 @@
 
 (use-package multiple-cursors
   :bind
-  (("C-j"      . mc/mark-next-like-this)
-   ("M-j"      . mc/mark-next-symbol-like-this)
-   ("C-n"      . mc/skip-to-next-like-this)
-   ("C-S-n"    . mc/unmark-previous-like-this)
+  (("M-m"      . mc/mark-next-like-this)
+   ;; ("C-M"      . newline)
+   ;; ("C-M-m"    . newline)
    ("C-M-<mouse-1>" . mc/add-cursor-on-click)
-   :map python-mode-map
-   ("C-j"      . mc/mark-next-like-this)
    :map mc/keymap
    ("<return>" . nil)
    ("M-v" . nil))
@@ -1274,7 +1275,7 @@
   :bind
   (("M-§" . eldoc-box-help-at-point))
   :custom
-  (eldoc-idle-delay 0.1))
+  (eldoc-idle-delay 0.15))
 
 ;; (add-to-list 'eglot-ignored-server-capabilites :hoverProvider)
 
@@ -1641,6 +1642,8 @@ length override, set to t for manual completion."
         ;; ("M-r" . nil)
         ("M-<up>" . (lambda() (interactive) (scroll-other-window-down 5)))
         ("M-<down>" . (lambda() (interactive) (scroll-other-window 5)))
+        ("M-k" . (lambda() (interactive) (scroll-other-window-down 5)))
+        ("M-j" . (lambda() (interactive) (scroll-other-window 5)))
         ("C-SPC" . embark-select)
         ("M-p" . previous-history-element)
         ("M-n" . next-history-element)
@@ -1770,7 +1773,7 @@ then \\[keyboard-quit] to abort the minibuffer."
   :config
   (with-eval-after-load 'consult
     (copy-face 'consult-line-number-prefix 'consult-line-number-wrapped))
-  (add-hook 'after-init-hook (lambda () (copy-face 'consult-line-number-prefix 'consult-line-number-wrapped)))
+  ;; (add-hook 'after-init-hook (lambda () (copy-face 'consult-line-number-prefix 'consult-line-number-wrapped)))
   (setq xref-show-xrefs-function 'consult-xref)
   (setq xref-show-definitions-function 'consult-xref))
 
@@ -2062,6 +2065,15 @@ Used to preselect nearest headings and imenu items.")
 
   (setq meow--kbd-delete-char "C-$")
   (global-set-key (kbd meow--kbd-delete-char) 'delete-char)
+  (global-set-key (kbd "C-x h") 'conf--prev-buffer)
+  (global-set-key (kbd "C-x l") 'conf--next-buffer)
+  (global-set-key (kbd "C-x C-h") 'conf--prev-buffer)
+  (global-set-key (kbd "C-x C-l") 'conf--next-buffer)
+
+  (global-set-key (kbd "C-x j") nil)
+  (global-set-key (kbd "C-x k") nil)
+  (global-set-key (kbd "C-x C-j") nil)
+  (global-set-key (kbd "C-x C-k") nil)
 
   (setq meow-expand-hint-counts
         '((word . 0)
@@ -2128,14 +2140,14 @@ Used to preselect nearest headings and imenu items.")
      '("i" . meow-insert)
      '("I" . meow-open-above)
      '("j" . meow-next)
-     '("M-j" . meow-next)
+     '("M-j" . (lambda () (interactive) (move-down 4)))
      '("J" . meow-next-expand)
      '("k" . meow-prev)
-     '("M-k" . meow-prev)
+     '("M-k" . (lambda () (interactive) (move-up 4)))
      '("K" . meow-prev-expand)
      '("l" . meow-right)
      '("L" . meow-right-expand)
-     '("m" . meow-join)
+     '("m" . nil)                       ;meow-join
      '("n" . meow-search)
      '("o" . meow-block)
      '("O" . meow-to-block)
@@ -2158,7 +2170,8 @@ Used to preselect nearest headings and imenu items.")
      '("z" . meow-pop-selection)
      '("'" . repeat)
      '("<escape>" . ignore)))
-  (meow-setup))
+  (meow-setup)
+  (add-hook 'git-commit-setup-hook 'meow-insert-mode))
 
 
 (use-package meow-vterm
