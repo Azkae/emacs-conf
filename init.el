@@ -2158,6 +2158,9 @@ Used to preselect nearest headings and imenu items.")
      '("L" . meow-right-expand)
      '("m" . nil)                       ;meow-join
      '("n" . meow-search)
+     '("N" . (lambda () (interactive)
+               (let ((current-prefix-arg '-)) ; Set the prefix argument to negative
+                 (call-interactively 'meow-search))))
      '("o" . meow-block)
      '("O" . meow-to-block)
      '("p" . meow-yank)
