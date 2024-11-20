@@ -2078,6 +2078,8 @@ Used to preselect nearest headings and imenu items.")
   (global-set-key (kbd "C-x C-j") nil)
   (global-set-key (kbd "C-x C-k") nil)
 
+  (setq meow-use-clipboard t)
+
   (setq meow-expand-hint-counts
         '((word . 0)
           (line . 0)
@@ -2158,9 +2160,7 @@ Used to preselect nearest headings and imenu items.")
      '("L" . meow-right-expand)
      '("m" . nil)                       ;meow-join
      '("n" . meow-search)
-     '("N" . (lambda () (interactive)
-               (let ((current-prefix-arg '-)) ; Set the prefix argument to negative
-                 (call-interactively 'meow-search))))
+     '("N" . meow-reverse)
      '("o" . meow-block)
      '("O" . meow-to-block)
      '("p" . meow-yank)
