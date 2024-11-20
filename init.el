@@ -1347,6 +1347,8 @@ length override, set to t for manual completion."
         ("C-e" . nil)
         ("C-j" . corfu-next)
         ("C-k" . corfu-previous)
+        ("M-j" . corfu-next)
+        ("M-k" . corfu-previous)
         ("<remap> <move-beginning-of-line>" . nil)
         ("<remap> <move-end-of-line>" . nil)
         ("C-s" . corfu-insert-separator)
@@ -2068,6 +2070,10 @@ Used to preselect nearest headings and imenu items.")
 
   (setq meow--kbd-delete-char "C-$")
   (global-set-key (kbd meow--kbd-delete-char) 'delete-char)
+
+  (setq meow--kbd-kill-line "C-=")
+  (global-set-key (kbd meow--kbd-kill-line) 'kill-line)
+
   (global-set-key (kbd "C-x h") 'conf--prev-buffer)
   (global-set-key (kbd "C-x l") 'conf--next-buffer)
   (global-set-key (kbd "C-x C-h") 'conf--prev-buffer)
@@ -2183,8 +2189,8 @@ Used to preselect nearest headings and imenu items.")
      '("'" . repeat)
      '("<escape>" . ignore)))
   (meow-setup)
-  (add-hook 'git-commit-setup-hook 'meow-insert-mode))
-
+  (add-hook 'git-commit-setup-hook 'meow-insert-mode)
+  (add-hook 'meow-insert-exit-hook 'corfu-quit))
 
 (use-package meow-vterm
   :straight (meow-vterm :type git :host github :repo "accelbread/meow-vterm")
