@@ -1776,9 +1776,8 @@ then \\[keyboard-quit] to abort the minibuffer."
   (consult-line-start-from-top 't)
   (consult-narrow-key "<")
   :config
-  (with-eval-after-load 'consult
-    (copy-face 'consult-line-number-prefix 'consult-line-number-wrapped))
-  ;; (add-hook 'after-init-hook (lambda () (copy-face 'consult-line-number-prefix 'consult-line-number-wrapped)))
+  (custom-set-faces
+    '(consult-line-number-wrapped ((t (:inherit consult-line-number-prefix)))))
   (setq xref-show-xrefs-function 'consult-xref)
   (setq xref-show-definitions-function 'consult-xref))
 
