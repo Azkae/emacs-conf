@@ -3,7 +3,7 @@
 (load-theme 'custom-monokai t)
 
 (defun conf--setup-font ()
-  (if (find-font (font-spec :name "Fira Mono"))
+  (if (or (find-font (font-spec :name "Fira Mono")) t)
       (progn
         (message "Using Fira Mono")
         (set-frame-font "Fira Mono-13" nil t)
@@ -14,7 +14,7 @@
   (set-face-attribute 'default nil :height 140))
 
 (conf--setup-font)
-(add-hook 'after-make-frame-functions 'conf--setup-font)
+;; (add-hook 'after-init-hook 'conf--setup-font)
 
 (menu-bar-mode -1)
 (blink-cursor-mode 0)
