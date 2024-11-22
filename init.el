@@ -135,10 +135,13 @@
 (global-set-key (kbd "M-d") "\C-a\C-@\C-e")
 (global-set-key (kbd "M-s") 'save-buffer)
 (global-set-key (kbd "M-N") 'goto-line)
-(global-set-key (kbd "M-k") 'compile)
+(global-set-key (kbd "M-a") 'recenter)
+;; (global-set-key (kbd "M-k") 'compile)
 (global-set-key (kbd "C-x C-c") nil)
 (global-set-key (kbd "C-S-x C-S-c") 'save-buffers-kill-terminal)
 
+(global-set-key (kbd "<mouse-3>") 'xref-find-definitions)
+(global-set-key (kbd "<mouse-4>") 'xref-go-back)
 
 (defun move-up (amount)
   (condition-case nil
@@ -1805,10 +1808,7 @@ then \\[keyboard-quit] to abort the minibuffer."
 
 (use-package embark
   :bind
-  (("M-/" . embark-act)         ;; pick some comfortable binding
-   ("C-;" . embark-dwim)        ;; good alternative: M-.
-   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-
+  (("M-/" . embark-act))
   :init
   (setq prefix-help-command #'embark-prefix-help-command)
   :config
@@ -2105,7 +2105,8 @@ Used to preselect nearest headings and imenu items.")
     (meow-motion-overwrite-define-key
      '("j" . meow-next)
      '("k" . meow-prev)
-     '("<escape>" . ignore))
+     '("<escape>" . ignore)
+     '("C-SPC" . (lambda () (interactive) (meow-left-expand) (meow-right-expand))))
     (meow-leader-define-key
      ;; SPC j/k will run the original command in MOTION state.
      '("j" . "H-j")
@@ -2211,7 +2212,9 @@ Used to preselect nearest headings and imenu items.")
       '("M-l" . meow-right)))
   (meow-setup)
   (add-hook 'git-commit-setup-hook 'meow-insert-mode)
-  (add-hook 'meow-insert-exit-hook 'corfu-quit))
+  (add-hook 'meow-insert-exit-hook 'corfu-quit)
+  (add-hook 'vterm-mode-hook 'meow-insert-mode)
+  (meow-global-mode))
 
 (use-package meow-vterm
   :straight (meow-vterm :type git :host github :repo "accelbread/meow-vterm")
