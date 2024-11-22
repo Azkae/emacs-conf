@@ -1908,19 +1908,14 @@ Used to preselect nearest headings and imenu items.")
 
     result))
 
-(defun conf--consult-line ()
+(defun conf--consult-line (&optional initial start)
   "Call `consult-line` with candidates filtered by the symbol at point by default."
   (interactive)
-  (let* ((symbol (thing-at-point 'symbol))
-         (initial (when symbol (regexp-quote symbol))))
-    (if initial
-        (minibuffer-with-setup-hook
-            (lambda ()
-              (insert initial)
-              (set-mark (point-max))
-              (goto-char (point-min)))
-          (consult-line))
-      (consult-line))))
+  (run-with-timer 0 nil (lambda () (interactive)
+                          (when (minibufferp)
+                            (goto-char (minibuffer-prompt-end))
+                            (push-mark (point-max) nil t))))
+  (consult-line (thing-at-point 'symbol)))
 
 (require 'vertico-multiform)
 (vertico-multiform-mode +1)
