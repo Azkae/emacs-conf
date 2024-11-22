@@ -52,4 +52,3 @@ TODO Vertico / Consult:
 - M-p for previous history is not working
 - Show unsaved file differently in consult-buffers (see how vertico-multi colorize activated command modes)
 - Fix "text in read" only on vertico-repeat
-
