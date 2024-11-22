@@ -1928,6 +1928,14 @@ Used to preselect nearest headings and imenu items.")
     (setq cand (funcall fun cand)))
   (cl-call-next-method cand prefix suffix index start))
 
+;; (defun +vertico-highlight-unsaved-buffer (buffer-name)
+;;   (let ((buffer (get-buffer buffer-name)))
+;;     (if (and buffer
+;;                (buffer-live-p buffer)
+;;                (buffer-modified-p buffer))
+;;         (propertize buffer-name 'face 'font-lock-constant-face)
+;;       buffer-name)))
+
 (defun +vertico-highlight-directory (file)
   "If FILE ends with a slash, highlight it as a directory."
   (if (string-suffix-p "/" file)
@@ -1954,6 +1962,11 @@ Used to preselect nearest headings and imenu items.")
              '(execute-extended-command
                ;; reverse
                (+vertico-transform-functions . +vertico-highlight-enabled-mode)))
+
+;; (add-to-list 'vertico-multiform-categories
+;;              '(multi-category
+;;                ;; (vertico-sort-function . sort-directories-first)
+;;                (+vertico-transform-functions . +vertico-highlight-unsaved-buffer)))
 
 
 (defun conf--embark-consult-export-xref (items)
@@ -2119,7 +2132,10 @@ Used to preselect nearest headings and imenu items.")
      '("à" . meow-digit-argument)
      '("/" . meow-keypad-describe-key)
      '("?" . meow-cheatsheet)
-     '("o" . other-window))
+     '("o" . other-window)
+     ;; '("h" . conf--prev-buffer)
+     ;; '("l" . conf--next-buffer)
+     )
     (meow-normal-define-key
      '("à" . meow-expand-0)
      '("&" . meow-expand-1)
