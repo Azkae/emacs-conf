@@ -413,7 +413,8 @@
 
 (use-package vundo
   :bind
-  (("C-x u" . vundo)))
+  (("C-x u" . vundo)
+   ("C-x C-u" . vundo)))
 
 (defun delete-slash ()
   (search-backward "/")
@@ -686,8 +687,8 @@
 (use-package symbol-overlay
   :bind
   ([f7] . symbol-overlay-put)
-  :custom
-  (symbol-overlay-inhibit-map t))
+  :init
+  (setq symbol-overlay-inhibit-map t))
 
 (use-package cmake-mode
   :bind
@@ -842,8 +843,8 @@
 (straight-use-package '(git-timemachine :type git :host github :repo "emacsmirror/git-timemachine"))
 
 (use-package magit-delta
-  :straight (magit-delta :type git :host github :repo "dandavison/magit-delta"
-                     :fork (:host github :repo "jumper047/magit-delta"))
+  ;; :straight (magit-delta :type git :host github :repo "dandavison/magit-delta"
+  ;;                    :fork (:host github :repo "jumper047/magit-delta"))
 
   :if (executable-find "delta")
   ;; :hook (magit-mode . magit-delta-mode)
@@ -1508,7 +1509,10 @@ length override, set to t for manual completion."
 
 (use-package treesit-auto
   :custom
-  (treesit-auto-langs '(typescript tsx python)))
+  (treesit-auto-install 'prompt)
+  :config
+  (treesit-auto-add-to-auto-mode-alist 'all)
+  (global-treesit-auto-mode))
 
 (defun conf--move-buffer (dir)
   (let* ((buf (current-buffer))
@@ -1576,8 +1580,10 @@ length override, set to t for manual completion."
         ("SPC" . casual-calc-tmenu)))
 
 ;; Disable M-o key in html
-(eval-after-load 'mhtml-mode
+(with-eval-after-load 'mhtml-mode
   (add-hook 'mhtml-mode-hook #'(lambda() (bind-key "M-o" nil mhtml-mode-map))))
+(with-eval-after-load 'html-ts-mode
+  (define-key html-ts-mode-map (kbd "M-o") nil))
 
 (which-function-mode)
 
@@ -2058,6 +2064,8 @@ Used to preselect nearest headings and imenu items.")
 (define-key embark-file-map "d" #'delete-file-and-buffer)
 (add-to-list 'embark-post-action-hooks '(delete-file-and-buffer embark--restart))
 (add-to-list 'embark-pre-action-hooks '(delete-file-and-buffer embark--confirm))
+
+(define-key embark-identifier-map "o" #'xref-find-definitions-other-window)
 
 (defun copy-file-in-directory (old-name new-name &optional ok-if-already-exists)
   "Rename OLD-NAME to NEW-NAME, updating associated buffer if it exists."
