@@ -64,7 +64,6 @@
 (setq native-comp-async-report-warnings-errors nil)
 (global-unset-key (kbd "C-z"))
 (normal-erase-is-backspace-mode 1)
-(setq delete-active-region t)
 
 ;; speedup long lines
 (setq bidi-display-reordering nil)
@@ -156,8 +155,9 @@
 
 (global-set-key (kbd "M-<up>")   (lambda () (interactive) (move-up 4)))
 (global-set-key (kbd "M-<down>") (lambda () (interactive) (move-down 4)))
-(global-set-key (kbd "M-j")   (lambda () (interactive) (move-up 4)))
-(global-set-key (kbd "M-k") (lambda () (interactive) (move-down 4)))
+;; Should move this to meow-motion map? -- this would only be used on motion map
+(global-set-key (kbd "M-j")   (lambda () (interactive) (move-down 4)))
+(global-set-key (kbd "M-k") (lambda () (interactive) (move-up 4)))
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (pixel-scroll-precision-mode)
 
@@ -2154,7 +2154,7 @@ Used to preselect nearest headings and imenu items.")
      '("_" . meow-expand-8)
      '("ç" . meow-expand-9)
 
-     '(":" . negative-argument)
+     '("!" . negative-argument)
      '(";" . meow-reverse)
      '("," . meow-inner-of-thing)
      '("." . meow-bounds-of-thing)
@@ -2213,7 +2213,7 @@ Used to preselect nearest headings and imenu items.")
      '("x" . meow-line)
      '("X" . meow-goto-line)
      '("y" . meow-save)
-     '("Y" . meow-sync-grab)
+     '("Y" . meow-change-save)  ; meow-change-save
      '("z" . meow-pop-selection)
      '("'" . repeat)
      '("<escape>" . ignore)
@@ -2232,6 +2232,7 @@ Used to preselect nearest headings and imenu items.")
   (add-hook 'git-commit-setup-hook 'meow-insert-mode)
   (add-hook 'meow-insert-exit-hook 'corfu-quit)
   (add-hook 'vterm-mode-hook 'meow-insert-mode)
+  (add-hook 'meow-global-mode-hook (lambda () (setq delete-active-region t)))
   (meow-global-mode))
 
 (use-package meow-vterm
