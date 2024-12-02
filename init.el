@@ -2285,6 +2285,15 @@ The thing `string' is not available in Emacs 27.'"
   :init
   (meow-tree-sitter-register-defaults))
 
+(use-package web-mode
+  :mode (("\\.html\\'" . web-mode))
+  :config
+
+  ;; There is a conflict between web-mode and electric-pair-mode, disable one:
+  ;; (add-hook 'web-mode-hook (lambda () (electric-pair-local-mode -1)))
+  (setq web-mode-enable-auto-pairing nil)
+  )
+
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: disable eglot when viewing magit commit
 ;; TODO: test direnv
