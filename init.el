@@ -2244,10 +2244,46 @@ Used to preselect nearest headings and imenu items.")
   (add-hook 'meow-global-mode-hook (lambda () (setq delete-active-region t)))
   (meow-global-mode))
 
+(el-patch-feature 'meow)
+
+(defun conf--treesit-bounds-at-point ()
+  (when-let* ((node (treesit-node-at (point)))
+              (parent (treesit-node-parent node))
+              (is-string (string= (treesit-node-type parent) "string")))
+    (cons (treesit-node-start parent)
+          (treesit-node-end parent))))
+
+(el-patch-defun meow--bounds-of-string-1 ()
+  "Return the bounds of the string under the cursor.
+
+The thing `string' is not available in Emacs 27.'"
+  (if (version< emacs-version "28")
+      (when (meow--in-string-p)
+        (let (beg end)
+          (save-mark-and-excursion
+            (while (meow--in-string-p)
+              (backward-char 1))
+            (setq beg (point)))
+          (save-mark-and-excursion
+            (while (meow--in-string-p)
+              (forward-char 1))
+            (setq end (point)))
+          (cons beg end)))
+    (el-patch-swap (bounds-of-thing-at-point 'string)
+                   (if (treesit-language-at (point))
+                       (conf--treesit-bounds-at-point)
+                     (bounds-of-thing-at-point 'string)
+                     ))))
+
+
 (use-package meow-vterm
   :straight (meow-vterm :type git :host github :repo "accelbread/meow-vterm")
   :init
   (meow-vterm-enable))
+
+(use-package meow-tree-sitter
+  :init
+  (meow-tree-sitter-register-defaults))
 
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: disable eglot when viewing magit commit
