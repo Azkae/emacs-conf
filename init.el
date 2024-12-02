@@ -1511,7 +1511,7 @@ length override, set to t for manual completion."
   :custom
   (treesit-auto-install 'prompt)
   :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
+  (setq treesit-auto-langs '(typescript tsx python))
   (global-treesit-auto-mode))
 
 (defun conf--move-buffer (dir)
