@@ -1722,8 +1722,9 @@ then \\[keyboard-quit] to abort the minibuffer."
   (let ((minibuffer-candidate (conf--minibuffer-candidate)))
     (when minibuffer-candidate
       (pcase (car minibuffer-candidate)
-        ('project-file (projectile-project-root (cdr minibuffer-candidate)))
-        ('file (let ((path (cdr minibuffer-candidate)))
+        ('project-file (projectile-project-root
+                        (expand-file-name (cdr minibuffer-candidate))))
+        ('file (let ((path (expand-file-name (cdr minibuffer-candidate))))
                  (if (not (file-directory-p path))
                         (file-name-directory path)
                       path)))))))
@@ -2005,8 +2006,11 @@ Used to preselect nearest headings and imenu items.")
 (defun rename-file-and-buffer (old-name new-name &optional ok-if-already-exists)
   "Rename OLD-NAME to NEW-NAME, updating associated buffer if it exists."
   (interactive
-   (let* ((old (read-file-name (format "Rename file ('%s' by default): "
-                                       (file-name-nondirectory (buffer-file-name)))
+   (let* ((current-file (and (buffer-file-name) (file-name-nondirectory (buffer-file-name))))
+          (old (read-file-name (if current-file
+                                   (format "Rename file ('%s' by default): "
+                                           (file-name-nondirectory (buffer-file-name)))
+                                 "Rename file: ")
                                nil (buffer-file-name) t))
           (new (read-file-name (format "Rename '%s' to file: " old) (file-name-directory old))))
      (list old new current-prefix-arg)))
@@ -2033,8 +2037,10 @@ Used to preselect nearest headings and imenu items.")
 (defun delete-file-and-buffer (filename delete-buffer)
   "Delete the file FILENAME and its associated buffer, if any."
   (interactive
-   (let* ((filename (read-file-name (format "Delete file ('%s' by default): "
-                                            (file-name-nondirectory (buffer-file-name)))
+   (let* ((current-file (and (buffer-file-name) (file-name-nondirectory (buffer-file-name))))
+          (filename (read-file-name (if current-file
+                                        (format "Delete file ('%s' by default): " current-file)
+                                      "Delete file: ")
                                     nil (buffer-file-name) t))
           (buffer (find-buffer-visiting filename))
           (delete-buffer (and buffer
