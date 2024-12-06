@@ -34,6 +34,8 @@ For *Iterm*:
 In `Profiles` -> `Advanced` -> `Sementic History`:
 Set to `Run command`, with value: `$PATH_TO/emacsclient -n \2 \1`
 
+Make sure to install all versions of Fira Mono (Medium, Regular & Bold)
+
 ### How to reproduce bugs:
 `emacs -Q -l ~/.emacs.d/straight/repos/straight.el/bootstrap.el`
 
@@ -48,6 +50,8 @@ Set to `Run command`, with value: `$PATH_TO/emacsclient -n \2 \1`
 (use-package ...)
 ```
 
-TODO Vertico / Consult:
+TODO:
 - M-p for previous history is not working
 - Show unsaved file differently in consult-buffers (see how vertico-multi colorize activated command modes)
+- add https://github.com/karthink/consult-dir
+- N should search in reverse always? but n should then always search forward..

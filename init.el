@@ -110,6 +110,7 @@
 (global-unset-key (kbd "C-x C-d"))
 (global-unset-key (kbd "C-t"))
 (global-unset-key (kbd "M-t"))
+(global-unset-key (kbd "C-o"))
 
 (define-key key-translation-map (kbd "M-g") (kbd "C-g"))
 ; (define-key crm-local-completion-map (kbd "M-v") nil)
@@ -187,6 +188,11 @@
 (global-set-key (kbd "M-q M-<right>") 'windmove-right)
 (global-set-key (kbd "M-q M-<up>")    'windmove-up)
 (global-set-key (kbd "M-q M-<down>")  'windmove-down)
+
+(global-set-key (kbd "M-q M-h")  'windmove-left)
+(global-set-key (kbd "M-q M-j")  'windmove-down)
+(global-set-key (kbd "M-q M-k")    'windmove-up)
+(global-set-key (kbd "M-q M-l") 'windmove-right)
 
 ;; fix some coding systems
 (define-coding-system-alias 'UTF-8 'utf-8)
@@ -832,13 +838,11 @@
                        "url"))
            (url-hexify-string (magit-get-current-branch)))))
 
-(eval-after-load 'magit
-  '(define-key magit-mode-map "h"
-     #'conf--visit-pull-request-url-github))
-
-(eval-after-load 'magit
-  '(define-key magit-mode-map "H"
-     #'conf--visit-circle-ci))
+(with-eval-after-load 'magit
+  (define-key magit-mode-map "h" #'conf--visit-pull-request-url-github)
+  (define-key magit-mode-map "H" #'conf--visit-circle-ci)
+  (define-key magit-mode-map (kbd "C-c i") #'conf--visit-circle-ci)
+  (define-key magit-mode-map (kbd "C-c p") #'conf--visit-pull-request-url-github))
 
 (straight-use-package '(git-timemachine :type git :host github :repo "emacsmirror/git-timemachine"))
 
@@ -1654,16 +1658,12 @@ length override, set to t for manual completion."
   ("M-b" . vertico-repeat)
   ("M-B" . vertico-repeat-select)
   (:map vertico-map
-        ("M-p" . previous-history-element)
-        ("M-n" . next-history-element)
         ;; ("M-r" . nil)
         ("M-<up>" . (lambda() (interactive) (scroll-other-window-down 5)))
         ("M-<down>" . (lambda() (interactive) (scroll-other-window 5)))
         ("M-k" . (lambda() (interactive) (scroll-other-window-down 5)))
         ("M-j" . (lambda() (interactive) (scroll-other-window 5)))
         ("C-SPC" . embark-select)
-        ("M-p" . previous-history-element)
-        ("M-n" . next-history-element)
         ("C-j" . next-line)
         ("C-k" . previous-line)
         ("C-h" . left-char)
@@ -2123,17 +2123,31 @@ Used to preselect nearest headings and imenu items.")
       (setq this-command #'meow-insert)
       (meow--switch-state 'insert)))
 
+  (defun conf--meow-change-and-mark ()
+    (interactive)
+    (when (region-active-p)
+      (meow--push-search (regexp-quote (buffer-substring-no-properties (region-beginning) (region-end)))))
+    (meow-change))
+
   (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
     (meow-motion-overwrite-define-key
+     '("h" . meow-left)
      '("j" . meow-next)
      '("k" . meow-prev)
+     '("l" . meow-right)
+     '("C-h" . left-word)
+     '("C-j" . forward-paragraph)
+     '("C-k" . backward-paragraph)
+     '("C-l" . right-word)
      '("<escape>" . ignore)
      '("C-SPC" . (lambda () (interactive) (meow-left-expand) (meow-right-expand))))
     (meow-leader-define-key
-     ;; SPC j/k will run the original command in MOTION state.
+     ;; SPC j/k/l/h will run the original command in MOTION state.
+     '("h" . "H-h")
      '("j" . "H-j")
      '("k" . "H-k")
+     '("l" . "H-l")
      ;; Use SPC (0-9) for digit arguments.
      '("&" . meow-digit-argument)
      '("é" . meow-digit-argument)
@@ -2163,23 +2177,31 @@ Used to preselect nearest headings and imenu items.")
      '("_" . meow-expand-8)
      '("ç" . meow-expand-9)
 
+     '("(" . insert-pair)
+     '("\"" . insert-pair)
+     '("'" . insert-pair)
+     '("{" . insert-pair)
+     '("[" . insert-pair)
+
      '("!" . negative-argument)
      '(";" . meow-reverse)
      '("," . meow-inner-of-thing)
      '("." . meow-bounds-of-thing)
-     '("[" . meow-beginning-of-thing)
-     '("]" . meow-end-of-thing)
+     '(")" . meow-beginning-of-thing)
+     '("=" . meow-end-of-thing)
      '("a" . meow-append)
      '("A" . meow-open-below)
      '("b" . meow-back-word)
      '("B" . meow-back-symbol)
-     '("c" . meow-change)
+     '("c" . conf--meow-change-and-mark)
      '("C" . conf--meow-insert-wrap)
      '("d" . meow-delete)
      '("D" . meow-backward-delete)
      '("e" . meow-next-word)
      '("E" . meow-next-symbol)
      '("f" . meow-find)
+     '("F" . (lambda () (interactive) (let ((current-prefix-arg -1))
+                                        (call-interactively 'meow-find))))
      '("g" . meow-cancel-selection)
      '("G" . meow-grab)
      '("h" . meow-left)
@@ -2188,8 +2210,12 @@ Used to preselect nearest headings and imenu items.")
      '("I" . meow-open-above)
      '("j" . meow-next)
      '("C-h" . left-word)
-     '("C-j" . forward-paragraph)
-     '("C-k" . backward-paragraph)
+     '("C-j" . (lambda () (interactive) (if (and corfu-mode completion-in-region-mode)
+                                            (corfu-next)
+                                          (forward-paragraph))))
+     '("C-k" . (lambda () (interactive) (if (and corfu-mode completion-in-region-mode)
+                                            (corfu-previous)
+                                          (backward-paragraph))))
      '("C-l" . right-word)
      '("J" . meow-next-expand)
      '("k" . meow-prev)
@@ -2213,6 +2239,8 @@ Used to preselect nearest headings and imenu items.")
      '("R" . meow-swap-grab)
      '("s" . meow-kill)
      '("t" . meow-till)
+     '("T" . (lambda () (interactive) (let ((current-prefix-arg -1))
+                                        (call-interactively 'meow-till))))
      '("u" . ignore)                 ; meow-undo
      '("U" . meow-undo)              ; undo-fu-only-redo
      '("M-U" . undo-fu-only-redo)
@@ -2253,6 +2281,7 @@ Used to preselect nearest headings and imenu items.")
     (cons (treesit-node-start parent)
           (treesit-node-end parent))))
 
+;; Fix bound of string in tsx mode, uses treesitter instead of bounds-of-thing-at-point
 (el-patch-defun meow--bounds-of-string-1 ()
   "Return the bounds of the string under the cursor.
 
@@ -2272,8 +2301,7 @@ The thing `string' is not available in Emacs 27.'"
     (el-patch-swap (bounds-of-thing-at-point 'string)
                    (if (treesit-language-at (point))
                        (conf--treesit-bounds-at-point)
-                     (bounds-of-thing-at-point 'string)
-                     ))))
+                     (bounds-of-thing-at-point 'string)))))
 
 (meow-thing-register 'xml
                      '(pair ("<") (">"))
@@ -2295,8 +2323,7 @@ The thing `string' is not available in Emacs 27.'"
 
   ;; There is a conflict between web-mode and electric-pair-mode, disable one:
   ;; (add-hook 'web-mode-hook (lambda () (electric-pair-local-mode -1)))
-  (setq web-mode-enable-auto-pairing nil)
-  )
+  (setq web-mode-enable-auto-pairing nil))
 
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: disable eglot when viewing magit commit
