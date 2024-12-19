@@ -2343,6 +2343,10 @@ The thing `string' is not available in Emacs 27.'"
          ("C-x C-d" . consult-dir)
          ("C-x C-j" . consult-dir-jump-file)))
 
+(use-package impatient-mode
+  :config
+  (setq httpd-port 8087))
+
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: disable eglot when viewing magit commit
 ;; TODO: test direnv
