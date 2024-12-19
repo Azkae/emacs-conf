@@ -55,3 +55,6 @@ TODO:
 - Show unsaved file differently in consult-buffers (see how vertico-multi colorize activated command modes)
 - add https://github.com/karthink/consult-dir
 - N should search in reverse always? but n should then always search forward..
+- Fix M-B with M-R session showing nil
+- Fix git timemachine keybind with meow
+- Fix timemachine highlighting (use font locking?)
