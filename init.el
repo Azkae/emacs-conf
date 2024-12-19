@@ -82,7 +82,7 @@
 ;; Don't spawn another window during ediff
 (setq ediff-window-setup-function 'ediff-setup-windows-plain)
 
-;; Trackpad horizontal scrolling
+;; Track-pad horizontal scrolling
 (setq mouse-wheel-tilt-scroll t)
 (setq mouse-wheel-flip-direction t)
 
@@ -98,14 +98,14 @@
 (global-set-key (kbd "M-à") 'shrink-window-horizontally)
 (global-set-key (kbd "M-)") 'enlarge-window-horizontally)
 
-(global-set-key (kbd "M-L") 'downcase-word)
-(global-set-key (kbd "M-U") 'upcase-word)
+(global-set-key (kbd "M-i") 'downcase-word)
+(global-set-key (kbd "M-u") 'upcase-word)
 
 (global-set-key (kbd "C-c b") 'pop-tag-mark)
 (global-set-key (kbd "C-q") 'kill-this-buffer)
 (global-set-key [C-backspace] 'delete-backward-char)
 
-;; remove anoying keybindings
+;; remove annoying keybindings
 (global-set-key (kbd "C-x DEL") 'ignore)
 (global-unset-key (kbd "C-x C-d"))
 (global-unset-key (kbd "C-t"))
