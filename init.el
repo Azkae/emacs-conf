@@ -2353,10 +2353,23 @@ The thing `string' is not available in Emacs 27.'"
   :custom
   (jinx-languages "en_US fr"))
 
+(use-package recursion-indicator
+  :config
+  (recursion-indicator-mode))
+
+(add-hook 'text-mode-hook 'visual-line-mode)
+
+(use-package tramp
+  :straight nil
+  :config
+  (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='/tmp/tramp.%%C' -o ControlPersist=3600")
+  (tramp-set-completion-function
+   "ssh" (append (tramp-get-completion-function "ssh") '((tramp-parse-sconfig "~/.ssh/config"))))
+  (tramp-set-completion-function
+   "scp" (append (tramp-get-completion-function "scp") '((tramp-parse-sconfig "~/.ssh/config")))))
+
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
-;; TODO: disable eglot when viewing magit commit
 ;; TODO: test direnv
-;; TODO (longshot): try meowing https://github.com/meow-edit/meow
 
 ;; load graphic settings
 (require 'graphics)
