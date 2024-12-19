@@ -2347,6 +2347,12 @@ The thing `string' is not available in Emacs 27.'"
   :config
   (setq httpd-port 8087))
 
+(use-package jinx
+  :hook (emacs-startup . global-jinx-mode)
+  :bind (("M-$" . jinx-correct))
+  :custom
+  (jinx-languages "en_US fr"))
+
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: disable eglot when viewing magit commit
 ;; TODO: test direnv
