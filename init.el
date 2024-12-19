@@ -387,7 +387,8 @@
         ("M-<return>" . conf--org-open-link-maybe)
         ("M-<up>"     . (lambda () (interactive) (move-up 4)))
         ("M-<down>"   . (lambda () (interactive) (move-down 4)))
-        )
+        ("M-H"        . org-shiftmetaleft)
+        ("M-L"        . org-shiftmetaright))
   :config
   (setq org-startup-folded t)
   (setq org-confirm-babel-evaluate nil)
