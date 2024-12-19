@@ -988,6 +988,9 @@
 
   ;; (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed")))
   (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed" "--header-insertion-decorators=0" "--header-insertion=never")))
+  (add-to-list 'eglot-server-programs `(web-mode . ,(eglot-alternatives
+                                                     '(("vscode-html-language-server" "--stdio")
+                                                       ("html-languageserver" "--stdio")))))
   (setq eldoc-echo-area-use-multiline-p nil)
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
