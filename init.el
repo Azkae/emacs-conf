@@ -2264,7 +2264,7 @@ Used to preselect nearest headings and imenu items.")
      '("y" . meow-save)
      '("Y" . meow-change-save)  ; meow-change-save
      '("z" . meow-pop-selection)
-     '("'" . repeat)
+     ;; '("'" . repeat)
      '("<escape>" . ignore)
      '("C-SPC" . (lambda () (interactive) (meow-left-expand) (meow-right-expand))))
     (meow-define-keys
@@ -2336,6 +2336,12 @@ The thing `string' is not available in Emacs 27.'"
   ;; There is a conflict between web-mode and electric-pair-mode, disable one:
   ;; (add-hook 'web-mode-hook (lambda () (electric-pair-local-mode -1)))
   (setq web-mode-enable-auto-pairing nil))
+
+(use-package consult-dir
+  :bind (("C-x C-d" . consult-dir)
+         :map minibuffer-local-completion-map
+         ("C-x C-d" . consult-dir)
+         ("C-x C-j" . consult-dir-jump-file)))
 
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: disable eglot when viewing magit commit
