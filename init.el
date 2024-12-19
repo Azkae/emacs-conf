@@ -1272,7 +1272,9 @@
 (use-package markdown-mode
   :custom
   (markdown-fontify-code-blocks-natively t)
-  (add-to-list 'markdown-code-lang-modes '("jsx" . tsx-ts-mode)))
+  :config
+  (add-to-list 'markdown-code-lang-modes '("jsx" . tsx-ts-mode))
+  (add-to-list 'markdown-code-lang-modes '("html" . mhtml-mode)))
 
 (use-package with-editor
   :hook
