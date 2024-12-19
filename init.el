@@ -1772,10 +1772,16 @@ then \\[keyboard-quit] to abort the minibuffer."
   (interactive)
   (message (format "Current category: %s" (vertico--metadata-get 'category))))
 
+(defun conf--find-in-open-buffers ()
+  (interactive)
+  (let ((current-prefix-arg 1))
+    (call-interactively 'consult-line-multi)))
+
 (use-package consult
   :bind
   (
    ("M-f"         . conf--consult-line)
+   ("M-F"         . conf--find-in-open-buffers)
    ("C-x b"       . consult-buffer)
    ("M-R"         . conf--select-directory-and-ripgrep)
    ("M-X"         . execute-extended-command)
