@@ -1266,6 +1266,9 @@
   :custom
   (typescript-ts-mode-indent-offset 4))
 
+(with-eval-after-load 'tsx-ts-mode
+  (modify-syntax-entry ?` "\"" tsx-ts-mode-syntax-table))
+
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
 
@@ -2194,6 +2197,7 @@ Used to preselect nearest headings and imenu items.")
      '("'" . insert-pair)
      '("{" . insert-pair)
      '("[" . insert-pair)
+     '("`" . insert-pair)
 
      '("!" . negative-argument)
      '(";" . meow-reverse)
