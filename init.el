@@ -1612,7 +1612,8 @@ length override, set to t for manual completion."
 
 (use-package csv-mode
   :hook
-  (csv-mode . csv-align-mode))
+  (csv-mode . csv-align-mode)
+  (csv-mode . (lambda () (visual-line-mode -1))))
 
 (use-package nerd-icons-corfu
   :config
