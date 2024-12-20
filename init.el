@@ -977,7 +977,7 @@
   :hook
   ((c-mode c++-mode c-ts-mode c++-ts-mode) . eglot-ensure)
   ((c-mode c++-mode c-ts-mode c++-ts-mode) . (lambda () (setq-local eglot-ignored-server-capabilities '(:inlayHintProvider))))
-  ((typescript-ts-mode-hook tsx-ts-mode-hook) . eglot-ensure)
+  ((typescript-ts-mode tsx-ts-mode) . eglot-ensure)
   ((python-mode python-ts-mode) . eglot-ensure)
   (rust-mode . eglot-ensure)
   :custom
