@@ -2358,9 +2358,9 @@ The thing `string' is not available in Emacs 27.'"
   :custom
   (jinx-languages "en_US fr"))
 
-(use-package recursion-indicator
-  :config
-  (recursion-indicator-mode))
+;; (use-package recursion-indicator
+;;   :config
+;;   (recursion-indicator-mode))
 
 (add-hook 'text-mode-hook 'visual-line-mode)
 
