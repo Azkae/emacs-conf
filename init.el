@@ -1112,7 +1112,7 @@
   (:map vterm-mode-map
   ("M-z" . 'vterm-copy-mode)
   ("<mouse-1>" . 'vterm-copy-mode)
-  ("M-f" . (lambda () (interactive) (vterm-copy-mode 1) (helm-occur)))
+  ("M-f" . (lambda () (interactive) (vterm-copy-mode 1) (conf--consult-line)))
   :map vterm-copy-mode-map
   ("M-z" . 'vterm-copy-mode)
   ("M-v" . (lambda () (interactive) (vterm-copy-mode -1) (vterm-yank)))
