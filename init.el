@@ -2373,6 +2373,15 @@ The thing `string' is not available in Emacs 27.'"
   (tramp-set-completion-function
    "scp" (append (tramp-get-completion-function "scp") '((tramp-parse-sconfig "~/.ssh/config")))))
 
+(defun conf--diff-and-save-buffer ()
+  "View diff and optionally save the buffer."
+  (interactive)
+  (diff-buffer-with-file))
+
+(setq save-some-buffers-action-alist (assq-delete-all ?d save-some-buffers-action-alist))
+(push '(?d (lambda (buff) (with-current-buffer buff (conf--diff-and-save-buffer)) nil) "Show diff")
+      save-some-buffers-action-alist)
+
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: test direnv
 
