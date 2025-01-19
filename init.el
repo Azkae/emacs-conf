@@ -645,24 +645,24 @@
   (projectile-with-default-dir (projectile-acquire-root)
     (call-interactively 'lldb)))
 
-(setq projectile-keymap-prefix (kbd "M-p"))
-(use-package projectile
-  :diminish projectile-mode
-  :bind
-  (:map projectile-mode-map
-   ("M-p k" . projectile-run-compile)
-   ("M-p d" . projectile-run-lldb)
-   ("M-p s s" . consult-ripgrep))
-  :config
-  (projectile-global-mode)
-  (setq projectile-enable-caching nil
-        projectile-svn-command projectile-generic-command
-        projectile-current-project-on-switch 'keep)
-  (setq projectile-mode-line "Projectile") ;avoid lag in tramp
-  (add-hook 'projectile-mode-hook
-            (lambda ()
-              (remove-hook 'find-file-hook #'projectile-cache-files-find-file-hook t)
-              (remove-hook 'find-file-hook #'projectile-visit-project-tags-table t))))
+;; (setq projectile-keymap-prefix (kbd "M-p"))
+;; (use-package projectile
+;;   :diminish projectile-mode
+;;   :bind
+;;   (:map projectile-mode-map
+;;    ("M-p k" . projectile-run-compile)
+;;    ("M-p d" . projectile-run-lldb)
+;;    ("M-p s s" . consult-ripgrep))
+;;   :config
+;;   (projectile-global-mode)
+;;   (setq projectile-enable-caching nil
+;;         projectile-svn-command projectile-generic-command
+;;         projectile-current-project-on-switch 'keep)
+;;   (setq projectile-mode-line "Projectile") ;avoid lag in tramp
+;;   (add-hook 'projectile-mode-hook
+;;             (lambda ()
+;;               (remove-hook 'find-file-hook #'projectile-cache-files-find-file-hook t)
+;;               (remove-hook 'find-file-hook #'projectile-visit-project-tags-table t))))
 
 ;; (setq helm-projectile-fuzzy-match nil)
 ;; (use-package helm-projectile
@@ -769,7 +769,9 @@
 (use-package magit
   :bind
   (("C-x g" . magit-status)
-   ("C-x v l" . magit-log-buffer-file))
+   ("C-x v l" . magit-log-buffer-file)
+   :map magit-status-mode-map
+   ("M-p" . nil))
   :custom
   (magit-diff-refine-hunk 'all)
   (magit-list-refs-sortby "-creatordate")
@@ -1678,8 +1680,11 @@ length override, set to t for manual completion."
         ("C-SPC" . embark-select)
         ("C-j" . next-line)
         ("C-k" . previous-line)
+        ("C-<return>" . vertico-exit)
         ("C-h" . left-char)
         ("C-l" . right-char))
+  (:map vertico-multiform-map
+        ("M-B" . nil))
   (:map minibuffer-local-map
         ("C-p" . previous-history-element)
         ("C-n" . next-history-element))
@@ -1818,6 +1823,10 @@ then \\[keyboard-quit] to abort the minibuffer."
  consult--source-bookmark consult--source-file-register
  consult--source-recent-file consult--source-project-recent-file
  :preview-key '(:debounce 0.01 any)) ;; Option 1: Delay preview
+
+(consult-customize
+ find-file
+ :preview-key '(:debounce 0.01 any))
 
 
 (use-package marginalia
@@ -2384,6 +2393,20 @@ The thing `string' is not available in Emacs 27.'"
 (push '(?d (lambda (buff) (with-current-buffer buff (conf--diff-and-save-buffer)) nil) "Show diff")
       save-some-buffers-action-alist)
 
+(use-package dirvish
+  :init
+  (dirvish-override-dired-mode))
+
+(global-set-key (kbd "M-p p") 'project-switch-project)
+(global-set-key (kbd "M-p f") 'project-find-file)
+(global-set-key (kbd "M-p s") 'consult-ripgrep)
+(global-set-key (kbd "M-p k") 'project-compile)
+
+(setq project-switch-commands '((project-find-file "Find file" "f")
+                                (project-find-dir "Find dir" "d")
+                                (project-dired "Dired" "D")
+                                (consult-ripgrep "ripgrep" "s")
+                                (magit-project-status "Magit" "g")))
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: test direnv
 
