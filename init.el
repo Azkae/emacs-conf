@@ -2407,6 +2407,12 @@ The thing `string' is not available in Emacs 27.'"
                                 (project-dired "Dired" "D")
                                 (consult-ripgrep "ripgrep" "s")
                                 (magit-project-status "Magit" "g")))
+
+(use-package topsy
+  :straight (topsy :type git :host github :repo "alphapapa/topsy.el")
+  :hook
+  (prog-mode . topsy-mode)
+  (magit-section-mode . topsy-mode))
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: test direnv
 
