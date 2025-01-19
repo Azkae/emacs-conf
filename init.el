@@ -368,7 +368,9 @@
   (("C-c i f" . flymake-mode)
    ;; ("C-c i r" . conf--toggle-flymake-end-of-line)
    :map flymake-mode-map
-   ("C-c i l" . flymake-show-buffer-diagnostics))
+   ("C-c i l" . flymake-show-buffer-diagnostics)
+   ("C-c i p" . flymake-goto-prev-error)
+   ("C-c i n" . flymake-goto-next-error))
   :custom
   (flymake-indicator-type 'fringes)
   ;; (flymake-show-diagnostics-at-end-of-line 'short)
