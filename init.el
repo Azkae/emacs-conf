@@ -140,8 +140,8 @@
 (global-set-key (kbd "C-x C-c") nil)
 (global-set-key (kbd "C-S-x C-S-c") 'save-buffers-kill-terminal)
 
-(global-set-key (kbd "<mouse-3>") 'xref-find-definitions)
-(global-set-key (kbd "<mouse-4>") 'xref-go-back)
+;; (global-set-key (kbd "<mouse-3>") 'xref-find-definitions)
+;; (global-set-key (kbd "<mouse-4>") 'xref-go-back)
 
 (defun move-up (amount)
   (condition-case nil
