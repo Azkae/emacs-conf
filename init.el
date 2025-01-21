@@ -2341,6 +2341,23 @@ The thing `string' is not available in Emacs 27.'"
                        (conf--treesit-bounds-at-point)
                      (bounds-of-thing-at-point 'string)))))
 
+(el-patch-defun meow--bounds-of-string (&optional inner)
+  (when-let* ((bounds (meow--bounds-of-string-1)))
+    (let ((beg (car bounds))
+          (end (cdr bounds)))
+      (cons
+       (save-mark-and-excursion
+         (goto-char beg)
+         (el-patch-add
+           (when (and inner (looking-at "f"))
+             (forward-char)))
+         (funcall (if inner #'skip-syntax-forward #'skip-syntax-backward) "\"|")
+         (point))
+       (save-mark-and-excursion
+         (goto-char end)
+         (funcall (if inner #'skip-syntax-backward #'skip-syntax-forward) "\"|")
+         (point))))))
+
 (meow-thing-register 'xml
                      '(pair ("<") (">"))
                      '(pair ("<") (">")))
