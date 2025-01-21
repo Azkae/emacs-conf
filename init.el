@@ -748,6 +748,7 @@
   :config
   (setq phi-search-limit 10000))
 
+(setq mc/list-file (expand-file-name "mc-lists.el" (file-name-directory load-file-name)))
 (use-package multiple-cursors
   :bind
   (("M-m"      . mc/mark-next-like-this)
@@ -771,6 +772,8 @@
   (("C-x g" . magit-status)
    ("C-x v l" . magit-log-buffer-file)
    :map magit-status-mode-map
+   ("M-p" . nil)
+   :map magit-diff-mode-map
    ("M-p" . nil))
   :custom
   (magit-diff-refine-hunk 'all)
@@ -1277,6 +1280,9 @@
   :hook (prog-mode . rainbow-delimiters-mode))
 
 (use-package markdown-mode
+  :bind
+  (:map markdown-mode-map
+   ("M-p" . nil))
   :custom
   (markdown-fontify-code-blocks-natively t)
   :config
@@ -1531,6 +1537,7 @@ length override, set to t for manual completion."
   (setq treesit-auto-langs '(typescript tsx python))
   (global-treesit-auto-mode))
 
+(require 'windmove)
 (defun conf--move-buffer (dir)
   (let* ((buf (current-buffer))
          (window (windmove-find-other-window dir)))
