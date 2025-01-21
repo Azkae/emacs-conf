@@ -2438,11 +2438,33 @@ The thing `string' is not available in Emacs 27.'"
                                 (magit-project-status "Magit" "g")
                                 (conf--vterm-toggle "Vterm" "e")))
 
+;; (which-function-mode)
+
 (use-package topsy
   :straight (topsy :type git :host github :repo "alphapapa/topsy.el")
   :hook
   (prog-mode . topsy-mode)
-  (magit-section-mode . topsy-mode))
+  :config
+  (defun conf--topsy--beginning-of-defun ()
+    (when (> (window-start) 1)
+      (save-excursion
+        (if (treesit-parser-list)
+            (progn
+              (goto-char (- (window-start) 1))
+              (let* ((node (treesit-defun-at-point)))
+                (when node
+                  (goto-char (treesit-node-start node))
+                  (beginning-of-line)
+                  (font-lock-ensure (point) (pos-eol))
+                  (buffer-substring (point) (pos-eol)))))
+          (goto-char (window-start))
+          (beginning-of-defun)
+          (font-lock-ensure (point) (pos-eol))
+          (buffer-substring (point) (pos-eol))))))
+
+  (setf (alist-get nil topsy-mode-functions) 'conf--topsy--beginning-of-defun)
+  (setf (alist-get 'emacs-lisp-mode topsy-mode-functions) 'conf--topsy--beginning-of-defun))
+
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: test direnv
 
