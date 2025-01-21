@@ -2143,6 +2143,8 @@ Used to preselect nearest headings and imenu items.")
   (global-set-key (kbd "C-x C-j") nil)
   (global-set-key (kbd "C-x C-k") nil)
 
+  (setq meow-next-thing-include-syntax '((word "" "") (symbol "" "")))
+
   (setq meow-use-clipboard t)
 
   (setq meow-expand-hint-counts
