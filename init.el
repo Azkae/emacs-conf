@@ -2399,6 +2399,8 @@ The thing `string' is not available in Emacs 27.'"
   (interactive)
   (diff-buffer-with-file))
 
+;; C-x s -> d seems broken, this fixes it. (emacs 30 pre-release)
+;; TODO: try again later by removing the lines below.
 (setq save-some-buffers-action-alist (assq-delete-all ?d save-some-buffers-action-alist))
 (push '(?d (lambda (buff) (with-current-buffer buff (conf--diff-and-save-buffer)) nil) "Show diff")
       save-some-buffers-action-alist)
