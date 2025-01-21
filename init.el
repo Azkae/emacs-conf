@@ -1609,12 +1609,13 @@ length override, set to t for manual completion."
 (with-eval-after-load 'html-ts-mode
   (define-key html-ts-mode-map (kbd "M-o") nil))
 
-(which-function-mode)
-
 (with-eval-after-load 'nxml-mode
   (modify-syntax-entry ?< "." nxml-mode-syntax-table)
   (modify-syntax-entry ?> "." nxml-mode-syntax-table)
-  (modify-syntax-entry ?/ "." nxml-mode-syntax-table))
+  (modify-syntax-entry ?/ "." nxml-mode-syntax-table)
+  (add-hook 'nxml-mode-hook #'(lambda () (when (fboundp 'jinx-mode)
+                                           (jinx-mode -1))))
+  (add-hook 'nxml-mode-hook #'(lambda () (visual-line-mode -1))))
 
 (use-package treesit-fold
   :straight (treesit-fold :type git :host github :repo "emacs-tree-sitter/treesit-fold")
