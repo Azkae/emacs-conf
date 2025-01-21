@@ -2435,7 +2435,8 @@ The thing `string' is not available in Emacs 27.'"
                                 (project-find-dir "Find dir" "d")
                                 (project-dired "Dired" "D")
                                 (consult-ripgrep "ripgrep" "s")
-                                (magit-project-status "Magit" "g")))
+                                (magit-project-status "Magit" "g")
+                                (conf--vterm-toggle "Vterm" "e")))
 
 (use-package topsy
   :straight (topsy :type git :host github :repo "alphapapa/topsy.el")
