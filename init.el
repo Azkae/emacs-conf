@@ -852,7 +852,15 @@
   (define-key magit-mode-map (kbd "C-c i") #'conf--visit-circle-ci)
   (define-key magit-mode-map (kbd "C-c p") #'conf--visit-pull-request-url-github))
 
-(straight-use-package '(git-timemachine :type git :host github :repo "emacsmirror/git-timemachine"))
+(use-package git-timemachine
+  :straight (git-timemachine :type git :host github :repo "emacsmirror/git-timemachine")
+  :config
+  (add-hook 'git-timemachine-mode-hook #'font-lock-ensure)
+  (add-hook 'git-timemachine-mode-hook #'meow--switch-to-motion)
+  (advice-add 'git-timemachine-show-revision :after
+            (lambda (&rest _)
+              (when (buffer-live-p (current-buffer))
+                (font-lock-ensure)))))
 
 (use-package magit-delta
   ;; :straight (magit-delta :type git :host github :repo "dandavison/magit-delta"
