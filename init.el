@@ -2390,7 +2390,15 @@ The thing `string' is not available in Emacs 27.'"
   :config
   (setq httpd-port 8087))
 
+(defun conf--is-jinx-library-available ()
+  (let ((enchant-flags
+         (condition-case nil
+             (car (process-lines "pkg-config" "--cflags" "--libs" "enchant-2"))
+           (error nil))))
+    (when enchant-flags t)))
+
 (use-package jinx
+  :if (conf--is-jinx-library-available)
   :hook (emacs-startup . global-jinx-mode)
   :bind (("M-$" . jinx-correct))
   :custom
