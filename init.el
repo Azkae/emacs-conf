@@ -850,6 +850,7 @@
   (define-key magit-mode-map "h" #'conf--visit-pull-request-url-github)
   (define-key magit-mode-map "H" #'conf--visit-circle-ci)
   (define-key magit-mode-map (kbd "C-c i") #'conf--visit-circle-ci)
+  (define-key magit-mode-map (kbd "C-c d") #'conf--visit-circle-ci)
   (define-key magit-mode-map (kbd "C-c p") #'conf--visit-pull-request-url-github))
 
 (use-package git-timemachine
