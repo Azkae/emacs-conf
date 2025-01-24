@@ -675,8 +675,7 @@
                 (set-face-attribute 'magit-diff-removed-highlight nil
                                     :background conf--saved-magit-diff-removed-highlight)
                 (set-face-attribute 'magit-diff-removed nil
-                                    :background conf--saved-magit-diff-removed))))
-  )
+                                    :background conf--saved-magit-diff-removed)))))
 
 (use-package quickrun
   :bind
@@ -690,8 +689,7 @@
                 (read-only-mode -1)
                 (end-of-buffer)
                 (insert "\n-- End --")
-                (read-only-mode +1))))
-  )
+                (read-only-mode +1)))))
 
 (use-package yaml-mode
   :hook
@@ -1058,8 +1056,6 @@
   :custom
   (eldoc-idle-delay 0.15))
 
-;; (add-to-list 'eglot-ignored-server-capabilites :hoverProvider)
-
 (defun conf--corfu-active-p ()
   (and corfu-mode completion-in-region-mode))
 
@@ -1149,15 +1145,7 @@ is a prefix length override, which is t for manual completion."
   :init
   (global-corfu-mode)
   (corfu-popupinfo-mode)
-  (defun corfu-enable-in-minibuffer ()
-    "Enable Corfu in the minibuffer no helm session are active."
-    (when (not helm-alive-p)
-      (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
-                  corfu-popupinfo-delay nil)
-      (corfu-mode 1)))
-  ;; (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
-  (add-hook 'after-save-hook #'corfu-quit)
-  )
+  (add-hook 'after-save-hook #'corfu-quit))
 
 (add-to-list 'completion-styles-alist
              '(tab completion-basic-try-completion ignore
