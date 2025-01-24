@@ -2131,6 +2131,9 @@ Used to preselect nearest headings and imenu items.")
 (define-key embark-file-map "c" #'copy-file-in-directory)
 (add-to-list 'embark-post-action-hooks '(copy-file-in-directory embark--restart))
 
+(define-key embark-identifier-map "R" #'eglot-rename)
+(push 'embark--allow-edit (alist-get 'eglot-rename embark-target-injection-hooks))
+
 (use-package meow
   :config
   (setq meow--kbd-forward-char "C-%")
