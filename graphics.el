@@ -9,7 +9,7 @@
           (message "Using Fira Mono")
           (set-frame-font "Fira Mono-13" nil t)
         (add-to-list 'default-frame-alist '(font . "Fira Mono")))
-      (message "Fira Mono not found"))
+      (warn "Fira Mono not found"))
     
     (add-to-list 'default-frame-alist '(cursor-color . "white"))
     (set-face-attribute 'default nil :height 140)))
