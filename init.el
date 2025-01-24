@@ -1411,8 +1411,6 @@ is a prefix length override, which is t for manual completion."
         ("C-<return>" . vertico-exit)
         ("C-h" . left-char)
         ("C-l" . right-char))
-  (:map vertico-multiform-map
-        ("M-B" . nil))
   (:map minibuffer-local-map
         ("C-p" . previous-history-element)
         ("C-n" . next-history-element))
@@ -1683,6 +1681,7 @@ Used to preselect nearest headings and imenu items.")
 (require 'vertico-multiform)
 (vertico-multiform-mode +1)
 (define-key vertico-multiform-map (kbd "M-R") nil)
+(define-key vertico-multiform-map (kbd "M-B") nil)
 (defvar +vertico-transform-functions nil)
 
 (cl-defmethod vertico--format-candidate :around
