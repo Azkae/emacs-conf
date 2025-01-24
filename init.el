@@ -2482,6 +2482,10 @@ The thing `string' is not available in Emacs 27.'"
   (setf (alist-get nil topsy-mode-functions) 'conf--topsy--beginning-of-defun)
   (setf (alist-get 'emacs-lisp-mode topsy-mode-functions) 'conf--topsy--beginning-of-defun))
 
+(use-package sinister
+  :straight nil
+  :load-path "vendors")
+
 ;; ;; TODO: try https://github.com/jdtsmith/indent-bars
 ;; TODO: test direnv
 
