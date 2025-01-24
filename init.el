@@ -1110,9 +1110,9 @@
   (emojify-set-emoji-styles '(unicode))
   (setq emojify-display-style 'unicode))
 
-(use-package solidity-mode
-  :config
-  (add-hook 'solidity-mode-hook '--set-tab-with))
+;; (use-package solidity-mode
+;;   :config
+;;   (add-hook 'solidity-mode-hook '--set-tab-with))
 
 (use-package sqlformat
   :config
@@ -1347,36 +1347,34 @@
 ;; Disable completion starting with [
 (with-eval-after-load 'corfu
   (el-patch-defun corfu--capf-wrapper (fun &optional prefix)
-    "Wrapper for `completion-at-point' FUN.
-The wrapper determines if the Capf is applicable at the current
-position and performs sanity checking on the returned result.
-For non-exclusive Capfs wrapper additionally checks if the
-current input can be completed successfully.  PREFIX is a prefix
-length override, set to t for manual completion."
-    (pcase (funcall fun)
-      ((and res `(,beg ,end ,table . ,plist))
-       (and (integer-or-marker-p beg) ;; Valid Capf result
-            (<= beg (point) end)      ;; Sanity checking
-            ;; When auto completing, check the prefix length!
-            (let ((len (or prefix
-                           (el-patch-swap (plist-get plist :company-prefix-length)
+  "Wrapper for `completion-at-point' FUN.
+The wrapper determines if the Capf is applicable at the current position
+and performs sanity checking on the returned result.  For non-exclusive
+Capfs, the wrapper checks if the current input can be completed.  PREFIX
+is a prefix length override, which is t for manual completion."
+  (pcase (funcall fun)
+    ((and res `(,beg ,end ,table . ,plist))
+     (and (integer-or-marker-p beg) ;; Valid Capf result
+          (<= beg (point) end)      ;; Sanity checking
+          ;; When auto completing, check the prefix length!
+          (let ((len (or prefix
+                         (el-patch-swap (plist-get plist :company-prefix-length)
                                           (and (not (eq (char-before) (string-to-char "[")))
                                                (plist-get plist :company-prefix-length)))
-                           (- (point) beg))))
-              (or (eq len t) (>= len corfu-auto-prefix)))
-            ;; For non-exclusive Capfs, check for valid completion.
-            (or (not (eq 'no (plist-get plist :exclusive)))
-                (let* ((str (buffer-substring-no-properties beg end))
-                       (pt (- (point) beg))
-                       (pred (plist-get plist :predicate))
-                       (md (completion-metadata (substring str 0 pt) table pred)))
-                  ;; We use `completion-try-completion' to check if there are
-                  ;; completions. The upstream `completion--capf-wrapper' uses
-                  ;; `try-completion' which is incorrect since it only checks for
-                  ;; prefix completions.
-                  (completion-try-completion str table pred pt md)))
-            (cons fun res)))))
-  )
+                         (- (point) beg))))
+            (or (eq len t) (>= len corfu-auto-prefix)))
+          ;; For non-exclusive Capfs, check for valid completion.
+          (or (not (eq 'no (plist-get plist :exclusive)))
+              (let* ((str (buffer-substring-no-properties beg end))
+                     (pt (- (point) beg))
+                     (pred (plist-get plist :predicate))
+                     (md (completion-metadata (substring str 0 pt) table pred)))
+                ;; We use `completion-try-completion' to check if there are
+                ;; completions. The upstream `completion--capf-wrapper' uses
+                ;; `try-completion' which is incorrect since it only checks for
+                ;; prefix completions.
+                (completion-try-completion str table pred pt md)))
+          (cons fun res))))))
 
 (use-package corfu
   :bind
@@ -1433,23 +1431,13 @@ length override, set to t for manual completion."
         completion-category-defaults nil
         completion-category-overrides '((file (styles partial-completion)))))
 
-(defun conf--setup-simple-completion()
-  (setq-local completion-at-point-functions conf--basic-completion-functions))
-
 (when (< emacs-major-version 29)
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 
-(use-package company)
-
 (use-package cape
-  :hook
-  ;; (python-mode . conf--setup-simple-completion)
-  (emacs-lisp-mode . conf--setup-simple-completion)
-  (sh-mode . conf--setup-simple-completion)
   :init
-  (setq conf--basic-completion-functions `(cape-file ,(cape-company-to-capf 'company-dabbrev-code) cape-keyword))
-  (setq completion-at-point-functions conf--basic-completion-functions))
+  (add-hook 'completion-at-point-functions #'cape-file))
 
 (use-package apheleia
   :hook
@@ -1606,11 +1594,6 @@ length override, set to t for manual completion."
 (use-package terraform-mode
   :hook
   (terraform-mode . eglot-ensure))
-
-(use-package casual-calc
-  :bind
-  (:map calc-mode-map
-        ("SPC" . casual-calc-tmenu)))
 
 ;; Disable M-o key in html
 (with-eval-after-load 'mhtml-mode
@@ -2322,7 +2305,7 @@ Used to preselect nearest headings and imenu items.")
   (add-hook 'meow-global-mode-hook (lambda () (setq delete-active-region t)))
   (meow-global-mode))
 
-(el-patch-feature 'meow)
+(el-patch-feature meow)
 
 (defun conf--treesit-bounds-at-point ()
   (when-let* ((node (treesit-node-at (point)))
