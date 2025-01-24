@@ -1788,7 +1788,7 @@ Used to preselect nearest headings and imenu items.")
     (when buf
       (with-current-buffer buf
         (set-visited-file-name new-name nil t)
-        (rename-buffer new-name)
+        (rename-buffer (file-name-nondirectory new-name))
         (set-buffer-modified-p nil)
         (message "Renamed buffer associated with '%s' to '%s'" old-name new-name)))))
 

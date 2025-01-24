@@ -50,5 +50,4 @@ Make sure to install all versions of Fira Mono (Medium, Regular & Bold)
 
 TODO:
 - meow: explore N for reverse search
-- Fix buffer name after rename-file-and-buffer; the buffer name is the whole path instead of only the filename
 - Fix poetry tracking with project.el
