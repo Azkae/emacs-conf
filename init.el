@@ -1725,12 +1725,6 @@ Used to preselect nearest headings and imenu items.")
                ;; reverse
                (+vertico-transform-functions . +vertico-highlight-enabled-mode)))
 
-;; (add-to-list 'vertico-multiform-categories
-;;              '(multi-category
-;;                ;; (vertico-sort-function . sort-directories-first)
-;;                (+vertico-transform-functions . +vertico-highlight-unsaved-buffer)))
-
-
 (defun conf--embark-consult-export-xref (items)
   "Create a grep-like buffer listing ITEMS from xref."
   (embark-consult--export-grep
