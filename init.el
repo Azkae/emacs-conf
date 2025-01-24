@@ -1244,6 +1244,7 @@ is a prefix length override, which is t for manual completion."
 
 (defvar conf--poetry-current-root nil)
 (defun conf--poetry-track-virtualenv()
+  (interactive)
   (let ((root (locate-dominating-file default-directory "pyproject.toml")))
     (when (and root (not (string= root conf--poetry-current-root)))
       (let ((process-environment (cl-remove-if
