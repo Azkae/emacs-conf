@@ -52,7 +52,8 @@ List of BUFFER WINDOW SAFE-MARKER and RESTORE-MARKER.")
 
 (defun sinister-stillness--enter (&rest _)
   "Adjust window points to prevent implicit scrolling."
-  (unless (> (minibuffer-depth) 1)
+  (unless (or (with-selected-window (minibuffer-selected-window) (region-active-p))
+              (> (minibuffer-depth) 1))
     (let ((windows (window-at-side-list
                     (window-frame (selected-window))
                     'bottom))
