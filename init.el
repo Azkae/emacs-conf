@@ -756,24 +756,25 @@
 
   (add-to-list 'eglot-stay-out-of 'company-backends)
 
-  (defun conf--project-try-cargo-toml (dir)
-    "Try to locate a Rust project."
-    (when (locate-dominating-file dir "Cargo.toml")
-      `(transient . ,dir)))
+  ;; (defun conf--project-try-cargo-toml (dir)
+  ;;   "Try to locate a Rust project."
+  ;;   (when (locate-dominating-file dir "Cargo.toml")
+  ;;     `(transient . ,dir)))
 
-  (add-hook 'project-find-functions 'conf--project-try-cargo-toml nil nil)
-  (setq-default eglot-workspace-configuration
-                (lambda (&rest args)
-                  (let ((root (locate-dominating-file default-directory "pyproject.toml")))
-                    (when root
-                      (let ((process-environment (cl-remove-if (lambda (element) (string-prefix-p "VIRTUAL_ENV=" element))
-                                                               process-environment)))
-                        (let* ((venv-full-path (string-trim (shell-command-to-string "poetry env info --path")))
-                               (venv (file-name-nondirectory venv-full-path))
-                               (venv-path (file-name-directory venv-full-path)))
-                          `((:pyright .
-                                      (:venvPath ,venv-path
-                                                 :venv ,venv)))))))))
+  ;; (add-hook 'project-find-functions 'conf--project-try-cargo-toml nil nil)
+
+  ;; (setq-default eglot-workspace-configuration
+  ;;               (lambda (&rest args)
+  ;;                 (let ((root (locate-dominating-file default-directory "pyproject.toml")))
+  ;;                   (when root
+  ;;                     (let ((process-environment (cl-remove-if (lambda (element) (string-prefix-p "VIRTUAL_ENV=" element))
+  ;;                                                              process-environment)))
+  ;;                       (let* ((venv-full-path (string-trim (shell-command-to-string "poetry env info --path")))
+  ;;                              (venv (file-name-nondirectory venv-full-path))
+  ;;                              (venv-path (file-name-directory venv-full-path)))
+  ;;                         `((:pyright .
+  ;;                                     (:venvPath ,venv-path
+  ;;                                                :venv ,venv)))))))))
 
   ;; Enable flymake only on same:
   ;; This allows to trigger flymake only when the sever published diagnostics
