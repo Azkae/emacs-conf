@@ -442,105 +442,6 @@
       (delete-until-slash)
     (conf--backward-delete-word)))
 
-;; ;; performance regression on helm on mac os.
-;; ;; run on helm repo:
-;; ;; git revert 1ecefa3840aa5bdd8d4959d2c4efd3ea0e433f64 && git reset HEAD~1
-;; (use-package helm
-;;   :diminish helm-mode
-;;   :bind
-;;   (("M-f"         . helm-occur)
-;;    ("C-x C-f"     . helm-find-files)
-;;    ("C-x b"       . helm-mini)
-;;    ("C-b"         . helm-resume)
-;;    ("C-p"         . helm-buffers-list)
-;;    ("M-X"         . helm-M-x)
-;;    ("M-o"         . helm-find-files)
-;;    ("M-O"         . helm-buffers-list)
-;;    ("C-x c M-y"   . helm-show-kill-ring)
-;;    :map helm-map
-;;    ("<right>"     . nil)
-;;    ("<left>"      . nil)
-;;    ("M-v"         . yank)
-;;    ("C-i"         . helm-execute-persistent-action) ;tab
-;;    ("M-z"         . helm-select-action) ;tab
-;;    ([M-backspace] . conf--backward-delete-word)
-;;    ("<M-down>"    . helm-scroll-other-window)
-;;    ("<M-up>"      . helm-scroll-other-window-down)
-;;    ("DEL"         . nil)
-;;    :map helm-occur-map
-;;    ("<right>"     . nil)
-;;    ("<left>"      . nil)
-;;    ("<M-down>"    . helm-scroll-other-window)
-;;    ("<M-up>"      . helm-scroll-other-window-down)
-;;    :map helm-find-files-map
-;;    ("<M-down>"    . helm-scroll-other-window)
-;;    ("<M-up>"      . helm-scroll-other-window-down)
-;;    ("M-e"         . helm-config--ff-open-vterm)
-;;    ("C-x g"       . helm-config--ff-open-magit)
-;;    ("M-E"         . helm-config--ff-open-vterm)
-;;    ("M-r"         . helm-ff-run-rename-file)
-;;    ("DEL"         . nil)
-;;    ([M-backspace] . delete-until-slash)
-;;    :map helm-read-file-map
-;;    ([M-backspace] . delete-until-slash)
-;;    :map helm-grep-map
-;;    ("<M-down>"    . helm-scroll-other-window)
-;;    ("<M-up>"      . helm-scroll-other-window-down)
-;;    ("<right>"     . nil)
-;;    ("<left>"      . nil)
-;;    ("DEL"         . nil))
-;;   :config
-;;   (setq
-;;    helm-buffers-fuzzy-matching t
-;;    helm-ff-newfile-prompt-p nil
-;;    helm-split-window-inside-p t
-;;    helm-echo-input-in-header-line t
-;;    helm-move-to-line-cycle-in-source nil
-;;    ;; Disable helm in minibuffer region completion (eval-expression for example)
-;;    helm-mode-handle-completion-in-region nil
-;;    helm-scroll-amount 6
-;;    helm-find-files-ignore-thing-at-point t)
-;;   (helm-mode))
-
-;; ;; see https://gist.github.com/PaulCapestany/15d6f04077c1a9bc98968a778d60956e to use ripgrep?
-;; (use-package helm-ag
-;;   :straight (helm-ag :type git :host github :repo "emacsorphanage/helm-ag"
-;;                      :fork (:host github :repo "Azkae/emacs-helm-ag"))
-;;   :bind
-;;   (("M-R"         . helm-do-ag)
-;;    ("M-F"         . helm-do-ag-buffers)
-;;    :map helm-find-files-map
-;;    ("M-R"         . helm-config--ff-run-helm-ag)
-;;    :map helm-ag-mode-map
-;;    ("<right>"     . nil)
-;;    ("<left>"      . nil)
-;;    :map helm-do-ag-map
-;;    ("<right>"     . nil)
-;;    ("<left>"      . nil)
-;;    :map helm-ag-edit-map
-;;    ("RET"         . helm-ag-mode-jump-other-window))
-;;   :custom
-;;   ;; (helm-ag-base-command "rg --vimgrep --no-heading --smart-case")
-;;   (helm-ag-base-command "ag --nocolor --nogroup")
-;;   )
-
-;; ;; (defun remove-helm-smartparens ()
-;; ;;   (smartparens-mode -1))
-
-;; ;; (add-hook 'helm-minibuffer-set-up-hook 'remove-helm-smartparens)
-
-;; ;; (defun remove-helm-electric-pair ()
-;; ;;   (electric-pair-local-mode -1))
-
-;; ;; (add-hook 'helm-minibuffer-set-up-hook 'remove-helm-electric-pair)
-
-;; (defun helm-config--helm-do-ag-on-file-maybe(basename)
-;;   (interactive)
-;;   (let* ((basename (expand-file-name basename))
-;;          (basename (if (not (file-directory-p basename))
-;;                        (file-name-directory basename)
-;;                      basename)))
-;;     (helm-do-ag basename)))
 
 (defun conf--vterm-toggle-insert-cd()
   (interactive)
@@ -553,142 +454,8 @@
         (vterm-send-return))
     (call-interactively #'vterm-toggle-cd-show)))
 
-;; (defun open-vterm-action(basename)
-;;   (interactive)
-;;   (let* ((basename (expand-file-name basename))
-;;          (basename (if (not (file-directory-p basename))
-;;                        (file-name-directory basename)
-;;                      basename))
-;;          (default-directory basename))
-
-;;     (conf--vterm-toggle-insert-cd)))
-
-;; (defun open-magit-action(basename)
-;;   (interactive)
-;;   (let* ((basename (expand-file-name basename))
-;;          (basename (if (not (file-directory-p basename))
-;;                        (file-name-directory basename)
-;;                      basename))
-;;          (default-directory basename))
-
-;;     (call-interactively #'magit)))
-
-;; (defun helm-config--helm-do-ag-on-project-root(basename)
-;;   (interactive)
-;;   (helm-do-ag (projectile-project-root)))
-
-;; (defun open-vterm-on-project-root-action(basename)
-;;   (interactive)
-;;   (let* ((default-directory (projectile-project-root)))
-;;     (conf--vterm-toggle-insert-cd)))
-
-;; (defun helm-config--ff-open-magit()
-;;   (interactive)
-;;   (with-helm-alive-p
-;;     (helm-exit-and-execute-action 'open-magit-action)))
-
-;; (defun helm-config--ff-open-vterm()
-;;   (interactive)
-;;   (with-helm-alive-p
-;;     (helm-exit-and-execute-action 'open-vterm-action)))
-
-;; (defun helm-config--ff-open-vterm-root()
-;;   (interactive)
-;;   (with-helm-alive-p
-;;     (helm-exit-and-execute-action 'open-vterm-on-project-root-action)))
-
-;; (defun helm-config--ff-run-helm-ag()
-;;   (interactive)
-;;   (with-helm-alive-p
-;;     (helm-exit-and-execute-action 'helm-config--helm-do-ag-on-file-maybe)))
-
-;; (defun helm-config--ff-run-helm-ag-root()
-;;   (interactive)
-;;   (with-helm-alive-p
-;;     (helm-exit-and-execute-action 'helm-config--helm-do-ag-on-project-root)))
-
-;; (add-hook
-;;  'helm-find-files-after-init-hook
-;;  (lambda ()
-;;    (helm-add-action-to-source "Find AG" 'helm-config--helm-do-ag-on-file-maybe helm-source-find-files)
-;;    (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-find-files)
-;;    (helm-add-action-to-source "Open magit" 'open-magit-action helm-source-find-files)))
-
-;; (with-eval-after-load "helm-projectile"
-;;   (helm-add-action-to-source "Find AG" 'helm-config--helm-do-ag-on-file-maybe helm-source-projectile-projects)
-;;   (helm-add-action-to-source "Find AG" 'helm-config--helm-do-ag-on-project-root helm-source-projectile-files-list)
-;;   (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-projectile-projects)
-;;   (helm-add-action-to-source "Open vterm on project root" 'open-vterm-on-project-root-action helm-source-projectile-files-list)
-;;   (helm-add-action-to-source "Open vterm" 'open-vterm-action helm-source-projectile-files-list)
-;;   (helm-add-action-to-source "Open magit" 'open-magit-action helm-source-projectile-files-list)
-;;   (helm-add-action-to-source "Open magit" 'open-magit-action helm-source-projectile-projects))
-
-;; (defun helm-config--helm-do-ag-projectile-project-symbol ()
-;;   (interactive)
-;;     (helm-do-ag (projectile-project-root) nil (symbol-name (symbol-at-point))))
-
-;; (define-key text-mode-map (kbd "M-.") 'helm-config--helm-do-ag-projectile-project-symbol)
-
-;; ;; Waiting for dumb-jump to support xref-find-references: https://github.com/jacktasia/dumb-jump/issues/433
-;; (define-key text-mode-map (kbd "M-?") 'helm-config--helm-do-ag-projectile-project-symbol)
-;; (define-key prog-mode-map (kbd "M-?") 'helm-config--helm-do-ag-projectile-project-symbol)
-
-(defun projectile-run-compile ()
-  "Invoke `gdb' in the project's root."
-  (interactive)
-  (projectile-with-default-dir (projectile-acquire-root)
-    (call-interactively 'compile)))
-
-(defun projectile-run-lldb ()
-  "Invoke `gdb' in the project's root."
-  (interactive)
-  (projectile-with-default-dir (projectile-acquire-root)
-    (call-interactively 'lldb)))
-
-;; (setq projectile-keymap-prefix (kbd "M-p"))
-;; (use-package projectile
-;;   :diminish projectile-mode
-;;   :bind
-;;   (:map projectile-mode-map
-;;    ("M-p k" . projectile-run-compile)
-;;    ("M-p d" . projectile-run-lldb)
-;;    ("M-p s s" . consult-ripgrep))
-;;   :config
-;;   (projectile-global-mode)
-;;   (setq projectile-enable-caching nil
-;;         projectile-svn-command projectile-generic-command
-;;         projectile-current-project-on-switch 'keep)
-;;   (setq projectile-mode-line "Projectile") ;avoid lag in tramp
-;;   (add-hook 'projectile-mode-hook
-;;             (lambda ()
-;;               (remove-hook 'find-file-hook #'projectile-cache-files-find-file-hook t)
-;;               (remove-hook 'find-file-hook #'projectile-visit-project-tags-table t))))
-
-;; (setq helm-projectile-fuzzy-match nil)
-;; (use-package helm-projectile
-;;   :bind
-;;   (:map helm-projectile-find-file-map
-;;    ("<right>"     . nil)
-;;    ("<left>"      . nil)
-;;    ([M-backspace] . conf--backward-delete-word)
-;;    ("M-e"         . helm-config--ff-open-vterm)
-;;    ("M-E"         . helm-config--ff-open-vterm-root)
-;;    ("M-R"         . helm-config--ff-run-helm-ag-root)
-;;    ("M-p"         . previous-history-element)
-;;    ("C-x g"       . helm-config--ff-open-magit)
-;;    :map helm-projectile-projects-map
-;;    ("M-e"         . helm-config--ff-open-vterm)
-;;    ("M-R"         . helm-config--ff-run-helm-ag)
-;;    ("C-x g"       . helm-config--ff-open-magit))
-;;   :config
-;;   (setq projectile-completion-system 'helm))
-;; (helm-projectile-on)
-;; ;; must be binded after (helm-projectile-on) because it remap projectile keybindings
-;; (define-key projectile-mode-map [remap projectile-ag] 'helm-do-ag-project-root)
-
 (use-package dumb-jump
   :init
-  ;; (define-key prog-mode-map (kbd "M-.") 'xref-find-definitions)
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   :custom
   (dumb-jump-force-searcher 'ag))
@@ -706,13 +473,6 @@
         ("M-." . conf--consult-ripgrep))
   :config
   (setq cmake-tab-width 4))
-
-;; (use-package powerline
-;;   :config
-;;   (powerline-default-theme)
-;;   (setq powerline-display-buffer-size nil
-;;         powerline-display-mule-info   nil
-;;         powerline-display-hud         nil))
 
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
@@ -733,16 +493,6 @@
 
 (global-set-key (vector (list 'control mouse-wheel-down-event)) 'zoom-in)
 (global-set-key (vector (list 'control mouse-wheel-up-event)) 'zoom-out)
-
-;; (use-package git-gutter-fringe+
-;;   :diminish git-gutter+-mode
-;;   :config
-;;   (global-git-gutter+-mode))
-
-;; (use-package git-gutter-fringe
-;;   :diminish git-gutter-mode
-;;   :config
-;;   (global-git-gutter-mode))
 
 (use-package phi-search
   :config
@@ -950,13 +700,6 @@
 (use-package swift-mode)
 
 (use-package cython-mode)
-
-;; (use-package helm-tramp
-;;   :bind
-;;   (("C-c s" . helm-tramp))
-;;   :config
-;;   (setq tramp-default-method "ssh")
-;;   (defun package-installed-p (v) nil))
 
 (use-package glsl-mode)
 
@@ -1211,8 +954,6 @@
         :map vterm-copy-mode-map
         ("M-t" . multi-vterm)))
 
-;; (use-package helm-xref)
-
 (use-package pyvenv)
 
 (use-package kotlin-mode
@@ -1306,8 +1047,6 @@
   :config
   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
 
-(use-package treemacs-projectile)
-
 (use-package which-key
   :diminish which-key-mode
   :config
@@ -1344,7 +1083,7 @@
 
 (el-patch-feature corfu)
 
-;; Disable completion starting with [
+;; Disable completion starting with [ with pyright
 (with-eval-after-load 'corfu
   (el-patch-defun corfu--capf-wrapper (fun &optional prefix)
   "Wrapper for `completion-at-point' FUN.
@@ -1444,10 +1183,7 @@ is a prefix length override, which is t for manual completion."
   ((python-mode python-ts-mode) . apheleia-mode)
   ((c++-mode c++-ts-mode) . apheleia-mode)
   (terraform-mode . apheleia-mode)
-  ((typescript-ts-mode tsx-ts-mode) . apheleia-mode)
-  :init
-  ;; (apheleia-global-mode +1)
-  )
+  ((typescript-ts-mode tsx-ts-mode) . apheleia-mode))
 
 (use-package fancy-compilation
   :commands (fancy-compilation-mode)
@@ -1518,14 +1254,15 @@ is a prefix length override, which is t for manual completion."
               (setq conf--poetry-current-root root)
               (pyvenv-activate venv))))))
 
-(define-minor-mode conf--poetry-tracking-mode
-  "Global mode to track poetry projects"
-  :global t
-  :group 'poetry
-  (if conf--poetry-tracking-mode
-      (add-hook 'projectile-after-switch-project-hook 'conf--poetry-track-virtualenv)
-    (remove-hook 'projectile-after-switch-project-hook 'conf--poetry-track-virtualenv)))
-(conf--poetry-tracking-mode)
+;; TODO: remake with project.el
+;; (define-minor-mode conf--poetry-tracking-mode
+;;   "Global mode to track poetry projects"
+;;   :global t
+;;   :group 'poetry
+;;   (if conf--poetry-tracking-mode
+;;       (add-hook 'projectile-after-switch-project-hook 'conf--poetry-track-virtualenv)
+;;     (remove-hook 'projectile-after-switch-project-hook 'conf--poetry-track-virtualenv)))
+;; (conf--poetry-tracking-mode)
 
 (use-package treesit-auto
   :custom
@@ -1649,16 +1386,6 @@ is a prefix length override, which is t for manual completion."
   )
 
 (use-package elysium)
-
-
-;; (use-package indent-bars
-;;   :custom
-;;   (indent-bars-treesit-support t)
-;;   (indent-bars-treesit-ignore-blank-lines-types '("module"))
-;;   ;; Add other languages as needed
-;;   (indent-bars-treesit-scope '((python function_definition class_definition for_statement
-;; 	  if_statement with_statement while_statement))))
-
 
 ;; Enable vertico
 (use-package vertico
