@@ -98,9 +98,6 @@
 (global-set-key (kbd "M-à") 'shrink-window-horizontally)
 (global-set-key (kbd "M-)") 'enlarge-window-horizontally)
 
-(global-set-key (kbd "M-i") 'downcase-word)
-(global-set-key (kbd "M-u") 'upcase-word)
-
 (global-set-key (kbd "C-c b") 'pop-tag-mark)
 (global-set-key (kbd "C-q") 'kill-this-buffer)
 (global-set-key [C-backspace] 'delete-backward-char)
@@ -144,11 +141,13 @@
 ;; (global-set-key (kbd "<mouse-4>") 'xref-go-back)
 
 (defun move-up (amount)
+  (deactivate-mark)
   (condition-case nil
       (scroll-down amount)
     (error nil))
   (previous-line amount))
 (defun move-down (amount)
+  (deactivate-mark)
   (condition-case nil
       (scroll-up amount)
     (error nil))
@@ -1178,20 +1177,21 @@ is a prefix length override, which is t for manual completion."
   :commands (fancy-compilation-mode)
   :custom
   (fancy-compilation-override-colors nil))
+(define-key compilation-mode-map (kbd "M-p") nil)
 
-(defun bury-compile-buffer-if-successful (buffer string)
-  "Bury a compilation buffer if succeeded without warnings "
-  (if (and
-       (string-match "compilation" (buffer-name buffer))
-       (string-match "finished" string)
-       (not
-        (with-current-buffer buffer
-          (goto-char 1)
-          (search-forward "warning" nil t))))
-      (run-with-timer 1 nil
-                      (lambda (buf)
-                        (quit-window nil (get-buffer-window buf)))
-                      buffer)))
+;; (defun bury-compile-buffer-if-successful (buffer string)
+;;   "Bury a compilation buffer if succeeded without warnings "
+;;   (if (and
+;;        (string-match "compilation" (buffer-name buffer))
+;;        (string-match "finished" string)
+;;        (not
+;;         (with-current-buffer buffer
+;;           (goto-char 1)
+;;           (search-forward "warning" nil t))))
+;;       (run-with-timer 1 nil
+;;                       (lambda (buf)
+;;                         (quit-window nil (get-buffer-window buf)))
+;;                       buffer)))
 ;; (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
 
 (with-eval-after-load 'compile
@@ -2178,11 +2178,17 @@ The thing `string' is not available in Emacs 27.'"
   (setf (alist-get nil topsy-mode-functions) 'conf--topsy--beginning-of-defun)
   (setf (alist-get 'emacs-lisp-mode topsy-mode-functions) 'conf--topsy--beginning-of-defun))
 
+;; checkout https://github.com/neeasade/stillness-mode.el or https://github.com/hkjels/mini-ontop.el instead
 (use-package sinister
   :straight nil
   :load-path "vendors")
 
-;; ;; TODO: try https://github.com/jdtsmith/indent-bars
+(use-package crux
+  :bind
+  (("C-c C-u" . crux-upcase-region)
+   ("C-c C-l" . crux-downcase-region)
+   ("C-c M-c" . crux-capitalize-region)))
+
 ;; TODO: test direnv
 
 ;; load graphic settings
