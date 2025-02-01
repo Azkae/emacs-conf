@@ -51,3 +51,6 @@ Make sure to install all versions of Fira Mono (Medium, Regular & Bold)
 TODO:
 - meow: explore N for reverse search
 - Fix poetry tracking with project.el
+- Preview of project-find-file or find-file
+- vertico-repeat with project-switch-project
+- disallow recursive M-o (no utility)
