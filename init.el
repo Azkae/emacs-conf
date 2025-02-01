@@ -33,7 +33,7 @@
   (if (file-exists-p (expand-file-name f))
       (load-file (expand-file-name f))))
 
-(load-if-exists "~/.emacs.d/secrets.el")
+;; (load-if-exists "~/.emacs.d/secrets.el")
 
 ;; -------------------
 ;; base emacs settings
@@ -362,6 +362,10 @@
 ;;   (flymake-mode -1)
 ;;   (flymake-mode 1))
 
+(use-package password-store)
+(use-package pass)
+(auth-source-pass-enable)
+
 (use-package flymake
   :bind
   (("C-c i f" . flymake-mode)
@@ -557,6 +561,8 @@
   (let ((repo (conf--get-current-repo))
         (branch (magit-get-current-branch)))
     (browse-url (format "https://app.circleci.com/pipelines/github/%s?branch=%s" repo branch))))
+
+(setq github-token (password-store-get "github-token"))
 
 (defun conf--visit-pull-request-url-github ()
   (interactive)
@@ -1352,7 +1358,15 @@ is a prefix length override, which is t for manual completion."
 
 (defalias 'conf--insert-emoji 'ns-do-show-character-palette)
 
-(use-package gptel)
+(use-package gptel
+  :config
+
+  (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
+    (setq
+     gptel-model 'claude-3-5-sonnet-20241022
+     gptel-backend (gptel-make-anthropic "Claude"
+				     :stream t
+				     :key anthropic-api-key))))
 
 (use-package sideline
   :custom

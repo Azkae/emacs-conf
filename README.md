@@ -5,9 +5,9 @@ Using [`Straight`](https://github.com/radian-software/straight.el) to declare pa
 
 ## Install
 
-Install emacs:
+Install emacs (MacOS):
 ```
-brew install libtool cmake
+brew install libtool cmake pass pinentry-mac
 
 brew tap d12frosted/emacs-plus
 brew install emacs-plus --with-native-comp

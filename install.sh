@@ -5,11 +5,19 @@ set -e
 mkdir -p ~/.emacs.d/straight/versions
 ln -fs `pwd`/lock-versions.el ~/.emacs.d/straight/versions/default.el
 
-line="(load-file \"$(pwd)/init.el\")"
+write-to-file-maybe() {
+    local line="$1"
+    local path="$2"
 
-if ! grep -qF "$line" ~/.emacs; then
-    echo "$line" >> ~/.emacs
-    echo "Added config to ~/.emacs"
-else
-    echo "Config already setup in ~/.emacs, skipping"
-fi
+    if ! grep -qF "$line" "$path"; then
+        echo "$line" >> "$path"
+        echo "Added config to $path"
+    else
+        echo "Config already present in $path, skipping"
+    fi
+}
+
+write-to-file-maybe "(load-file \"$(pwd)/init.el\")" ~/.emacs
+
+write-to-file-maybe "pinentry-program /opt/homebrew/bin/pinentry-mac" \
+                    ~/.gnupg/gpg-agent.conf
