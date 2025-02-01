@@ -1873,7 +1873,7 @@ Used to preselect nearest headings and imenu items.")
 
   (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
-    (meow-motion-overwrite-define-key
+    (meow-motion-define-key
      '("h" . meow-left)
      '("j" . meow-next)
      '("k" . meow-prev)
@@ -1886,10 +1886,11 @@ Used to preselect nearest headings and imenu items.")
      '("C-SPC" . (lambda () (interactive) (meow-left-expand) (meow-right-expand))))
     (meow-leader-define-key
      ;; SPC j/k/l/h will run the original command in MOTION state.
-     '("h" . "H-h")
-     '("j" . "H-j")
-     '("k" . "H-k")
-     '("l" . "H-l")
+     ;; See https://github.com/meow-edit/meow/issues/692 for magit-discard
+     ;; '("h" . "H-h")
+     ;; '("j" . "H-j")
+     ;; '("k" . "H-k")
+     ;; '("l" . "H-l")
      ;; Use SPC (0-9) for digit arguments.
      '("&" . meow-digit-argument)
      '("é" . meow-digit-argument)
