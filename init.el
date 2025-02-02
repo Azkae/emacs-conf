@@ -365,6 +365,8 @@
 (use-package password-store)
 (use-package pass)
 (auth-source-pass-enable)
+(setq epa-file-select-keys 'silent)
+(setq epa-file-encrypt-to '("C37350DE46EE427FC9FA5ADFF63419C720EB67CE"))
 
 (use-package flymake
   :bind
@@ -978,6 +980,11 @@
   :custom
   (org-roam-directory (expand-file-name "~/Dropbox/org-roam"))
   (org-roam-verbose nil)
+  ;; Create encrypted files by default
+  (org-roam-capture-templates '(("d" "default" plain "%?" :target
+                                 (file+head "%<%Y%m%d%H%M%S>-${slug}.org.gpg"
+                                            "#+title: ${title}")
+                                 :unnarrowed t)))
   :bind
   (("C-c n f" . org-roam-node-find)
    ("C-c n t" . org-roam-dailies-goto-today)
