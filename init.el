@@ -615,6 +615,8 @@
   :config
   (add-hook 'git-timemachine-mode-hook #'font-lock-ensure)
   (add-hook 'git-timemachine-mode-hook #'meow--switch-to-motion)
+  ;; Should be fixed in original repo: https://codeberg.org/pidu/git-timemachine/pulls/95
+  ;; Not yet sync with emacsmirror
   (advice-add 'git-timemachine-show-revision :after
             (lambda (&rest _)
               (when (buffer-live-p (current-buffer))
