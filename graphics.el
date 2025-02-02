@@ -62,15 +62,15 @@
 (basic--set-faces (selected-frame))
 (add-hook 'after-make-frame-functions 'basic--set-faces)
 
-(defun --set-emoji-font (frame)
-  "Adjust the font settings of FRAME so Emacs can display emoji properly."
-  (if (eq system-type 'darwin)
-      ;; For NS/Cocoa
-      (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji") frame 'prepend)
-    ;; For Linux
-    (set-fontset-font t 'symbol (font-spec :family "Symbola") frame 'prepend)))
+;; (defun --set-emoji-font (frame)
+;;   "Adjust the font settings of FRAME so Emacs can display emoji properly."
+;;   (if (eq system-type 'darwin)
+;;       ;; For NS/Cocoa
+;;       (set-fontset-font t 'symbol (font-spec :family "Apple Color Emoji") frame 'prepend)
+;;     ;; For Linux
+;;     (set-fontset-font t 'symbol (font-spec :family "Symbola") frame 'prepend)))
 
-(--set-emoji-font nil)
-(add-hook 'after-make-frame-functions '--set-emoji-font)
+;; (--set-emoji-font nil)
+;; (add-hook 'after-make-frame-functions '--set-emoji-font)
 
 (provide 'graphics)
