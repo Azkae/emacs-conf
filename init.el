@@ -2216,6 +2216,10 @@ The thing `string' is not available in Emacs 27.'"
    ("C-c C-l" . crux-downcase-region)
    ("C-c M-c" . crux-capitalize-region)))
 
+(use-package highlight-parentheses
+  :hook
+  (prog-mode . highlight-parentheses-mode))
+
 ;; TODO: test direnv
 
 ;; load graphic settings
