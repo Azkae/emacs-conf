@@ -852,10 +852,10 @@
 
 (add-hook 'restclient-mode-hook 'restclient-collapse-all)
 
-(use-package emojify
-  :config
-  (emojify-set-emoji-styles '(unicode))
-  (setq emojify-display-style 'unicode))
+;; (use-package emojify
+;;   :config
+;;   (emojify-set-emoji-styles '(unicode))
+;;   (setq emojify-display-style 'unicode))
 
 ;; (use-package solidity-mode
 ;;   :config
@@ -1314,7 +1314,8 @@ is a prefix length override, which is t for manual completion."
 
 (use-package org-modern
   :config
-  (global-org-modern-mode))
+  (global-org-modern-mode)
+  (setq org-modern-fold-stars '(("▶" . "▼") ("▷" . "▽") ("▸" . "▾") ("▹" . "▿") ("▸" . "▾"))))
 
 (use-package org-modern-indent
   :straight (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")
@@ -1356,7 +1357,11 @@ is a prefix length override, which is t for manual completion."
   :config
   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
 
-(defalias 'conf--insert-emoji 'ns-do-show-character-palette)
+(defun conf--insert-emoji ()
+  (interactive)
+  (when (and (boundp 'meow-mode) (not (meow-insert-mode-p)))
+    (meow-insert))
+  (ns-do-show-character-palette))
 
 (use-package gptel
   :config
