@@ -2178,7 +2178,9 @@ The thing `string' is not available in Emacs 27.'"
 
 (use-package dirvish
   :init
-  (dirvish-override-dired-mode))
+  (dirvish-override-dired-mode)
+  ;; (dirvish-peek-mode)
+  )
 
 (global-set-key (kbd "M-p p") 'project-switch-project)
 (global-set-key (kbd "M-p f") 'project-find-file)
