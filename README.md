@@ -35,18 +35,7 @@ Set to `Run command`, with value: `$PATH_TO/emacsclient -n \2 \1`
 Make sure to install all versions of Fira Mono (Medium, Regular & Bold)
 
 ### How to reproduce bugs:
-`emacs -Q -l ~/.emacs.d/straight/repos/straight.el/bootstrap.el`
-
-```
-(straight-use-package 'use-package)
-(setq straight-use-package-by-default t)
-
-(when (string-equal system-type "darwin")
-  (setq mac-command-modifier 'meta
-  mac-option-modifier nil))
-
-(use-package ...)
-```
+`emacs -Q -l ~/emacs-conf/min.el`
 
 TODO:
 - meow: explore N for reverse search
