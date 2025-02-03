@@ -1307,11 +1307,14 @@ is a prefix length override, which is t for manual completion."
 (global-set-key (kbd "<C-M-up>") 'conf--move-buffer-up)
 (global-set-key (kbd "<C-M-down>") 'conf--move-buffer-down)
 
+(repeat-mode 1)
+(put 'other-window 'repeat-map nil)
+
 (use-package dape
   :init
   (setq dape-key-prefix "\C-xd")
-  (add-hook 'dape-compile-compile-hooks 'kill-buffer)
-  (repeat-mode 1))
+  (add-hook 'dape-compile-compile-hooks 'kill-buffer))
+
 ;; Build and run in debugger:
 ;;   codelldb-cc :cwd "/path/base_dir" :program "/path/base_dir/program" :args ["test"] compile "make -k"
 
