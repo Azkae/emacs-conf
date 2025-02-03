@@ -1501,12 +1501,12 @@ then \\[keyboard-quit] to abort the minibuffer."
   (let ((minibuffer-candidate (conf--minibuffer-candidate)))
     (when minibuffer-candidate
       (pcase (car minibuffer-candidate)
-        ('project-file (projectile-project-root
-                        (expand-file-name (cdr minibuffer-candidate))))
+        ('project-file (project-root
+                        (project-current nil (expand-file-name (cdr minibuffer-candidate)))))
         ('file (let ((path (expand-file-name (cdr minibuffer-candidate))))
                  (if (not (file-directory-p path))
-                        (file-name-directory path)
-                      path)))))))
+                     (file-name-directory path)
+                   path)))))))
 
 (defun conf--exit-minibuffer-and-execute (func)
   (run-with-timer 0 nil func)
