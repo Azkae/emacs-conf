@@ -1408,6 +1408,14 @@ is a prefix length override, which is t for manual completion."
 
 (use-package elysium)
 
+(defun conf--vertico-preview ()
+  "Previews candidate in vertico buffer, unless it's a consult command"
+  (interactive)
+  (unless (bound-and-true-p consult--preview-function)
+    (save-selected-window
+      (let ((embark-quit-after-action nil))
+        (embark-dwim)))))
+
 ;; Enable vertico
 (use-package vertico
   :custom
@@ -1430,7 +1438,8 @@ is a prefix length override, which is t for manual completion."
         ("C-k" . previous-line)
         ("C-<return>" . vertico-exit)
         ("C-h" . left-char)
-        ("C-l" . right-char))
+        ("C-l" . right-char)
+        ("C-d" . conf--vertico-preview))
   (:map minibuffer-local-map
         ("C-p" . previous-history-element)
         ("C-n" . next-history-element))
