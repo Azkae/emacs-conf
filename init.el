@@ -537,6 +537,12 @@
   (magit-auto-revert-immediately t)
   (magit-bury-buffer-function (lambda (_) (magit-mode-quit-window t)))
   (vc-display-status nil))
+
+;; This git is faster got some reason
+(let ((git-path "/Applications/Xcode.app/Contents/Developer/usr/bin/git"))
+  (when (file-exists-p git-path)
+    (setq magit-git-executable git-path)))
+
 (setq smerge-command-prefix "\C-cv")
 
 (use-package request)
