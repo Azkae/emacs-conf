@@ -53,6 +53,7 @@
 
 ;; save minibuffer history
 (savehist-mode 1)
+(add-to-list 'savehist-additional-variables 'compile-command)
 
 (global-auto-revert-mode)
 (setq inhibit-startup-message t)
