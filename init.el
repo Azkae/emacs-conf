@@ -220,7 +220,8 @@
 	(forward-char pos)))))
 
 (defun my-c-mode-common-hook ()
-  (define-key c-mode-base-map (kbd "C-d") nil))
+  (define-key c-mode-base-map (kbd "C-d") nil)
+  (define-key c-mode-base-map (kbd "M-e") nil))
 (add-hook 'c-mode-common-hook 'my-c-mode-common-hook)
 (add-hook 'delete-selection-mode 'delete-selection-pre-hook)
 
@@ -888,13 +889,13 @@
   ("M-z" . 'vterm-copy-mode)
   ("<mouse-1>" . 'vterm-copy-mode)
   ("M-f" . (lambda () (interactive) (vterm-copy-mode 1) (conf--consult-line)))
+  ("M-a" . (lambda () (interactive) (vterm-send "C-l")))
   :map vterm-copy-mode-map
   ("M-z" . 'vterm-copy-mode)
   ("M-v" . (lambda () (interactive) (vterm-copy-mode -1) (vterm-yank)))
   ("C-c C-c" . (lambda () (interactive) (vterm-copy-mode -1) (vterm--self-insert)))
   ("DEL" . (lambda () (interactive) (vterm-copy-mode -1) (vterm-send-backspace)))
-  ("SPC" . 'vterm-copy-mode)
-  )
+  ("SPC" . 'vterm-copy-mode))
   :config
   (define-key vterm-copy-mode-map [remap self-insert-command] #'(lambda() (interactive) (vterm-copy-mode -1)
                                                                   (vterm--self-insert)))
@@ -2119,6 +2120,10 @@ The thing `string' is not available in Emacs 27.'"
 
 (use-package meow-vterm
   :straight (meow-vterm :type git :host github :repo "accelbread/meow-vterm")
+  :bind ((:map meow-vterm-normal-mode-map
+               ("M-t"       . multi-vterm)
+               ("<M-right>" . vterm-toggle-forward)
+               ("<M-left>"  . vterm-toggle-backward)))
   :init
   (meow-vterm-enable))
 
