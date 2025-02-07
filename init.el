@@ -136,6 +136,7 @@
 (global-set-key (kbd "M-a") 'recenter)
 ;; (global-set-key (kbd "M-k") 'compile)
 (global-set-key (kbd "C-x C-c") nil)
+(global-set-key (kbd "C-M-l") nil)
 (global-set-key (kbd "C-S-x C-S-c") 'save-buffers-kill-terminal)
 
 ;; (global-set-key (kbd "<mouse-3>") 'xref-find-definitions)
