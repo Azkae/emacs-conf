@@ -2198,16 +2198,33 @@ The thing `string' is not available in Emacs 27.'"
 (push '(?d (lambda (buff) (with-current-buffer buff (conf--diff-and-save-buffer)) nil) "Show diff")
       save-some-buffers-action-alist)
 
-(use-package dirvish
-  :init
-  (dirvish-override-dired-mode)
-  ;; (dirvish-peek-mode)
-  )
+;; (use-package dirvish
+;;   :init
+;;   (dirvish-override-dired-mode)
+;;   ;; (dirvish-peek-mode)
+;;   )
+
+(defun conf--jump-to-same-base-name ()
+  "Jump to another file with same base name in current directory."
+  (interactive)
+  (let* ((current-file (buffer-file-name))
+         (base-name (car (split-string (file-name-nondirectory current-file) "\\.")))
+         (dir (file-name-directory current-file))
+         (files (remove current-file
+                       (directory-files dir t (concat "^" (regexp-quote base-name) "\\.")))))
+    (cond
+     ((null files)
+      (message "No other files with same base name found"))
+     ((= (length files) 1)
+      (find-file (car files)))
+     (t
+      (find-file (completing-read "Select file: " files nil t))))))
 
 (global-set-key (kbd "M-p p") 'project-switch-project)
 (global-set-key (kbd "M-p f") 'project-find-file)
 (global-set-key (kbd "M-p s") 'consult-ripgrep)
 (global-set-key (kbd "M-p k") 'project-compile)
+(global-set-key (kbd "M-p a") 'conf--jump-to-same-base-name)
 
 (setq project-switch-commands '((project-find-file "Find file" "f")
                                 (project-find-dir "Find dir" "d")
