@@ -9,12 +9,12 @@
         electric-pair-delete-pair
         ignore
         indent-for-tab-command
+        insert-pair
         kill-region-maybe
         mark-sexp
         markdown-outdent-or-delete
         meow-back-word
         meow-bounds-of-thing
-        meow-cancel-selection
         meow-change
         meow-delete
         meow-insert
@@ -23,8 +23,10 @@
         meow-left
         meow-mark-symbol
         meow-mark-word
+        meow-next
         meow-next-symbol
         meow-next-word
+        meow-prev
         meow-replace
         meow-right
         meow-till
@@ -40,10 +42,9 @@
 (setq mc/cmds-to-run-once
       '(
         conf--vterm-toggle
+        meow-cancel-selection
         meow-insert-exit
         meow-keypad
-        meow-next
-        meow-prev
         meow-undo
         mouse-set-region
         pixel-scroll-precision
