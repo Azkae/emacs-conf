@@ -426,6 +426,9 @@
 (electric-pair-mode)
 (electric-indent-mode)
 
+(add-to-list 'electric-pair-pairs '(?` . ?`))
+(add-to-list 'insert-pair-alist '(?` ?`))
+
 (use-package ws-butler
   :diminish ws-butler-mode
   :hook (prog-mode . ws-butler-mode))
