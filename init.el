@@ -1289,8 +1289,10 @@ is a prefix length override, which is t for manual completion."
   :custom
   (treesit-auto-install 'prompt)
   :config
-  (setq treesit-auto-langs '(typescript tsx python))
+  (setq treesit-auto-langs '(typescript tsx python css))
   (global-treesit-auto-mode))
+
+(setq-default css-indent-offset 2)
 
 (require 'windmove)
 (defun conf--move-buffer (dir)
