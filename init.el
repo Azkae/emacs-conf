@@ -1065,7 +1065,8 @@
   (markdown-fontify-code-blocks-natively t)
   :config
   (add-to-list 'markdown-code-lang-modes '("jsx" . tsx-ts-mode))
-  (add-to-list 'markdown-code-lang-modes '("html" . mhtml-mode)))
+  (add-to-list 'markdown-code-lang-modes '("html" . mhtml-mode))
+  (add-to-list 'markdown-code-lang-modes '("json" . js-json-mode)))
 
 (use-package with-editor
   :hook
