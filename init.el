@@ -137,6 +137,8 @@
 ;; (global-set-key (kbd "M-k") 'compile)
 (global-set-key (kbd "C-x C-c") nil)
 (global-set-key (kbd "C-M-l") nil)
+(global-set-key (kbd "M-h") nil)
+(global-set-key (kbd "M-l") nil)
 (global-set-key (kbd "C-S-x C-S-c") 'save-buffers-kill-terminal)
 
 ;; (global-set-key (kbd "<mouse-3>") 'xref-find-definitions)
@@ -883,7 +885,7 @@
 
 (use-package vterm
   :init
-  (setq vterm-keymap-exceptions '("M-q" "C-q" "C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-v" "M-v" "C-y" "M-y" "M-z" "M-X" "M-O" "M-e" "M-E"))
+  (setq vterm-keymap-exceptions '("M-q" "C-q" "C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-v" "M-v" "C-y" "M-y" "M-z" "M-X" "M-O" "M-e" "M-E" "M-l" "M-h"))
   :bind
   (:map vterm-mode-map
   ("M-z" . 'vterm-copy-mode)
@@ -955,10 +957,14 @@
    ("M-E" . conf--vterm-insert-cd)
    ("<M-right>" . vterm-toggle-forward)
    ("<M-left>" . vterm-toggle-backward)
+   ("M-l" . vterm-toggle-forward)
+   ("M-h" . vterm-toggle-backward)
    :map vterm-copy-mode-map
    ("M-E" . (lambda () (interactive) (vterm-copy-mode -1) (conf--vterm-insert-cd)))
    ("<M-right>" . vterm-toggle-forward)
-   ("<M-left>" . vterm-toggle-backward))
+   ("<M-left>" . vterm-toggle-backward)
+   ("M-l" . vterm-toggle-forward)
+   ("M-h" . vterm-toggle-backward))
   :config
   (setq vterm-toggle-hide-method 'bury-all-vterm-buffer)
   (setq vterm-toggle-reset-window-configration-after-exit nil)
@@ -2012,10 +2018,10 @@ Used to preselect nearest headings and imenu items.")
      '("C-l" . right-word)
      '("J" . meow-next-expand)
      '("k" . meow-prev)
-     '("M-h" . meow-left)
+     ;; '("M-h" . meow-left)
      '("M-k" . (lambda () (interactive) (move-up 4)))
      '("M-j" . (lambda () (interactive) (move-down 4)))
-     '("M-l" . meow-right)
+     ;; '("M-l" . meow-right)
      '("K" . meow-prev-expand)
      '("l" . meow-right)
      '("L" . meow-right-expand)
@@ -2054,10 +2060,11 @@ Used to preselect nearest headings and imenu items.")
       '("C-j" . meow-next)
       '("C-k" . meow-prev)
       '("C-l" . meow-right)
-      '("M-h" . meow-left)
+      ;; '("M-h" . meow-left)
       '("M-k" . (lambda () (interactive) (move-up 4)))
       '("M-j" . (lambda () (interactive) (move-down 4)))
-      '("M-l" . meow-right)))
+      ;; '("M-l" . meow-right)
+      ))
   (meow-setup)
   (add-hook 'git-commit-setup-hook 'meow-insert-mode)
   (add-hook 'meow-insert-exit-hook 'corfu-quit)
@@ -2123,7 +2130,9 @@ The thing `string' is not available in Emacs 27.'"
   :bind ((:map meow-vterm-normal-mode-map
                ("M-t"       . multi-vterm)
                ("<M-right>" . vterm-toggle-forward)
-               ("<M-left>"  . vterm-toggle-backward)))
+               ("<M-left>"  . vterm-toggle-backward)
+               ("M-l" . vterm-toggle-forward)
+               ("M-h" . vterm-toggle-backward)))
   :init
   (meow-vterm-enable))
 
