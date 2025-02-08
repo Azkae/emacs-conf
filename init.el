@@ -2283,6 +2283,12 @@ The thing `string' is not available in Emacs 27.'"
   :custom
   (highlight-parentheses-colors '("firebrick1")))
 
+(use-package gptel-quick
+  :straight (gptel-quick :type git :host github :repo "karthink/gptel-quick")
+  :config
+  (keymap-set embark-general-map "q" #'gptel-quick)
+  (add-to-list 'embark-post-action-hooks '(gptel-quick embark--unmark-target)))
+
 ;; TODO: test direnv
 
 ;; load graphic settings
