@@ -88,12 +88,15 @@
 (setq mouse-wheel-flip-direction t)
 
 ;; Better comint settings
-(setq-default comint-scroll-to-bottom-on-output t)
-(setq-default comint-scroll-to-bottom-on-input t)
-(setq-default comint-scroll-show-maximum-output nil)
-(define-key comint-mode-map (kbd "M-p") nil)
-(define-key comint-mode-map (kbd "M-b") #'comint-previous-input)
-(define-key comint-mode-map (kbd "M-r") nil)
+(use-package comint
+  :straight (:type built-in)
+  :config
+  (setq-default comint-scroll-to-bottom-on-output t)
+  (setq-default comint-scroll-to-bottom-on-input t)
+  (setq-default comint-scroll-show-maximum-output nil)
+  (define-key comint-mode-map (kbd "M-p") nil)
+  (define-key comint-mode-map (kbd "M-b") #'comint-previous-input)
+  (define-key comint-mode-map (kbd "M-r") nil))
 
 ;; TODO: use bind-key: https://melpa.org/#/bind-key
 
