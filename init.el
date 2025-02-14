@@ -147,6 +147,7 @@
 (global-set-key (kbd "C-M-l") nil)
 (global-set-key (kbd "M-h") nil)
 (global-set-key (kbd "M-l") nil)
+(global-set-key (kbd "M-u") nil)
 (global-set-key (kbd "C-S-x C-S-c") 'save-buffers-kill-terminal)
 
 ;; (global-set-key (kbd "<mouse-3>") 'xref-find-definitions)
