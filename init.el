@@ -2270,6 +2270,32 @@ With universal argument ARG, open in another window."
   :bind
   (("C-c '" . cycle-quotes)))
 
+(use-package aidermacs
+  :straight (:host github :repo "MatthewZMD/aidermacs" :files ("*.el"))
+  :bind
+  (:map aidermacs-minor-mode
+   ("C-c /" . insert-project-file-path))
+  :config
+  (setq aidermacs-auto-commits t)
+  (setq aidermacs-args '("--model" "anthropic/claude-3-5-sonnet-20241022"))
+  (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
+    (setenv "ANTHROPIC_API_KEY" anthropic-api-key))
+  (global-set-key (kbd "C-c a") 'aidermacs-transient-menu)
+  (add-to-list 'aidermacs-language-name-map '("tsx" . "tsx-ts"))
+  (add-to-list 'aidermacs-language-name-map '("typescript" . "tsx-ts")))
+
+(defun insert-project-file-path ()
+  "Select a file from current project and insert its relative path at point."
+  (interactive)
+  (let* ((project (project-current))
+         (root (project-root project))
+         (files (project-files project))
+         (relative-files (mapcar (lambda (f) (file-relative-name f root)) files))
+         (selected (completing-read "Project file: " relative-files)))
+    (insert selected)))
+
+(add-to-list 'project-switch-commands '(aidermacs-run-aidermacs "Aider" "a"))
+
 ;; TODO: test direnv
 
 ;; load graphic settings
