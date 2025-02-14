@@ -821,6 +821,8 @@
       (restclient-toggle-body-visibility)
       (restclient-jump-next))))
 
+(add-hook 'restclient-mode-hook 'restclient-collapse-all)
+
 (defun smerge-next-safe ()
   (condition-case err
       (not (smerge-next))
@@ -838,8 +840,6 @@
         (smerge-next-safe)))))
 
 (global-set-key (kbd "M-q e") 'goto-next-conflict)
-
-(add-hook 'restclient-mode-hook 'restclient-collapse-all)
 
 ;; (use-package emojify
 ;;   :config
@@ -962,7 +962,7 @@
 
 (use-package string-inflection
   :bind
-  ("C-c f" . string-inflection-toggle))
+  ("C-c _" . string-inflection-toggle))
 
 (use-package org-roam
   :diminish org-roam-mode
@@ -1169,7 +1169,10 @@ is a prefix length override, which is t for manual completion."
 
 (use-package cape
   :init
-  (add-hook 'completion-at-point-functions #'cape-file))
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'comint-mode-hook
+            (lambda ()
+              (add-hook 'completion-at-point-functions #'cape-dabbrev))))
 
 (use-package apheleia
   :hook
