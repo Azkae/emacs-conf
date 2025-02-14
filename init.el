@@ -740,7 +740,7 @@
 (use-package dockerfile-mode)
 
 (use-package eglot
-  :straight nil
+  :straight (:type built-in)
   :bind
   (:map eglot-mode-map
         ("M-." . xref-find-definitions)
@@ -802,7 +802,7 @@
 (use-package clang-format)
 
 (use-package js
-  :straight nil
+  :straight (:type built-in)
   :bind
   (:map js-json-mode-map
         ("M-." . 'conf--consult-ripgrep))
@@ -1019,7 +1019,7 @@
     (buffer-string)))
 
 (use-package typescript-ts-mode
-  :straight nil
+  :straight (:type built-in)
   :mode (("\\.ts\\'" . typescript-ts-mode)
          ("\\.tsx\\'" . tsx-ts-mode))
   :custom
@@ -2160,7 +2160,7 @@ The thing `string' is not available in Emacs 27.'"
 (add-hook 'text-mode-hook 'visual-line-mode)
 
 (use-package tramp
-  :straight nil
+  :straight (:type built-in)
   :config
   (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='/tmp/tramp.%%C' -o ControlPersist=3600")
   (tramp-set-completion-function
@@ -2245,7 +2245,7 @@ With universal argument ARG, open in another window."
 
 ;; checkout https://github.com/neeasade/stillness-mode.el or https://github.com/hkjels/mini-ontop.el instead
 (use-package sinister
-  :straight nil
+  :straight (:type built-in)
   :load-path "vendors")
 
 (use-package crux
