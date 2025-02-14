@@ -1882,6 +1882,7 @@ Used to preselect nearest headings and imenu items.")
   (global-set-key (kbd "C-x k") nil)
   (global-set-key (kbd "C-x C-j") nil)
   (global-set-key (kbd "C-x C-k") nil)
+  (global-set-key (kbd "C-c /") nil)
 
   (setq meow-next-thing-include-syntax '((word "" "") (symbol "" "")))
 
@@ -2184,21 +2185,23 @@ The thing `string' is not available in Emacs 27.'"
 ;;   ;; (dirvish-peek-mode)
 ;;   )
 
-(defun conf--jump-to-same-base-name ()
-  "Jump to another file with same base name in current directory."
-  (interactive)
+(defun conf--jump-to-same-base-name (arg)
+  "Jump to another file with same base name in current directory.
+With universal argument ARG, open in another window."
+  (interactive "P")
   (let* ((current-file (buffer-file-name))
          (base-name (car (split-string (file-name-nondirectory current-file) "\\.")))
          (dir (file-name-directory current-file))
          (files (remove current-file
-                       (directory-files dir t (concat "^" (regexp-quote base-name) "\\.")))))
+                       (directory-files dir t (concat "^" (regexp-quote base-name) "\\."))))
+         (find-func (if arg #'find-file-other-window #'find-file)))
     (cond
      ((null files)
       (message "No other files with same base name found"))
      ((= (length files) 1)
-      (find-file (car files)))
+      (funcall find-func (car files)))
      (t
-      (find-file (completing-read "Select file: " files nil t))))))
+      (funcall find-func (completing-read "Select file: " files nil t))))))
 
 (global-set-key (kbd "M-p p") 'project-switch-project)
 (global-set-key (kbd "M-p f") 'project-find-file)
