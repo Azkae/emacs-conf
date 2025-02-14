@@ -2266,6 +2266,10 @@ With universal argument ARG, open in another window."
   (keymap-set embark-general-map "q" #'gptel-quick)
   (add-to-list 'embark-post-action-hooks '(gptel-quick embark--unmark-target)))
 
+(use-package cycle-quotes
+  :bind
+  (("C-c '" . cycle-quotes)))
+
 ;; TODO: test direnv
 
 ;; load graphic settings
