@@ -1603,6 +1603,7 @@ then \\[keyboard-quit] to abort the minibuffer."
   (setq prefix-help-command #'embark-prefix-help-command)
   :config
   (setq embark-help-key "?")
+  (setq embark-target-finders (delete 'embark-target-active-region embark-target-finders))
   ;; Hide the mode line of the Embark live/completions buffers
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
