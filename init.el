@@ -2307,8 +2307,9 @@ With universal argument ARG, open in another window."
         (history-var minibuffer-history-variable))
     (run-with-timer 0 nil
                     (lambda () (interactive)
-                      (set history-var (cdr (symbol-value history-var)))
-                      (add-to-history history-var input)))))
+                      (when (boundp history-var)
+                        (set history-var (cdr (symbol-value history-var)))
+                        (add-to-history history-var input))))))
 
 (advice-add #'vertico-exit :before 'conf--vertico-exit-advice)
 
