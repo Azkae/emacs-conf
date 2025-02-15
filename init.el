@@ -483,7 +483,7 @@
   :init
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   :custom
-  (dumb-jump-force-searcher 'ag))
+  (dumb-jump-prefer-searcher 'rg))
 
 (use-package symbol-overlay
   :bind
