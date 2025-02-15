@@ -42,4 +42,3 @@ TODO:
 - Fix poetry tracking with project.el
 - vertico-repeat with project-switch-project
 - disallow recursive M-o (no utility)
-- project-swich-project -> vterm has an incorrect default-directory

@@ -928,6 +928,19 @@
         (conf--vterm-hide)
       (vterm-toggle))))
 
+(defun conf--vterm-toggle-project()
+  (interactive)
+  (let* ((dir (expand-file-name (project-root (project-current))))
+         (cd-cmd (concat " cd " (shell-quote-argument dir))))
+    (setq conf--vterm-cd-command cd-cmd))
+
+  (if (and (not (derived-mode-p 'vterm-mode))
+           (vterm-toggle--get-window))
+      (vterm-toggle-show)
+    (if (derived-mode-p 'vterm-mode)
+        (conf--vterm-hide)
+      (vterm-toggle))))
+
 (use-package vterm-toggle
   :bind
   (("M-e" . conf--vterm-toggle)
@@ -2219,7 +2232,7 @@ With universal argument ARG, open in another window."
                                 (project-dired "Dired" "D")
                                 (consult-ripgrep "ripgrep" "s")
                                 (magit-project-status "Magit" "g")
-                                (conf--vterm-toggle "Vterm" "e")))
+                                (conf--vterm-toggle-project "Vterm" "e")))
 
 ;; (which-function-mode)
 
