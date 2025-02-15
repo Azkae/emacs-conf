@@ -2216,7 +2216,6 @@ With universal argument ARG, open in another window."
 (global-set-key (kbd "M-p a") 'conf--jump-to-same-base-name)
 
 (setq project-switch-commands '((project-find-file "Find file" "f")
-                                (project-find-dir "Find dir" "d")
                                 (project-dired "Dired" "D")
                                 (consult-ripgrep "ripgrep" "s")
                                 (magit-project-status "Magit" "g")
