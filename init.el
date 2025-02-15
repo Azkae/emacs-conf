@@ -742,13 +742,25 @@
 
 (use-package dockerfile-mode)
 
+(defun conf--xref-find-definitions ()
+  (interactive)
+  (let ((this-command 'xref-find-definitions))
+    (deactivate-mark)
+    (call-interactively 'xref-find-definitions)))
+
+(defun conf--xref-find-references ()
+  (interactive)
+  (let ((this-command 'xref-find-references))
+    (deactivate-mark)
+    (call-interactively 'xref-find-references)))
+
 (use-package eglot
   :straight (:type built-in)
   :bind
-  (:map eglot-mode-map
-        ("M-." . xref-find-definitions)
-        ("M-?" . xref-find-references)
-        ("<mouse-2>" . eglot-code-actions-at-mouse))
+  (("M-." . conf--xref-find-definitions)
+   ("M-?" . conf--xref-find-references)
+   :map eglot-mode-map
+   ("<mouse-2>" . eglot-code-actions-at-mouse))
   :hook
   ((c-mode c++-mode c-ts-mode c++-ts-mode) . eglot-ensure)
   ((c-mode c++-mode c-ts-mode c++-ts-mode) . (lambda () (setq-local eglot-ignored-server-capabilities '(:inlayHintProvider))))
