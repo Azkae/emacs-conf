@@ -2301,6 +2301,18 @@ With universal argument ARG, open in another window."
 
 (add-to-list 'project-switch-commands '(aidermacs-run-aidermacs "Aider" "a"))
 
+(defun conf--vertico-exit-advice (&optional arg)
+  "Change history to use input instead of selected candidate"
+  (let ((input (minibuffer-contents-no-properties))
+        (history-var minibuffer-history-variable))
+    (run-with-timer 0 nil
+                    (lambda () (interactive)
+                      (set history-var (cdr (symbol-value history-var)))
+                      (add-to-history history-var input)))))
+
+(advice-add #'vertico-exit :before 'conf--vertico-exit-advice)
+
+
 ;; TODO: test direnv
 
 ;; load graphic settings
