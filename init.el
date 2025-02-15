@@ -2282,7 +2282,7 @@ With universal argument ARG, open in another window."
    ("C-c /" . insert-project-file-path))
   :config
   (setq aidermacs-auto-commits t)
-  (setq aidermacs-args '("--model" "anthropic/claude-3-5-sonnet-20241022"))
+  (setq aidermacs-default-model "anthropic/claude-3-5-sonnet-20241022")
   (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
     (setenv "ANTHROPIC_API_KEY" anthropic-api-key))
   (global-set-key (kbd "C-c a") 'aidermacs-transient-menu)
@@ -2299,7 +2299,7 @@ With universal argument ARG, open in another window."
          (selected (completing-read "Project file: " relative-files)))
     (insert selected)))
 
-(add-to-list 'project-switch-commands '(aidermacs-run-aidermacs "Aider" "a"))
+(add-to-list 'project-switch-commands '(aidermacs-run "Aider" "a"))
 
 (defun conf--vertico-exit-advice (&optional arg)
   "Change history to use input instead of selected candidate"
