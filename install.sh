@@ -19,5 +19,5 @@ write-to-file-maybe() {
 
 write-to-file-maybe "(load-file \"$(pwd)/init.el\")" ~/.emacs
 
-write-to-file-maybe "pinentry-program /opt/homebrew/bin/pinentry-mac" \
+write-to-file-maybe "pinentry-program $(which pinentry-mac)" \
                     ~/.gnupg/gpg-agent.conf
