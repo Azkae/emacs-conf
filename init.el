@@ -2327,13 +2327,18 @@ With universal argument ARG, open in another window."
 
 (add-to-list 'project-switch-commands '(aidermacs-run "Aider" "a"))
 
+;; Maybe we should do the opposite, a whitelist instead of a blacklist
+(defvar conf--use-default-history '(extended-command-history))
+
 (defun conf--vertico-exit-advice (&optional arg)
   "Change history to use input instead of selected candidate"
   (let ((input (minibuffer-contents-no-properties))
         (history-var minibuffer-history-variable))
     (run-with-timer 0 nil
                     (lambda () (interactive)
-                      (when (boundp history-var)
+                      (when (and (boundp history-var)
+                                 (not (memq history-var conf--use-default-history)))
+                        ;; (message "memory var %s" history-var)
                         (set history-var (cdr (symbol-value history-var)))
                         (add-to-history history-var input))))))
 
