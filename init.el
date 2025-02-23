@@ -1217,6 +1217,8 @@ is a prefix length override, which is t for manual completion."
   (fancy-compilation-override-colors nil))
 (define-key compilation-mode-map (kbd "M-p") nil)
 
+(define-key diff-mode-map (kbd "M-p") nil)
+
 ;; (defun bury-compile-buffer-if-successful (buffer string)
 ;;   "Bury a compilation buffer if succeeded without warnings "
 ;;   (if (and
