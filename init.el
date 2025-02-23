@@ -2274,10 +2274,10 @@ With universal argument ARG, open in another window."
   (setf (alist-get nil topsy-mode-functions) 'conf--topsy--beginning-of-defun)
   (setf (alist-get 'emacs-lisp-mode topsy-mode-functions) 'conf--topsy--beginning-of-defun))
 
-;; checkout https://github.com/neeasade/stillness-mode.el or https://github.com/hkjels/mini-ontop.el instead
-(use-package sinister
-  :straight (:type built-in)
-  :load-path "vendors")
+;; ;; checkout https://github.com/neeasade/stillness-mode.el or https://github.com/hkjels/mini-ontop.el instead
+;; (use-package sinister
+;;   :straight (:type built-in)
+;;   :load-path "vendors")
 
 (use-package crux
   :bind
