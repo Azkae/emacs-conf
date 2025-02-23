@@ -1459,6 +1459,7 @@ is a prefix length override, which is t for manual completion."
         ("C-h" . left-char)
         ("C-l" . right-char)
         ("C-d" . conf--vertico-preview))
+        ("M-t" . vertico-buffer-mode)
   (:map minibuffer-local-map
         ("C-p" . previous-history-element)
         ("C-n" . next-history-element))
