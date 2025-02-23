@@ -2211,11 +2211,11 @@ The thing `string' is not available in Emacs 27.'"
 (push '(?d (lambda (buff) (with-current-buffer buff (conf--diff-and-save-buffer)) nil) "Show diff")
       save-some-buffers-action-alist)
 
-;; (use-package dirvish
-;;   :init
-;;   (dirvish-override-dired-mode)
-;;   ;; (dirvish-peek-mode)
-;;   )
+(use-package dirvish
+  :init
+  (dirvish-override-dired-mode)
+  ;; (dirvish-peek-mode)
+  )
 
 (defun conf--jump-to-same-base-name (arg)
   "Jump to another file with same base name in current directory.
