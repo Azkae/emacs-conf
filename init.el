@@ -1186,10 +1186,13 @@ is a prefix length override, which is t for manual completion."
 
 (use-package cape
   :init
+  (setq cape-dabbrev-min-length 3)
   (add-hook 'completion-at-point-functions #'cape-file)
+  ;; (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'comint-mode-hook
             (lambda ()
-              (add-hook 'completion-at-point-functions #'cape-dabbrev))))
+              (add-to-list 'completion-at-point-functions #'cape-dabbrev)))
+  )
 
 (use-package apheleia
   :hook
