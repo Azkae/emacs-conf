@@ -2179,7 +2179,9 @@ The thing `string' is not available in Emacs 27.'"
 (use-package jinx
   :if (conf--is-jinx-library-available)
   :hook (emacs-startup . global-jinx-mode)
-  :bind (("M-$" . jinx-correct))
+  :bind (("M-$" . jinx-correct)
+         :map jinx-overlay-map
+         ("M-p" . nil))
   :custom
   (jinx-languages "en_US fr"))
 
