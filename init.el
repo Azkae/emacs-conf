@@ -1350,6 +1350,8 @@ is a prefix length override, which is t for manual completion."
   :straight (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")
   :config
   (setq org-startup-indented t)
+  (setq org-modern-hide-stars nil)
+  (setq org-indent-indentation-per-level 1)
   (add-hook 'org-mode-hook #'org-modern-indent-mode 90)
   ;; (set-face-attribute 'org-modern-bracket-line nil :family "Menlo")
   )
