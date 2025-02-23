@@ -1482,6 +1482,8 @@ is a prefix length override, which is t for manual completion."
   ;; commands are hidden in normal buffers. This setting is useful beyond
   ;; Vertico.
   (read-extended-command-predicate #'command-completion-default-include-p)
+  :bind
+  (("C-c t" . eglot-code-actions))
   :init
   ;; Add prompt indicator to `completing-read-multiple'.
   ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
