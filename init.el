@@ -1363,7 +1363,7 @@ is a prefix length override, which is t for manual completion."
 
 (use-package dape
   :init
-  (setq dape-key-prefix "\C-xd")
+  (setq dape-key-prefix "\C-cd")
   (add-hook 'dape-compile-compile-hooks 'kill-buffer))
 
 ;; Build and run in debugger:
