@@ -7,6 +7,7 @@
         conf--meow-change-and-mark
         conf--meow-insert-wrap
         electric-pair-delete-pair
+        end-of-buffer
         ignore
         indent-for-tab-command
         insert-pair
