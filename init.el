@@ -1184,14 +1184,48 @@ is a prefix length override, which is t for manual completion."
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 
+;; project files - capf
+(defvar conf--project-files-cache (make-hash-table :test 'equal))
+(defvar conf--project-files-cache-time (make-hash-table :test 'equal))
+
+(defun conf--project-files-cached (project)
+  (let* ((root (project-root project))
+         (cache-time (gethash root conf--project-files-cache-time))
+         (now (current-time)))
+    (if (and cache-time
+             (< (float-time (time-subtract now cache-time)) 10)) ; 10s cache
+        (gethash root conf--project-files-cache)
+      (let ((files (mapcar (lambda (f)
+                            (file-relative-name f root))
+                          (project-files project))))
+        (puthash root files conf--project-files-cache)
+        (puthash root now conf--project-files-cache-time)
+        files))))
+
+(defun conf--project-files-capf ()
+  (when-let* ((project (project-current))
+              (bounds (bounds-of-thing-at-point 'filename))
+              (start (or (car bounds) (point)))
+              (end (or (cdr bounds) (point)))
+              (table (completion-table-with-cache
+                     (lambda (_prefix)
+                       (conf--project-files-cached project)))))
+    (list start
+          end
+          table
+          :exclusive 'no)))
+
 (use-package cape
   :init
-  (setq cape-dabbrev-min-length 3)
+  (setq cape-dabbrev-min-length 4)
   (add-hook 'completion-at-point-functions #'cape-file)
   ;; (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'comint-mode-hook
             (lambda ()
-              (add-to-list 'completion-at-point-functions #'cape-dabbrev)))
+              (setq-local completion-at-point-functions
+                          '(conf--project-files-capf
+                            cape-dabbrev
+                            comint-completion-at-point t))))
   )
 
 (use-package apheleia
