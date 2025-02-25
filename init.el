@@ -1433,7 +1433,7 @@ is a prefix length override, which is t for manual completion."
 
   (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
     (setq
-     gptel-model 'claude-3-5-sonnet-20241022
+     gptel-model 'claude-3-7-sonnet-20250219
      gptel-backend (gptel-make-anthropic "Claude"
 				     :stream t
 				     :key anthropic-api-key))))
@@ -2350,7 +2350,7 @@ With universal argument ARG, open in another window."
    ("C-c /" . insert-project-file-path))
   :config
   (setq aidermacs-auto-commits t)
-  (setq aidermacs-default-model "anthropic/claude-3-5-sonnet-20241022")
+  (setq aidermacs-default-model "anthropic/claude-3-7-sonnet-20250219")
   (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
     (setenv "ANTHROPIC_API_KEY" anthropic-api-key))
   (global-set-key (kbd "C-c a") 'aidermacs-transient-menu)
