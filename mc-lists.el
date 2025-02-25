@@ -16,6 +16,7 @@
         markdown-outdent-or-delete
         meow-back-word
         meow-bounds-of-thing
+        meow-cancel-selection
         meow-change
         meow-delete
         meow-insert
@@ -43,7 +44,6 @@
 (setq mc/cmds-to-run-once
       '(
         conf--vterm-toggle
-        meow-cancel-selection
         meow-insert-exit
         meow-keypad
         meow-undo
