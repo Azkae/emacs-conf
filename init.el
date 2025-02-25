@@ -1503,7 +1503,7 @@ is a prefix length override, which is t for manual completion."
 
   (defun conf--minibuffer-complete-or-insert-directory ()
     (interactive)
-    (if (eq (vertico--metadata-get 'category) 'file)
+    (if (or (eq (vertico--metadata-get 'category) 'file) crm-completion-table)
         (vertico-insert)
       (minibuffer-complete)))
 
@@ -2362,8 +2362,8 @@ With universal argument ARG, open in another window."
          (root (project-root project))
          (files (project-files project))
          (relative-files (mapcar (lambda (f) (file-relative-name f root)) files))
-         (selected (completing-read "Project file: " relative-files)))
-    (insert selected)))
+         (selected (completing-read-multiple "Project file: " relative-files nil t)))
+    (insert (string-join selected " "))))
 
 (add-to-list 'project-switch-commands '(aidermacs-run "Aider" "a"))
 
