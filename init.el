@@ -1223,9 +1223,9 @@ is a prefix length override, which is t for manual completion."
   (add-hook 'comint-mode-hook
             (lambda ()
               (setq-local completion-at-point-functions
-                          '(conf--project-files-capf
-                            cape-dabbrev
-                            comint-completion-at-point t))))
+                          (list (cape-capf-super 'conf--project-files-capf
+                                                 'cape-dabbrev)
+                                'comint-completion-at-point t))))
   )
 
 (use-package apheleia
