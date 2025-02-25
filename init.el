@@ -532,6 +532,7 @@
    ("C-M-<mouse-1>" . mc/add-cursor-on-click)
    :map mc/keymap
    ("<return>" . nil)
+   ("M-n" . mc/skip-to-next-like-this)
    ("M-v" . nil))
   :config
   (add-to-list 'mc/unsupported-minor-modes 'electric-indent-mode))
