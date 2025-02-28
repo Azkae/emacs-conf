@@ -2,19 +2,24 @@
 
 (load-theme 'custom-monokai t)
 
-(defun conf--setup-font (frame)
+;; (setq conf--font-name "CommitMono")
+(setq conf--font-name "Fira Mono")
+
+(defun conf--setup-font ()
+  (if (find-font (font-spec :name conf--font-name))
+      (progn
+        (message "Using %s" conf--font-name)
+        (set-frame-font (format "%s-14" conf--font-name) nil t)
+        (add-to-list 'default-frame-alist `(font . ,conf--font-name)))
+    (warn (format "%s not found" conf--font-name))))
+
+(defun conf--setup-font-for-frame (frame)
   (with-selected-frame frame
-    (if (find-font (font-spec :name "Fira Mono"))
-        (progn
-          (message "Using Fira Mono")
-          (set-frame-font "Fira Mono-13" nil t)
-        (add-to-list 'default-frame-alist '(font . "Fira Mono")))
-      (warn "Fira Mono not found"))
-    
+    (conf--setup-font)
     (add-to-list 'default-frame-alist '(cursor-color . "white"))
     (set-face-attribute 'default nil :height 140)))
 
-(add-hook 'after-make-frame-functions 'conf--setup-font)
+(add-hook 'after-make-frame-functions 'conf--setup-font-for-frame)
 
 (menu-bar-mode -1)
 (blink-cursor-mode 0)
