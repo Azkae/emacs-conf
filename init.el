@@ -1226,8 +1226,10 @@ is a prefix length override, which is t for manual completion."
               (defalias 'conf--test (cape-company-to-capf #'company-dabbrev))
               (setq-local completion-at-point-functions
                           (list
-                           (cape-capf-super 'conf--project-files-capf
-                                            (cape-capf-prefix-length #'cape-dabbrev 3))
+                           (cape-capf-prefix-length
+                            (cape-capf-super 'conf--project-files-capf
+                                             #'cape-dabbrev)
+                            3)
                            'comint-completion-at-point t))))
   )
 
