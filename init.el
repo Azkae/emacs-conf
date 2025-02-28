@@ -2378,8 +2378,8 @@ With universal argument ARG, open in another window."
     (insert (string-join selected " "))))
 
 (defun conf--aidermacs-run-advice (orig-fun &rest args)
-  (let ((default-directory (project-root (project-current)))
-        (res (apply orig-fun args)))
+  (let* ((default-directory (project-root (project-current)))
+         (res (apply orig-fun args)))
     res))
 
 (advice-add 'aidermacs-run :around #'conf--aidermacs-run-advice)
