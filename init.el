@@ -533,6 +533,7 @@
    :map mc/keymap
    ("<return>" . nil)
    ("M-n" . mc/skip-to-next-like-this)
+   ("M-N" . mc/unmark-next-like-this)   ; not sure about this one
    ("M-v" . nil))
   :config
   (add-to-list 'mc/unsupported-minor-modes 'electric-indent-mode))
