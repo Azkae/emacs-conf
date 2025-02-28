@@ -1218,15 +1218,16 @@ is a prefix length override, which is t for manual completion."
 
 (use-package cape
   :init
-  (setq cape-dabbrev-min-length 4)
   (add-hook 'completion-at-point-functions #'cape-file)
   ;; (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'comint-mode-hook
             (lambda ()
+              (defalias 'conf--test (cape-company-to-capf #'company-dabbrev))
               (setq-local completion-at-point-functions
-                          (list (cape-capf-super 'conf--project-files-capf
-                                                 'cape-dabbrev)
-                                'comint-completion-at-point t))))
+                          (list
+                           (cape-capf-super 'conf--project-files-capf
+                                            (cape-capf-prefix-length #'cape-dabbrev 3))
+                           'comint-completion-at-point t))))
   )
 
 (use-package apheleia
