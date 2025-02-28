@@ -2377,6 +2377,13 @@ With universal argument ARG, open in another window."
          (selected (completing-read-multiple "Project file: " relative-files nil t)))
     (insert (string-join selected " "))))
 
+(defun conf--aidermacs-run-advice (orig-fun &rest args)
+  (let ((default-directory (project-root (project-current)))
+        (res (apply orig-fun args)))
+    res))
+
+(advice-add 'aidermacs-run :around #'conf--aidermacs-run-advice)
+
 (add-to-list 'project-switch-commands '(aidermacs-run "Aider" "a"))
 
 ;; Maybe we should do the opposite, a whitelist instead of a blacklist
