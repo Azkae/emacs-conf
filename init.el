@@ -1338,7 +1338,7 @@ is a prefix length override, which is t for manual completion."
   :custom
   (treesit-auto-install 'prompt)
   :config
-  (setq treesit-auto-langs '(typescript tsx python css))
+  (setq treesit-auto-langs '(typescript tsx python css javascript))
   (global-treesit-auto-mode))
 
 (setq-default css-indent-offset 2)
