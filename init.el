@@ -1668,6 +1668,9 @@ then \\[keyboard-quit] to abort the minibuffer."
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
+;; Idea: We could add a wrapper to embark-act that deactivate the region if
+;; the selection was made via meow-next-word (not symbol?) and maybe
+;; don't deactivate region with universal prefix
 (use-package embark
   :bind
   (("M-/" . embark-act))
