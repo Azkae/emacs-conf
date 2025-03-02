@@ -360,13 +360,21 @@
 (setq undo-strong-limit 100663296) ; 96mb.
 (setq undo-outer-limit 1006632960) ; 960mb.
 
+;; Do the same thing with embark
+(defun conf--undo ()
+  (interactive)
+  (if (equal 'select (car-safe (meow--selection-type)))
+      (let ((undo-fu-allow-undo-in-region nil))
+        (call-interactively 'undo-fu-only-undo))
+    (call-interactively 'undo-fu-only-undo)))
+
 (use-package undo-fu
   :custom
   (undo-fu-ignore-keyboard-quit t)
   (undo-fu-allow-undo-in-region t)
   :config
   (global-unset-key (kbd "M-z"))
-  (global-set-key (kbd "M-z")   'undo-fu-only-undo)
+  (global-set-key (kbd "M-z")   'conf--undo)
   (global-set-key (kbd "M-Z") 'undo-fu-only-redo))
 
 ;; (defun conf--toggle-flymake-end-of-line ()
