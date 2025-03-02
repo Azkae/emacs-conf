@@ -2148,10 +2148,10 @@ Used to preselect nearest headings and imenu items.")
 
 (el-patch-feature meow)
 
-(defun conf--treesit-bounds-at-point ()
+(defun conf--treesit-string-bounds-at-point ()
   (when-let* ((node (treesit-node-at (point)))
               (parent (treesit-node-parent node))
-              (is-string (string= (treesit-node-type parent) "string")))
+              (is-string (member (treesit-node-type parent) '("string" "template_string"))))
     (cons (treesit-node-start parent)
           (treesit-node-end parent))))
 
@@ -2174,7 +2174,7 @@ The thing `string' is not available in Emacs 27.'"
           (cons beg end)))
     (el-patch-swap (bounds-of-thing-at-point 'string)
                    (if (treesit-language-at (point))
-                       (conf--treesit-bounds-at-point)
+                       (conf--treesit-string-bounds-at-point)
                      (bounds-of-thing-at-point 'string)))))
 
 (el-patch-defun meow--bounds-of-string (&optional inner)
