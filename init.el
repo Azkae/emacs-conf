@@ -1979,6 +1979,10 @@ Used to preselect nearest headings and imenu items.")
 
   (setq meow-use-clipboard t)
 
+  ;; Disable going to secondary selection when no region is active during pop
+  (setq meow-selection-command-fallback
+        (assoc-delete-all 'meow-pop-selection meow-selection-command-fallback))
+
   (setq meow-expand-hint-counts
         '((word . 0)
           (line . 0)
