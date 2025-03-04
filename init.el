@@ -298,7 +298,7 @@
 
 (defun conf--skip-temp-buffers (func)
   (interactive)
-  (let (( bread-crumb (buffer-name) ))
+  (let ((bread-crumb (buffer-name)))
     (funcall func)
     (while
         (and
