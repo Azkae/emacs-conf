@@ -96,7 +96,8 @@
   (setq-default comint-scroll-show-maximum-output nil)
   (define-key comint-mode-map (kbd "M-p") nil)
   (define-key comint-mode-map (kbd "M-b") #'comint-previous-input)
-  (define-key comint-mode-map (kbd "M-r") nil))
+  (define-key comint-mode-map (kbd "M-r") nil)
+  (define-key comint-mode-map (kbd "C-M-l") nil))
 
 ;; TODO: use bind-key: https://melpa.org/#/bind-key
 
@@ -1373,6 +1374,11 @@ is a prefix length override, which is t for manual completion."
 (global-set-key (kbd "<C-M-right>") 'conf--move-buffer-right)
 (global-set-key (kbd "<C-M-up>") 'conf--move-buffer-up)
 (global-set-key (kbd "<C-M-down>") 'conf--move-buffer-down)
+
+(global-set-key (kbd "C-M-h") 'conf--move-buffer-left)
+(global-set-key (kbd "C-M-l") 'conf--move-buffer-right)
+(global-set-key (kbd "C-M-k") 'conf--move-buffer-up)
+(global-set-key (kbd "C-M-j") 'conf--move-buffer-down)
 
 (repeat-mode 1)
 (put 'other-window 'repeat-map nil)
