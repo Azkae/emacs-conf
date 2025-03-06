@@ -414,6 +414,7 @@
     (call-interactively 'org-meta-return)))
 
 (use-package org
+  :straight (:type built-in)
   :bind
   (:map org-mode-map
         ("M-." . org-open-at-point)
