@@ -767,7 +767,7 @@
     (call-interactively 'xref-find-references)))
 
 (use-package eglot
-  :straight (:type built-in)
+  ;; :straight (:type built-in)
   :bind
   (("M-." . conf--xref-find-definitions)
    ("M-?" . conf--xref-find-references)
@@ -1387,7 +1387,9 @@ is a prefix length override, which is t for manual completion."
 (use-package dape
   :init
   (setq dape-key-prefix "\C-cd")
-  (add-hook 'dape-compile-compile-hooks 'kill-buffer))
+  (add-hook 'dape-compile-compile-hooks 'kill-buffer)
+  :config
+  (set-face-attribute 'dape-exception-description-face nil :foreground "black"))
 
 ;; Build and run in debugger:
 ;;   codelldb-cc :cwd "/path/base_dir" :program "/path/base_dir/program" :args ["test"] compile "make -k"
