@@ -2436,6 +2436,14 @@ With universal argument ARG, open in another window."
 
 (advice-add #'vertico-exit :before 'conf--vertico-exit-advice)
 
+(use-package ediff
+  :straight (:type built-in)
+  :config
+  (setq ediff-split-window-function	'split-window-horizontally)
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  (winner-mode)
+  (add-hook 'ediff-after-quit-hook-internal 'winner-undo))
+
 
 ;; TODO: test direnv
 
