@@ -1977,6 +1977,7 @@ Used to preselect nearest headings and imenu items.")
   (global-set-key (kbd "C-M-k") nil)
   (global-set-key (kbd "C-M-l") nil)
   (global-set-key (kbd "C-c /") nil)
+  (global-set-key (kbd "C-c _") nil)
 
   (setq meow-next-thing-include-syntax '((word "" "") (symbol "" "")))
 
