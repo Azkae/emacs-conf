@@ -2213,6 +2213,11 @@ The thing `string' is not available in Emacs 27.'"
                      '(pair ("<") (">")))
 (add-to-list 'meow-char-thing-table '(?x . xml))
 
+(meow-thing-register 'inside-xml
+                     '(pair (">") ("<"))
+                     '(pair (">") ("<")))
+(add-to-list 'meow-char-thing-table '(?< . inside-xml))
+
 (use-package meow-vterm
   :straight (meow-vterm :type git :host github :repo "accelbread/meow-vterm")
   :bind ((:map meow-vterm-normal-mode-map
