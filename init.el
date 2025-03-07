@@ -2442,6 +2442,10 @@ With universal argument ARG, open in another window."
   (winner-mode)
   (add-hook 'ediff-after-quit-hook-internal 'winner-undo))
 
+(defun conf--restart ()
+  (interactive)
+  (call-process "sh" nil nil nil "-c" "emacsclient -e \"(kill-emacs)\" && emacsclient -c -n -a \"\" && sleep 1 && emacsclient -e \"(progn (select-frame-set-input-focus (selected-frame)))\" &"))
+
 
 ;; TODO: test direnv
 
