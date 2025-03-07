@@ -290,7 +290,8 @@
         "\\*Flymake .*\\*"
         "\\*apheleia-.*\\*"
         "\\*Native-compile-Log\\*"
-        "\\*help\\*"))
+        "\\*help\\*"
+        "\\*Ediff.*\\*"))
 
 (defun is-buffer-valid (buffer-name)
   (not (cl-loop for boring-buffer in boring-buffers
