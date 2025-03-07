@@ -547,7 +547,8 @@
    ("M-N" . mc/unmark-next-like-this)   ; not sure about this one
    ("M-v" . nil))
   :config
-  (add-to-list 'mc/unsupported-minor-modes 'electric-indent-mode))
+  (add-to-list 'mc/unsupported-minor-modes 'electric-indent-mode)
+  (add-to-list 'mc/unsupported-minor-modes 'corfu-mode))
 
 (use-package yasnippet
   :diminish yas-minor-mode
