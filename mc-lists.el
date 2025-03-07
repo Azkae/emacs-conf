@@ -43,6 +43,7 @@
 
 (setq mc/cmds-to-run-once
       '(
+        conf--undo
         conf--vterm-toggle
         meow-insert-exit
         meow-keypad
