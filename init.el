@@ -2327,6 +2327,14 @@ With universal argument ARG, open in another window."
 (global-set-key (kbd "M-p k") 'project-compile)
 (global-set-key (kbd "M-p a") 'conf--jump-to-same-base-name)
 
+(global-set-key (kbd "C-c p p") 'project-switch-project)
+(global-set-key (kbd "C-c p f") 'project-find-file)
+(global-set-key (kbd "C-c p s") 'consult-ripgrep)
+(global-set-key (kbd "C-c p k") 'project-compile)
+(global-set-key (kbd "C-c p a") 'conf--jump-to-same-base-name)
+
+(global-set-key (kbd "C-c f") 'find-file)
+
 (setq project-switch-commands '((project-find-file "Find file" "f")
                                 (project-dired "Dired" "D")
                                 (consult-ripgrep "ripgrep" "s")
