@@ -1695,7 +1695,8 @@ then \\[keyboard-quit] to abort the minibuffer."
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
-                 (window-parameters (mode-line-format . none)))))
+                 (window-parameters (mode-line-format . none))))
+  (add-to-list 'embark-default-action-overrides '(file . find-file)))
 
 (defvar consult--previous-point nil
     "Location of point before entering minibuffer.
