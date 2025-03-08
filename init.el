@@ -785,6 +785,7 @@
   (eglot-report-progress t)
   ;; help with perf:
   (eglot-events-buffer-size 0)
+  (eglot-code-action-indicator "h")
   :config
 
   ;; (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed")))
