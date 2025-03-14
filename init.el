@@ -2404,7 +2404,7 @@ With universal argument ARG, open in another window."
   (:map aidermacs-minor-mode
    ("C-c /" . insert-project-file-path))
   :config
-  (setq aidermacs-auto-commits t)
+  (setq aidermacs-auto-commits nil)
   (setq aidermacs-default-model "anthropic/claude-3-7-sonnet-20250219")
   (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
     (setenv "ANTHROPIC_API_KEY" anthropic-api-key))
