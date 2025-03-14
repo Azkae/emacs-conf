@@ -2452,8 +2452,19 @@ With universal argument ARG, open in another window."
   :config
   (setq ediff-split-window-function	'split-window-horizontally)
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
-  (winner-mode)
-  (add-hook 'ediff-after-quit-hook-internal 'winner-undo))
+  ;; (winner-mode)
+  ;; (add-hook 'ediff-after-quit-hook-internal 'winner-undo)
+  
+  (defun conf--ediff-hook ()
+    (ediff-setup-keymap)
+    ;; (define-key ediff-mode-map "C-j" 'ediff-next-difference)
+    ;; (define-key ediff-mode-map "C-k" 'ediff-previous-difference)
+    (define-key ediff-mode-map (kbd "M-j")
+                (lambda () (interactive) (ediff-scroll-vertically -4)))
+     (define-key ediff-mode-map (kbd "M-k")
+                 (lambda () (interactive) (ediff-scroll-vertically 4))))
+
+  (add-hook 'ediff-mode-hook 'conf--ediff-hook))
 
 (defun conf--restart ()
   (interactive)
