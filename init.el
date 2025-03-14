@@ -2341,7 +2341,8 @@ With universal argument ARG, open in another window."
                                 (project-dired "Dired" "D")
                                 (consult-ripgrep "ripgrep" "s")
                                 (magit-project-status "Magit" "g")
-                                (conf--vterm-toggle-project "Vterm" "e")))
+                                (conf--vterm-toggle-project "Vterm" "e")
+                                (project-compile "Compike" "k")))
 
 ;; (which-function-mode)
 
