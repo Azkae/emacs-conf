@@ -2468,8 +2468,11 @@ With universal argument ARG, open in another window."
 
 (defun conf--restart ()
   (interactive)
-  (call-process "sh" nil nil nil "-c" "emacsclient -e \"(kill-emacs)\" && emacsclient -c -n -a \"\" && emacsclient -e \"(progn (switch-to-buffer \\\"*Messages*\\\") (select-frame-set-input-focus (selected-frame)))\" &"))
-
+  (call-process "sh" nil nil nil "-c"
+                (concat "emacsclient -e \"(kill-emacs)\" && "
+                        "emacsclient -c -n -a \"\" && "
+                        "sleep 1 && "
+                        "emacsclient -e \"(progn (switch-to-buffer \\\"*Messages*\\\") (select-frame-set-input-focus (selected-frame)))\" &")))
 
 
 ;; TODO: test direnv
