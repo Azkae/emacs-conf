@@ -125,9 +125,9 @@
 (define-key key-translation-map (kbd "M-g") (kbd "C-g"))
 ; (define-key crm-local-completion-map (kbd "M-v") nil)
 
-(global-set-key (kbd "C-c p b") 'profiler-start)
-(global-set-key (kbd "C-c p r") 'profiler-report)
-(global-set-key (kbd "C-c p e") 'profiler-stop)
+;; (global-set-key (kbd "C-c p b") 'profiler-start)
+;; (global-set-key (kbd "C-c p r") 'profiler-report)
+;; (global-set-key (kbd "C-c p e") 'profiler-stop)
 
 (global-set-key (kbd "C-x C-o") 'other-window)
 
