@@ -154,6 +154,8 @@
 (global-set-key (kbd "M-u") nil)
 (global-set-key (kbd "C-S-x C-S-c") 'save-buffers-kill-terminal)
 
+(global-set-key (kbd "C-c e") 'kmacro-end-and-call-macro)
+
 ;; (global-set-key (kbd "<mouse-3>") 'xref-find-definitions)
 ;; (global-set-key (kbd "<mouse-4>") 'xref-go-back)
 
