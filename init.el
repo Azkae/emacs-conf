@@ -2241,7 +2241,6 @@ The thing `string' is not available in Emacs 27.'"
   (meow-vterm-enable))
 
 (use-package meow-tree-sitter
-  :straight (meow-tree-sitter :fork (:host github :repo "Azkae/meow-tree-sitter"))
   :init
   (meow-tree-sitter-register-defaults))
 
