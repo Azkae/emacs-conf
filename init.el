@@ -769,7 +769,7 @@
     (call-interactively 'xref-find-references)))
 
 (use-package eglot
-  ;; :straight (:type built-in)
+  :straight (:type built-in)
   :bind
   (("M-." . conf--xref-find-definitions)
    ("M-?" . conf--xref-find-references)
