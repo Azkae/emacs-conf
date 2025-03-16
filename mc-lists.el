@@ -13,6 +13,8 @@
         insert-pair
         kill-region-maybe
         mark-sexp
+        markdown-beginning-of-line
+        markdown-end-of-line
         markdown-outdent-or-delete
         meow-back-word
         meow-bounds-of-thing
@@ -23,6 +25,7 @@
         meow-join
         meow-kill
         meow-left
+        meow-line
         meow-mark-symbol
         meow-mark-word
         meow-next
