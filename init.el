@@ -425,7 +425,7 @@
         ("M-H"        . org-shiftmetaleft)
         ("M-L"        . org-shiftmetaright))
   :config
-  (setq org-startup-folded t)
+  ;; (setq org-startup-folded t)
   (setq org-confirm-babel-evaluate nil)
   (setq org-support-shift-select t)
   (modify-syntax-entry ?= "." org-mode-syntax-table)
