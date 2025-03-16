@@ -802,17 +802,21 @@
   (add-to-list 'eglot-stay-out-of 'company-backends)
   ;; Enable flymake only on save:
   ;; This allows to trigger flymake only when the sever published diagnostics
-  (cl-defmethod eglot-handle-notification :after
-    (_server (_method (eql textDocument/publishDiagnostics)) &key uri
-             &allow-other-keys)
-    (when-let ((buffer (find-buffer-visiting (eglot-uri-to-path uri))))
-      (with-current-buffer buffer
-        (when (and (eq nil flymake-no-changes-timeout)
-                   (not (buffer-modified-p)))
-          (flymake-start t)
-          (when (bound-and-true-p sideline-mode)
-            (sideline--reset)
-            (sideline-render)))))))
+  (defun conf--eglot-publishDiagnostics (server method &rest args)
+    (when (eq method 'textDocument/publishDiagnostics)
+      (let ((uri (plist-get args :uri)))
+        (when-let ((buffer (find-buffer-visiting (eglot-uri-to-path uri))))
+          (with-current-buffer buffer
+            (when (and (eq nil flymake-no-changes-timeout)
+                       (not (buffer-modified-p)))
+              (flymake-start t)
+              (when (bound-and-true-p sideline-mode)
+                (sideline--reset)
+                (sideline-render))))))))
+  
+  (advice-add 'eglot-handle-notification :after #'conf--eglot-publishDiagnostics))
+
+
 
 (el-patch-feature eglot)
 
