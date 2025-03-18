@@ -1723,27 +1723,14 @@ Used to preselect nearest headings and imenu items.")
 (defun conf--vertico-set-update-selection(&rest _)
   (setq conf--vertico-update-selection t))
 
-
 (defun conf--closest-integer-index-sorted (target int-list predicate)
   "Return the index of the closest integer to TARGET in a sorted INT-LIST using PREDICATE to extract integer values."
-  (let ((left 0)
-        (right (1- (length int-list))))
-    ;; Binary search to narrow down the closest index
-    (while (< left right)
-      (let* ((mid (floor (+ left right) 2))
-             (mid-value (funcall predicate (nth mid int-list))))
-        (if (< target mid-value)
-            (setq right mid)
-          (setq left (1+ mid)))))
-    ;; After binary search, `left` is close to the target; check the nearest index
-    (let ((closest left)
-          (closest-value (funcall predicate (nth left int-list))))
-      (when (and (> left 0)
-                 (< (abs (- target (funcall predicate (nth (1- left) int-list))))
-                    (abs (- target closest-value))))
-        (setq closest (1- left)))
-      closest)))
-
+  (cl-loop for num in int-list
+           for index from 0
+           for value = (funcall predicate num)
+           do (when (>= value target)
+                (cl-return (max 0 (- index 1))))
+           finally return (- index 1)))
 
 (defvar conf--minibuffer-command-stack nil
   "Stack of commands that opened each minibuffer session, tracked by depth.")
