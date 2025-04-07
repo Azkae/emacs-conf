@@ -1464,7 +1464,7 @@ is a prefix length override, which is t for manual completion."
 
 (use-package gptel
   :config
-
+  (global-set-key (kbd "C-c , g") 'gptel)
   (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
     (setq
      gptel-model 'claude-3-7-sonnet-20250219
@@ -1490,8 +1490,7 @@ is a prefix length override, which is t for manual completion."
 
   (defun conf--sideline-stop-p ()
     (or (buffer-modified-p) (sideline-stop-p)))
-  (setq sideline-inhibit-display-function #'conf--sideline-stop-p)
-  )
+  (setq sideline-inhibit-display-function #'conf--sideline-stop-p))
 
 (use-package elysium)
 
