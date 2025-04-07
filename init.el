@@ -2207,12 +2207,7 @@ The thing `string' is not available in Emacs 27.'"
 (meow-thing-register 'xml
                      '(pair ("<") (">"))
                      '(pair ("<") (">")))
-(add-to-list 'meow-char-thing-table '(?x . xml))
-
-(meow-thing-register 'inside-xml
-                     '(pair (">") ("<"))
-                     '(pair (">") ("<")))
-(add-to-list 'meow-char-thing-table '(?< . inside-xml))
+(add-to-list 'meow-char-thing-table '(?< . xml))
 
 (use-package meow-vterm
   :straight (meow-vterm :type git :host github :repo "accelbread/meow-vterm")
