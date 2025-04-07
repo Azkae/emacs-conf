@@ -374,7 +374,7 @@
 
 (use-package undo-fu
   :custom
-  (undo-fu-ignore-keyboard-quit t)
+  (undo-fu-ignore-keyboard-quit nil)
   (undo-fu-allow-undo-in-region t)
   :config
   (global-unset-key (kbd "M-z"))
