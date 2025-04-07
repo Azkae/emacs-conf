@@ -48,6 +48,8 @@
       '(
         conf--undo
         conf--vterm-toggle
+        jinx-next
+        meow-grab
         meow-insert-exit
         meow-keypad
         meow-undo
