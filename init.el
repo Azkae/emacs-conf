@@ -150,6 +150,9 @@
 
 (global-set-key (kbd "C-c e") 'kmacro-end-and-call-macro)
 
+;; remap registers
+(define-key global-map (kbd "C-c r") ctl-x-r-map)
+
 ;; (global-set-key (kbd "<mouse-3>") 'xref-find-definitions)
 ;; (global-set-key (kbd "<mouse-4>") 'xref-go-back)
 
