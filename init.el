@@ -2464,6 +2464,12 @@ With universal argument ARG, open in another window."
                         "sleep 1 && "
                         "emacsclient -e \"(progn (switch-to-buffer \\\"*Messages*\\\") (select-frame-set-input-focus (selected-frame)))\" &")))
 
+(use-package gptel-aibo
+  :straight (:host github :repo "dolmens/gptel-aibo")
+  :config
+  ;; TODO/ better keybind
+  (global-set-key (kbd "C-c , c") #'gptel-aibo-summon))
+
 
 ;; TODO: test direnv
 
