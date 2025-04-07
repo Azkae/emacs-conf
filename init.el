@@ -2257,7 +2257,8 @@ The thing `string' is not available in Emacs 27.'"
   :hook (emacs-startup . global-jinx-mode)
   :bind (("M-$" . jinx-correct)
          :map jinx-overlay-map
-         ("M-p" . nil))
+         ("M-p" . nil)
+         ("M-n" . nil))
   :custom
   (jinx-languages "en_US fr"))
 
