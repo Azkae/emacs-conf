@@ -2470,6 +2470,22 @@ With universal argument ARG, open in another window."
   ;; TODO/ better keybind
   (global-set-key (kbd "C-c , c") #'gptel-aibo-summon))
 
+(use-package repeat-fu
+  :commands (repeat-fu-mode repeat-fu-execute)
+  :straight (repeat-fu :type git :host codeberg :repo "ideasman42/emacs-repeat-fu")
+
+  :config
+  (setq repeat-fu-preset 'meow)
+
+  :hook
+  ((meow-mode)
+   .
+   (lambda ()
+     (when (and (not (minibufferp)) (not (derived-mode-p 'special-mode)))
+       (repeat-fu-mode)
+       (define-key meow-normal-state-keymap (kbd "M-'") 'repeat-fu-execute)
+       (define-key meow-insert-state-keymap (kbd "M-'") 'repeat-fu-execute)))))
+
 
 ;; TODO: test direnv
 
