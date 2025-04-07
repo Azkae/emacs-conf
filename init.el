@@ -67,9 +67,6 @@
 (normal-erase-is-backspace-mode 1)
 
 ;; speedup long lines
-(setq bidi-display-reordering nil)
-(setq bidi-inhibit-bpa t)
-(setq bidi-paragraph-direction 'left-to-right)
 (setq auto-window-vscroll nil)
 (setq redisplay-skip-fontification-on-input t)
 (global-so-long-mode 1)
