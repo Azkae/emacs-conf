@@ -1096,7 +1096,8 @@
   :bind
   (("M-§" . eldoc-box-help-at-point))
   :custom
-  (eldoc-idle-delay 0.2))
+  (eldoc-idle-delay 0.2)
+  (add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t))
 
 (defun conf--corfu-active-p ()
   (and corfu-mode completion-in-region-mode))
