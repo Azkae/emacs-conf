@@ -1398,7 +1398,16 @@ is a prefix length override, which is t for manual completion."
   (setq dape-key-prefix "\C-cd")
   (add-hook 'dape-compile-compile-hooks 'kill-buffer)
   :config
-  (set-face-attribute 'dape-exception-description-face nil :foreground "black"))
+  (set-face-attribute 'dape-exception-description-face nil :foreground "black")
+
+  (add-to-list 'dape-configs
+    '(debugpy-attach-port
+       modes (python-mode python-ts-mode)
+       port 8787
+       :request "attach"
+       :type "python"
+       :justMyCode nil
+       :showReturnValue t)))
 
 ;; Build and run in debugger:
 ;;   codelldb-cc :cwd "/path/base_dir" :program "/path/base_dir/program" :args ["test"] compile "make -k"
