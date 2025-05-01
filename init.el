@@ -157,7 +157,7 @@
 ;; (global-set-key (kbd "<mouse-4>") 'xref-go-back)
 
 ;; Disable mouse highlighting
-(setq mouse-highlight nil)
+;; (setq mouse-highlight nil)
 
 (defun move-up (amount)
   (deactivate-mark)
