@@ -811,13 +811,10 @@
       (let ((uri (plist-get args :uri)))
         (when-let ((buffer (find-buffer-visiting (eglot-uri-to-path uri))))
           (with-current-buffer buffer
-            (when (and (eq nil flymake-no-changes-timeout)
-                       (not (buffer-modified-p)))
-              (flymake-start t)
-              (when (bound-and-true-p sideline-mode)
-                (sideline--reset)
-                (sideline-render))))))))
-  
+            (when (bound-and-true-p sideline-mode)
+              (sideline--reset)
+              (sideline-render-this)))))))
+
   (advice-add 'eglot-handle-notification :after #'conf--eglot-publishDiagnostics))
 
 
