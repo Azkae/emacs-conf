@@ -756,6 +756,8 @@
 
 (use-package nhexl-mode)
 
+(define-key hexl-mode-map (kbd "M-X") nil)
+
 (use-package dockerfile-mode)
 
 (defun conf--xref-find-definitions ()
