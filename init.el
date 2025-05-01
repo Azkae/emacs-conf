@@ -1107,18 +1107,18 @@
   (corfu-quit)
   (corfu--auto-complete-deferred))
 
-(defun conf--corfu-post-command()
-  "Refresh completion when prefix length is 3 and no candidates are found."
-  (when (and corfu-mode completion-in-region-mode)
-    (let* ((input (car corfu--input))
-           (str (if (thing-at-point 'filename) (file-name-nondirectory input) input))
-           (len (length str))
-           (candidates corfu--candidates))
-      (when (and (= len 3)
-                 ;; (>= len 3)
-                 ;; (= (% len 3) 0)
-                 (not (try-completion str candidates)))
-        (conf--corfu-reset)))))
+;; (defun conf--corfu-post-command()
+;;   "Refresh completion when prefix length is 3 and no candidates are found."
+;;   (when (and corfu-mode completion-in-region-mode)
+;;     (let* ((input (car corfu--input))
+;;            (str (if (thing-at-point 'filename) (file-name-nondirectory input) input))
+;;            (len (length str))
+;;            (candidates corfu--candidates))
+;;       (when (and (= len 3)
+;;                  ;; (>= len 3)
+;;                  ;; (= (% len 3) 0)
+;;                  (not (try-completion str candidates)))
+;;         (conf--corfu-reset)))))
 
 (el-patch-feature corfu)
 
@@ -1175,7 +1175,8 @@ is a prefix length override, which is t for manual completion."
   :hook
   (corfu-mode . (lambda ()
                   (add-hook 'yas-keymap-disable-hook 'conf--corfu-active-p nil t)
-                  (add-hook 'post-command-hook #'conf--corfu-post-command)))
+                  ;; (add-hook 'post-command-hook #'conf--corfu-post-command)
+                  ))
   ((git-commit-mode gptel-mode) . (lambda ()
                                     (corfu-mode -1)))
   :custom
