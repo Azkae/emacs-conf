@@ -1675,11 +1675,11 @@ then \\[keyboard-quit] to abort the minibuffer."
  consult-bookmark consult-recent-file consult-xref
  consult--source-bookmark consult--source-file-register
  consult--source-recent-file consult--source-project-recent-file
- :preview-key '(:debounce 0.01 any)) ;; Option 1: Delay preview
+ :preview-key '(:debounce 0.1 any)) ;; Option 1: Delay preview
 
-(consult-customize
- find-file
- :preview-key '(:debounce 0.01 any))
+;; (consult-customize
+;;  find-file
+;;  :preview-key '(:debounce 0.01 any))
 
 
 (use-package marginalia
