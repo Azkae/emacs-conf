@@ -1711,6 +1711,7 @@ then \\[keyboard-quit] to abort the minibuffer."
                  nil
                  (window-parameters (mode-line-format . none))))
   (add-to-list 'embark-default-action-overrides '(file . find-file)))
+(require 'embark-consult)
 
 (defvar consult--previous-point nil
     "Location of point before entering minibuffer.
@@ -1729,39 +1730,40 @@ Used to preselect nearest headings and imenu items.")
 (advice-add #'vertico--recompute :after #'conf--vertico-set-update-selection)
 
 (defun conf--vertico-set-update-selection(&rest _)
+  "Used to re-trigger a candidate selection after a new input"
   (setq conf--vertico-update-selection t))
 
-(defun conf--closest-integer-index-sorted (target int-list predicate)
-  "Return the index of the closest integer to TARGET in a sorted INT-LIST using PREDICATE to extract integer values."
-  (cl-loop for num in int-list
+(defun conf--closest-candidates-index (target candidates predicate)
+  "Return the index of the closest candidate to TARGET using PREDICATE to extract candidate position."
+  (cl-loop for candidate in candidates
            for index from 0
-           for value = (funcall predicate num)
-           do (when (>= value target)
+           for candidate-pos = (funcall predicate candidate)
+           do (when (>= candidate-pos target)
                 (cl-return (max 0 (- index 1))))
            finally return (- index 1)))
 
-(defvar conf--minibuffer-command-stack nil
-  "Stack of commands that opened each minibuffer session, tracked by depth.")
+;; (defvar conf--minibuffer-command-stack nil
+;;   "Stack of commands that opened each minibuffer session, tracked by depth.")
 
-(defun conf--push-minibuffer-command ()
-  "Push the command that opens the minibuffer onto `conf--minibuffer-command-stack`."
-  (push this-command conf--minibuffer-command-stack))
+;; (defun conf--push-minibuffer-command ()
+;;   "Push the command that opens the minibuffer onto `conf--minibuffer-command-stack`."
+;;   (push this-command conf--minibuffer-command-stack))
 
-(defun conf--pop-minibuffer-command ()
-  "Pop the last command from `conf--minibuffer-command-stack` upon minibuffer exit."
-  (when conf--minibuffer-command-stack
-    (pop conf--minibuffer-command-stack)))
+;; (defun conf--pop-minibuffer-command ()
+;;   "Pop the last command from `conf--minibuffer-command-stack` upon minibuffer exit."
+;;   (when conf--minibuffer-command-stack
+;;     (pop conf--minibuffer-command-stack)))
 
-;; Add hooks to track entering and exiting minibuffers
-(add-hook 'minibuffer-setup-hook #'conf--push-minibuffer-command)
-(add-hook 'minibuffer-exit-hook #'conf--pop-minibuffer-command)
+;; ;; Add hooks to track entering and exiting minibuffers
+;; (add-hook 'minibuffer-setup-hook #'conf--push-minibuffer-command)
+;; (add-hook 'minibuffer-exit-hook #'conf--pop-minibuffer-command)
 
-(require 'embark-consult)
 (defun conf--consult-vertico-update-selection (orig-fun &rest args)
   "Pick the nearest candidate rather than the first after updating candidates."
   (setq conf--vertico-update-selection nil)
   (let ((result (apply orig-fun args))
-        (conf--current-minibuffer-command (car conf--minibuffer-command-stack)))
+        (conf--current-minibuffer-command current-minibuffer-command ;; (car conf--minibuffer-command-stack)
+                                          ))
 
     ;; (message "conf--vertico-update-selection: %s" conf--vertico-update-selection)
     (when (and conf--vertico-update-selection
@@ -1769,8 +1771,8 @@ Used to preselect nearest headings and imenu items.")
                (memq conf--current-minibuffer-command
                      '(consult-org-heading consult-outline consult-line conf--consult-line)))
       (setq vertico--index
-            (max 0 ; if none above, choose the first below
-                 (or (conf--closest-integer-index-sorted
+            (max 0
+                 (or (conf--closest-candidates-index
                       consult--previous-point
                       vertico--candidates
                       (lambda (cand)
