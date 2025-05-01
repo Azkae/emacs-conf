@@ -407,8 +407,8 @@
    ("C-c i n" . flymake-goto-next-error))
   :custom
   (flymake-indicator-type 'fringes)
-  ;; (flymake-show-diagnostics-at-end-of-line 'short)
-  (flymake-no-changes-timeout nil))
+  ;; (flymake-no-changes-timeout nil)
+  )
 
 (defun conf--org-open-link-maybe()
   (interactive)
