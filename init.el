@@ -1318,23 +1318,30 @@ is a prefix length override, which is t for manual completion."
   (diff-hl-update-async t)
   (diff-hl-disable-on-remote t))
 
-;; Poetry project tracking
+;; Poetry/UV project tracking
 
-(defvar conf--poetry-current-root nil)
-(defun conf--poetry-track-virtualenv()
+(defvar conf--python-current-root nil)
+(defun conf--python-track-virtualenv()
   (interactive)
   (when (not (file-remote-p buffer-file-name))
     (let ((root (locate-dominating-file default-directory "pyproject.toml")))
-      (when (and root (not (string= root conf--poetry-current-root)))
-        (let ((process-environment (cl-remove-if
+      (when (and root (not (string= root conf--python-current-root)))
+        (message "checking for root %s" root)
+        (if-let* ((venv-path (expand-file-name ".venv" root))
+                  ((file-directory-p venv-path)))
+            (progn
+              (message "Applying venv: %s (.venv)" venv-path)
+              (setq conf--python-current-root root)
+              (pyvenv-activate venv-path))
+          (let ((process-environment (cl-remove-if
                                     (lambda (element) (string-prefix-p "VIRTUAL_ENV=" element))
                                     process-environment)))
           (let ((venv (string-trim (shell-command-to-string "poetry env info --path"))))
-            (message "Applying venv: %s" venv)
-            (setq conf--poetry-current-root root)
-            (pyvenv-activate venv)))))))
+            (message "Applying venv: %s (poetry)" venv)
+            (setq conf--python-current-root root)
+            (pyvenv-activate venv))))))))
 
-(add-hook 'find-file-hook 'conf--poetry-track-virtualenv)
+(add-hook 'find-file-hook 'conf--python-track-virtualenv)
 
 ;; TODO: remake with project.el
 ;; (define-minor-mode conf--poetry-tracking-mode
