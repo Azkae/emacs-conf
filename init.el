@@ -2453,6 +2453,7 @@ With universal argument ARG, open in another window."
     (run-with-timer 0 nil
                     (lambda () (interactive)
                       (when (and (boundp history-var)
+                                 (not (equal (symbol-value history-var) t))
                                  (not (memq history-var conf--use-default-history)))
                         ;; (message "memory var %s" history-var)
                         (set history-var (cdr (symbol-value history-var)))
