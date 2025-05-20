@@ -565,14 +565,17 @@
    :map magit-status-mode-map
    ("M-p" . nil)
    :map magit-diff-mode-map
-   ("M-p" . nil))
+   ("M-p" . nil)
+   :map magit-hunk-section-map
+   ("C-j" . nil))
   :custom
   (magit-diff-refine-hunk 'all)
   (magit-list-refs-sortby "-creatordate")
   (magit-diff-visit-avoid-head-blob t)
   (magit-auto-revert-immediately t)
   (magit-bury-buffer-function (lambda (_) (magit-mode-quit-window t)))
-  (vc-display-status nil))
+  (vc-display-status nil)
+  (add-hook 'magit-pre-refresh-hook 'magit-maybe-prime-refresh-cache))
 
 ;; This git is faster got some reason
 (let ((git-path "/Applications/Xcode.app/Contents/Developer/usr/bin/git"))
