@@ -2537,6 +2537,17 @@ With universal argument ARG, open in another window."
        (define-key meow-normal-state-keymap (kbd "M-'") 'repeat-fu-execute)
        (define-key meow-insert-state-keymap (kbd "M-'") 'repeat-fu-execute)))))
 
+(use-package minuet
+  :bind
+  (("C-c , i" . #'minuet-complete-with-minibuffer)
+   ("C-c m" . #'minuet-configure-provider))
+  :custom
+  (minuet-provider 'claude))
+
+(use-package casual
+  :custom
+  (casual-timezone-datestamp-format "%a %b %-e %Y, %H:%M"))
+
 
 ;; TODO: test direnv
 
