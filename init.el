@@ -160,6 +160,10 @@
 ;; Disable mouse highlighting
 ;; (setq mouse-highlight nil)
 
+(defun conf--disable-keys (map keys)
+  (dolist (key keys)
+    (define-key map (kbd key) nil)))
+
 (defun move-up (amount)
   (deactivate-mark)
   (condition-case nil
@@ -456,6 +460,7 @@
 (add-to-list 'insert-pair-alist '(?` ?`))
 
 (use-package ws-butler
+  :straight (:type git :host github :repo "lewang/ws-butler")
   :diminish ws-butler-mode
   :hook (prog-mode . ws-butler-mode))
 
@@ -1277,7 +1282,7 @@ is a prefix length override, which is t for manual completion."
   (fancy-compilation-override-colors nil))
 (define-key compilation-mode-map (kbd "M-p") nil)
 
-(define-key diff-mode-map (kbd "M-p") nil)
+(conf--disable-keys diff-mode-map '("M-p" "M-h" "M-j" "M-k" "M-l"))
 
 ;; (defun bury-compile-buffer-if-successful (buffer string)
 ;;   "Bury a compilation buffer if succeeded without warnings "
@@ -1325,7 +1330,6 @@ is a prefix length override, which is t for manual completion."
   (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
   :custom
-  ;; TODO: re-enable when issue https://github.com/dgutov/diff-hl/issues/213 is fixed
   (diff-hl-update-async t)
   (diff-hl-disable-on-remote t))
 
@@ -1354,7 +1358,6 @@ is a prefix length override, which is t for manual completion."
 
 (add-hook 'find-file-hook 'conf--python-track-virtualenv)
 
-;; TODO: remake with project.el
 ;; (define-minor-mode conf--poetry-tracking-mode
 ;;   "Global mode to track poetry projects"
 ;;   :global t
@@ -2153,7 +2156,7 @@ Used to preselect nearest headings and imenu items.")
      '("q" . nil)
      '("Q" . meow-goto-line)
      '("r" . meow-replace)
-     '("R" . meow-swap-grab)
+     '("R" . meow-replace)            ; meow-swap-grab
      '("s" . meow-kill)
      '("t" . meow-till)
      '("T" . (lambda () (interactive) (let ((current-prefix-arg -1))
@@ -2309,7 +2312,11 @@ The thing `string' is not available in Emacs 27.'"
   (tramp-set-completion-function
    "ssh" (append (tramp-get-completion-function "ssh") '((tramp-parse-sconfig "~/.ssh/config"))))
   (tramp-set-completion-function
-   "scp" (append (tramp-get-completion-function "scp") '((tramp-parse-sconfig "~/.ssh/config")))))
+   "scp" (append (tramp-get-completion-function "scp") '((tramp-parse-sconfig "~/.ssh/config"))))
+  ;; see https://www.gnu.org/software/emacs/manual/html_node/tramp/Remote-processes.html#Improving-performance-of-asynchronous-remote-processes-1
+  (connection-local-set-profile-variables
+   'remote-direct-async-process
+   '((tramp-direct-async-process . t))))
 
 (defun conf--diff-and-save-buffer ()
   "View diff and optionally save the buffer."
@@ -2338,6 +2345,9 @@ With universal argument ARG, open in another window."
          (files (remove current-file
                        (directory-files dir t (concat "^" (regexp-quote base-name) "\\."))))
          (find-func (if arg #'find-file-other-window #'find-file)))
+    (unless files
+      (setq files (remove current-file
+                          (directory-files dir t "[^.].*"))))
     (cond
      ((null files)
       (message "No other files with same base name found"))
