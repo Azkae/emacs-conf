@@ -6,6 +6,7 @@
         conf--backward-delete-word
         conf--meow-change-and-mark
         conf--meow-insert-wrap
+        crux-upcase-region
         electric-pair-delete-pair
         end-of-buffer
         ignore
@@ -16,6 +17,7 @@
         markdown-beginning-of-line
         markdown-end-of-line
         markdown-outdent-or-delete
+        meow-append
         meow-back-word
         meow-bounds-of-thing
         meow-cancel-selection
@@ -48,6 +50,7 @@
       '(
         conf--undo
         conf--vterm-toggle
+        describe-key
         jinx-next
         meow-grab
         meow-insert-exit
