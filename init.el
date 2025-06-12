@@ -85,10 +85,11 @@
 (use-package comint
   :straight (:type built-in)
   :config
-  (setq-default comint-scroll-to-bottom-on-output t)
+  (setq comint-output-filter-functions (remove 'comint-postoutput-scroll-to-bottom comint-output-filter-functions))
+  (setq-default comint-scroll-to-bottom-on-output nil)
   (setq-default comint-scroll-to-bottom-on-input t)
   (setq-default comint-scroll-show-maximum-output nil)
-  (define-key comint-mode-map (kbd "M-p") nil)
+  (define-key comint-mode-map (kbd "M-p") #'comint-previous-input)
   (define-key comint-mode-map (kbd "M-b") #'comint-previous-input)
   (define-key comint-mode-map (kbd "M-r") nil)
   (define-key comint-mode-map (kbd "C-M-l") nil))
@@ -575,6 +576,7 @@
   (magit-auto-revert-immediately t)
   (magit-bury-buffer-function (lambda (_) (magit-mode-quit-window t)))
   (vc-display-status nil)
+  :config
   (add-hook 'magit-pre-refresh-hook 'magit-maybe-prime-refresh-cache))
 
 ;; This git is faster got some reason
@@ -1240,18 +1242,24 @@ is a prefix length override, which is t for manual completion."
           table
           :exclusive 'no)))
 
+(defun conf--aidermacs-keywords-completion-at-point ()
+  (let ((bounds (bounds-of-thing-at-point 'symbol))
+        (keywords '("/add" "/drop" "/reset")))
+    (when bounds
+      (list (car bounds) (cdr bounds) keywords
+            :exclusive 'no))))
+
 (use-package cape
   :init
   (add-hook 'completion-at-point-functions #'cape-file)
-  ;; (add-hook 'completion-at-point-functions #'cape-dabbrev)
   (add-hook 'comint-mode-hook
             (lambda ()
-              (defalias 'conf--test (cape-company-to-capf #'company-dabbrev))
               (setq-local completion-at-point-functions
                           (list
                            (cape-capf-prefix-length
                             (cape-capf-super 'conf--project-files-capf
-                                             #'cape-dabbrev)
+                                             #'cape-dabbrev
+                                             'conf--aidermacs-keywords-completion-at-point)
                             3)
                            'comint-completion-at-point t))))
   )
@@ -2414,13 +2422,14 @@ With universal argument ARG, open in another window."
   (("C-c '" . cycle-quotes)))
 
 (use-package aidermacs
-  :straight (:host github :repo "MatthewZMD/aidermacs" :files ("*.el"))
+  :straight (:fork (:host github :repo "Azkae/aidermacs"))
   :bind
   (:map aidermacs-minor-mode
    ("C-c /" . insert-project-file-path))
   :config
-  (setq aidermacs-auto-commits t)
-  (setq aidermacs-show-diff-after-change nil)
+  ;; (setq aidermacs-auto-commits t)
+  ;; (setq aidermacs-show-diff-after-change nil)
+  ;; (setq aidermacs-use-architect-mode t)
   (setq aidermacs-default-model "anthropic/claude-3-7-sonnet-20250219")
   (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
     (setenv "ANTHROPIC_API_KEY" anthropic-api-key))
@@ -2435,7 +2444,7 @@ With universal argument ARG, open in another window."
          (root (project-root project))
          (files (project-files project))
          (relative-files (mapcar (lambda (f) (file-relative-name f root)) files))
-         (selected (completing-read-multiple "Project file: " relative-files nil t)))
+         (selected (completing-read-multiple "Insert file: " relative-files nil t)))
     (insert (string-join selected " "))))
 
 (defun conf--aidermacs-run-advice (orig-fun &rest args)
@@ -2480,6 +2489,11 @@ With universal argument ARG, open in another window."
                 (lambda () (interactive) (ediff-scroll-vertically -4)))
      (define-key ediff-mode-map (kbd "M-k")
                  (lambda () (interactive) (ediff-scroll-vertically 4))))
+
+  (defun conf--disable-y-or-n-p (orig-fun &rest args)
+    (cl-letf (((symbol-function 'y-or-n-p) (lambda (prompt) t)))
+      (apply orig-fun args)))
+  (advice-add 'ediff-quit :around #'conf--disable-y-or-n-p)
 
   (add-hook 'ediff-mode-hook 'conf--ediff-hook))
 
