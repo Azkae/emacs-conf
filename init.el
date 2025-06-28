@@ -1257,6 +1257,8 @@ is a prefix length override, which is t for manual completion."
             :exclusive 'no))))
 
 (use-package cape
+  :bind
+  (("M-*" . cape-dabbrev))
   :init
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'comint-mode-hook
