@@ -332,9 +332,11 @@
 (global-set-key [remap previous-buffer] 'conf--prev-buffer)
 (global-set-key [remap kill-this-buffer] 'kill-this-buffer-avoid-boring)
 
-;; better performance
-;; (setq gc-cons-threshold 100000000)
-(setq read-process-output-max (* 64 1024)) ;; 64k
+;; better process performance
+(setq read-process-output-max (* 1024 1024))
+
+;; Testing this setting, greatly improve the compilation output speed
+(setq process-adaptive-read-buffering nil)
 
 (defun conf--backward-delete-word ()
   "Delete word backwards, and delete matching pair if at point."
