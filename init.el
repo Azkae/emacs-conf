@@ -2313,6 +2313,14 @@ The thing `string' is not available in Emacs 27.'"
 (use-package tramp
   :straight (:type built-in)
   :config
+  (setq remote-file-name-inhibit-locks t
+        tramp-use-scp-direct-remote-copying t
+        remote-file-name-inhibit-auto-save-visited t)
+
+  (setq tramp-copy-size-limit (* 1024 1024)) ;; 1MB
+  (setq tramp-verbose 2)
+
+  ;; see https://coredumped.dev/2025/06/18/making-tramp-go-brrrr./
   (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='/tmp/tramp.%%C' -o ControlPersist=3600")
   (tramp-set-completion-function
    "ssh" (append (tramp-get-completion-function "ssh") '((tramp-parse-sconfig "~/.ssh/config"))))
