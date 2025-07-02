@@ -1218,6 +1218,8 @@ is a prefix length override, which is t for manual completion."
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-purify))
 
+(use-package async)
+
 ;; project files - capf
 (defvar conf--project-files-cache (make-hash-table :test 'equal))
 (defvar conf--project-files-cache-time (make-hash-table :test 'equal))
@@ -1226,15 +1228,19 @@ is a prefix length override, which is t for manual completion."
   (let* ((root (project-root project))
          (cache-time (gethash root conf--project-files-cache-time))
          (now (current-time)))
-    (if (and cache-time
-             (< (float-time (time-subtract now cache-time)) 10)) ; 10s cache
-        (gethash root conf--project-files-cache)
-      (let ((files (mapcar (lambda (f)
-                            (file-relative-name f root))
-                          (project-files project))))
-        (puthash root files conf--project-files-cache)
-        (puthash root now conf--project-files-cache-time)
-        files))))
+    (when (and cache-time
+               (> (float-time (time-subtract now cache-time)) 10)) ; 10s cache
+      (puthash root now conf--project-files-cache-time)
+      (async-start
+       (lambda ()
+         (require 'project)
+         (mapcar (lambda (f)
+                   (file-relative-name f root))
+                 (project-files project)))
+
+       (lambda (result)
+         (puthash root result conf--project-files-cache))))
+    (gethash root conf--project-files-cache)))
 
 (defun conf--project-files-capf ()
   (when-let* ((project (project-current))
@@ -1261,17 +1267,18 @@ is a prefix length override, which is t for manual completion."
   (("M-*" . cape-dabbrev))
   :init
   (add-hook 'completion-at-point-functions #'cape-file)
-  (add-hook 'comint-mode-hook
-            (lambda ()
-              (setq-local completion-at-point-functions
-                          (list
-                           (cape-capf-prefix-length
-                            (cape-capf-super 'conf--project-files-capf
-                                             #'cape-dabbrev
-                                             'conf--aidermacs-keywords-completion-at-point)
-                            3)
-                           'comint-completion-at-point t))))
-  )
+
+  (defun conf--setup-comint-mode-completions ()
+    (setq-local completion-at-point-functions
+                (list
+                 (cape-capf-prefix-length
+                  (cape-capf-super 'conf--project-files-capf
+                                   #'cape-dabbrev
+                                   'conf--aidermacs-keywords-completion-at-point)
+                  3)
+                 'comint-completion-at-point t)))
+
+  (add-hook 'comint-mode-hook 'conf--setup-comint-mode-completions))
 
 (use-package apheleia
   :hook
