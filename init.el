@@ -1228,7 +1228,7 @@ is a prefix length override, which is t for manual completion."
   (let* ((root (project-root project))
          (cache-time (gethash root conf--project-files-cache-time))
          (now (current-time)))
-    (when (and cache-time
+    (when (or (not cache-time)
                (> (float-time (time-subtract now cache-time)) 10)) ; 10s cache
       (puthash root now conf--project-files-cache-time)
       (async-start
