@@ -33,8 +33,6 @@
   (if (file-exists-p (expand-file-name f))
       (load-file (expand-file-name f))))
 
-;; (load-if-exists "~/.emacs.d/secrets.el")
-
 ;; -------------------
 ;; base emacs settings
 ;; -------------------
@@ -1295,21 +1293,6 @@ is a prefix length override, which is t for manual completion."
 
 (conf--disable-keys diff-mode-map '("M-p" "M-h" "M-j" "M-k" "M-l"))
 
-;; (defun bury-compile-buffer-if-successful (buffer string)
-;;   "Bury a compilation buffer if succeeded without warnings "
-;;   (if (and
-;;        (string-match "compilation" (buffer-name buffer))
-;;        (string-match "finished" string)
-;;        (not
-;;         (with-current-buffer buffer
-;;           (goto-char 1)
-;;           (search-forward "warning" nil t))))
-;;       (run-with-timer 1 nil
-;;                       (lambda (buf)
-;;                         (quit-window nil (get-buffer-window buf)))
-;;                       buffer)))
-;; (add-hook 'compilation-finish-functions 'bury-compile-buffer-if-successful)
-
 (with-eval-after-load 'compile
   (fancy-compilation-mode))
 
@@ -2343,8 +2326,6 @@ The thing `string' is not available in Emacs 27.'"
   (interactive)
   (diff-buffer-with-file))
 
-;; C-x s -> d seems broken, this fixes it. (emacs 30 pre-release)
-;; TODO: try again later by removing the lines below.
 (setq save-some-buffers-action-alist (assq-delete-all ?d save-some-buffers-action-alist))
 (push '(?d (lambda (buff) (with-current-buffer buff (conf--diff-and-save-buffer)) nil) "Show diff")
       save-some-buffers-action-alist)
@@ -2535,12 +2516,6 @@ With universal argument ARG, open in another window."
                         "sleep 1 && "
                         "emacsclient -e \"(progn (switch-to-buffer \\\"*Messages*\\\") (select-frame-set-input-focus (selected-frame)))\" &")))
 
-(use-package gptel-aibo
-  :straight (:host github :repo "dolmens/gptel-aibo")
-  :config
-  ;; TODO/ better keybind
-  (global-set-key (kbd "C-c , c") #'gptel-aibo-summon))
-
 (use-package repeat-fu
   :commands (repeat-fu-mode repeat-fu-execute)
   :straight (repeat-fu :type git :host codeberg :repo "ideasman42/emacs-repeat-fu")
@@ -2559,7 +2534,7 @@ With universal argument ARG, open in another window."
 
 (use-package minuet
   :bind
-  (("C-c , i" . #'minuet-complete-with-minibuffer)
+  (("C-c , c" . #'minuet-complete-with-minibuffer)
    ("C-c m" . #'minuet-configure-provider))
   :custom
   (minuet-provider 'claude))
@@ -2567,7 +2542,6 @@ With universal argument ARG, open in another window."
 (use-package casual
   :custom
   (casual-timezone-datestamp-format "%a %b %-e %Y, %H:%M"))
-
 
 ;; TODO: test direnv
 
