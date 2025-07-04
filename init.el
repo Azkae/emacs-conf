@@ -219,10 +219,22 @@
 (define-coding-system-alias 'UTF-8 'utf-8)
 (define-coding-system-alias 'utf8 'utf-8)
 
+(defun conf--region-more-than-one-line-p ()
+  "Return t if the selected region spans more than one line, nil otherwise.
+Returns nil if there is no active region."
+  (when (use-region-p)
+    (save-excursion
+      (let* ((begin (region-beginning))
+             (end (region-end))
+             (begin-line (progn (goto-char begin) (line-number-at-pos)))
+             (end-line (progn (goto-char end) (line-number-at-pos))))
+        (/= begin-line end-line)))))
+
 ;; Duplicate region
 (defun duplicate-line-or-region (&optional n)
   (interactive "*p")
-  (let ((use-region (use-region-p)))
+  (let ((use-region (and (use-region-p)
+                         (conf--region-more-than-one-line-p))))
     (save-excursion
       (let ((text (if use-region
 		      (buffer-substring (region-beginning) (region-end))
