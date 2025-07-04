@@ -296,7 +296,8 @@
         "\\*apheleia-.*\\*"
         "\\*Native-compile-Log\\*"
         "\\*help\\*"
-        "\\*Ediff.*\\*"))
+        "\\*Ediff.*\\*"
+        "*Shell Command Output*"))
 
 (defun is-buffer-valid (buffer-name)
   (not (cl-loop for boring-buffer in boring-buffers
