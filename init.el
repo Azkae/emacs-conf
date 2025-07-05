@@ -1507,12 +1507,17 @@ is a prefix length override, which is t for manual completion."
 (use-package gptel
   :config
   (global-set-key (kbd "C-c , g") 'gptel)
+  (global-set-key (kbd "C-c , m") 'gptel-menu)
   (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
     (setq
-     gptel-model 'claude-3-7-sonnet-20250219
+     gptel-model 'claude-sonnet-4-20250514
      gptel-backend (gptel-make-anthropic "Claude"
 				     :stream t
 				     :key anthropic-api-key)))
+
+  (setq gptel-default-mode 'org-mode)
+  (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "* ")
+
   (add-to-list 'gptel-directives '(critical . "Prioritize substance, clarity, and depth. Challenge all my proposals, designs, and conclusions as hypotheses to be tested. Sharpen follow-up questions for precision, surfacing hidden assumptions, trade offs, and failure modes early. Default to terse, logically structured, information-dense responses unless detailed exploration is required. Skip unnecessary praise unless grounded in evidence. Explicitly acknowledge uncertainty when applicable. Always propose at least one alternative framing. Accept critical debate as normal and preferred. Treat all factual claims as provisional unless cited or clearly justified. Cite when appropriate. Acknowledge when claims rely on inference or incomplete information. Favor accuracy over sounding certain."))
 
   (gptel-make-tool
@@ -1526,6 +1531,7 @@ is a prefix length override, which is t for manual completion."
    :args (list '(:name "buffer"
                        :type string
                        :description "the name of the buffer whose contents are to be retrieved"))
+   :confirm t
    :category "emacs")
 
   (gptel-make-tool
@@ -1546,6 +1552,52 @@ is a prefix length override, which is t for manual completion."
    :args (list '(:name "variable"
                        :type string
                        :description "function name"))
+   :category "emacs")
+
+  (gptel-make-tool
+   :name "elisp_eval"
+   :function (lambda (code)
+               (condition-case err
+                   (let ((result (eval (read code))))
+                     (format "Result: %S" result))
+                 (error
+                  (format "Error: %S" err))))
+   :description "Evaluate elisp code and return the result"
+   :args (list '(:name "code"
+                       :type string
+                       :description "The elisp code to evaluate"))
+   :confirm t
+   :include t
+   :category "emacs")
+
+  (gptel-make-tool
+   :name "elisp_completion"
+   :function (lambda (prefix limit)
+               (let ((completions '())
+                     (case-fold-search nil)
+                     (max-results (or limit 20)))
+                 (mapatoms
+                  (lambda (symbol)
+                    (when (and (string-prefix-p prefix (symbol-name symbol))
+                               (or (fboundp symbol)
+                                   (boundp symbol)
+                                   (facep symbol)))
+                      (push (symbol-name symbol) completions))))
+                 (let ((sorted-completions (sort completions #'string<)))
+                   (if (<= (length sorted-completions) max-results)
+                       sorted-completions
+                     (append (seq-take sorted-completions max-results)
+                             (list (format "... and %d more"
+                                           (- (length sorted-completions) max-results))))))))
+   :description "Get completion candidates for elisp symbols matching a prefix"
+   :args (list '(:name "prefix"
+                       :type string
+                       :description "The partial symbol name to complete")
+               '(:name "limit"
+                       :type integer
+                       :description "Maximum number of results to return (default: 20)"
+                       :optional t))
+   :confirm nil
    :category "emacs"))
 
 (use-package sideline
@@ -2487,7 +2539,7 @@ With universal argument ARG, open in another window."
   ;; (setq aidermacs-auto-commits t)
   ;; (setq aidermacs-show-diff-after-change nil)
   ;; (setq aidermacs-use-architect-mode t)
-  (setq aidermacs-default-model "anthropic/claude-3-7-sonnet-20250219")
+  (setq aidermacs-default-model "sonnet")
   (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
     (setenv "ANTHROPIC_API_KEY" anthropic-api-key))
   (global-set-key (kbd "C-c a") 'aidermacs-transient-menu)
