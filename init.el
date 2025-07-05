@@ -1572,16 +1572,20 @@ is a prefix length override, which is t for manual completion."
 
   (gptel-make-tool
    :name "elisp_completion"
-   :function (lambda (prefix limit)
+   :function (lambda (prefix limit type show-private)
                (let ((completions '())
                      (case-fold-search nil)
                      (max-results (or limit 20)))
                  (mapatoms
                   (lambda (symbol)
                     (when (and (string-prefix-p prefix (symbol-name symbol))
-                               (or (fboundp symbol)
-                                   (boundp symbol)
-                                   (facep symbol)))
+                               (or show-private
+                                   (not (string-match-p "--" (symbol-name symbol))))
+                               (cond
+                                ((string= type "function") (fboundp symbol))
+                                ((string= type "variable") (boundp symbol))
+                                ((string= type "face") (facep symbol))
+                                (t (or (fboundp symbol) (boundp symbol) (facep symbol)))))
                       (push (symbol-name symbol) completions))))
                  (let ((sorted-completions (sort completions #'string<)))
                    (if (<= (length sorted-completions) max-results)
@@ -1596,6 +1600,15 @@ is a prefix length override, which is t for manual completion."
                '(:name "limit"
                        :type integer
                        :description "Maximum number of results to return (default: 20)"
+                       :optional t)
+               '(:name "type"
+                       :type string
+                       :enum ["function" "variable" "face"]
+                       :description "Filter by symbol type: function, variable, or face. If not specified, returns all types"
+                       :optional t)
+               '(:name "show-private"
+                       :type boolean
+                       :description "If true, show private symbols (those containing -- anywhere in the name)"
                        :optional t))
    :confirm nil
    :category "emacs"))
