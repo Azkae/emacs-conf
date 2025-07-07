@@ -38,7 +38,6 @@ Make sure to install all versions of Fira Mono (Medium, Regular & Bold)
 `emacs -Q -l ~/emacs-conf/min.el`
 
 TODO:
-- meow: explore N for reverse search
-- vertico-repeat with project-switch-project
 - disallow recursive M-o
 - change the region color to blue
+- try https://github.com/konrad1977/flyover
