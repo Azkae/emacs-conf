@@ -1576,7 +1576,7 @@ is a prefix length override, which is t for manual completion."
    :function (lambda (prefix limit type show-private)
                (let ((completions '())
                      (case-fold-search nil)
-                     (max-results (or limit 20)))
+                     (max-results (or limit 50)))
                  (mapatoms
                   (lambda (symbol)
                     (when (and (string-prefix-p prefix (symbol-name symbol))
@@ -1600,7 +1600,7 @@ is a prefix length override, which is t for manual completion."
                        :description "The partial symbol name to complete")
                '(:name "limit"
                        :type integer
-                       :description "Maximum number of results to return (default: 20)"
+                       :description "Maximum number of results to return (default: 50)"
                        :optional t)
                '(:name "type"
                        :type string
