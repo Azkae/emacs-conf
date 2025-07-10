@@ -1433,6 +1433,8 @@ is a prefix length override, which is t for manual completion."
   :config
   (set-face-attribute 'dape-exception-description-face nil :foreground "black")
 
+  (add-hook 'dape-start-hook 'delete-other-windows)
+
   (add-to-list 'dape-configs
     '(debugpy-attach-port
        modes (python-mode python-ts-mode)
