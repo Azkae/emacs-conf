@@ -1268,7 +1268,7 @@ is a prefix length override, which is t for manual completion."
 
 (defun conf--aidermacs-keywords-completion-at-point ()
   (let ((bounds (bounds-of-thing-at-point 'symbol))
-        (keywords '("/add" "/drop" "/reset")))
+        (keywords '("/add" "/drop" "/reset" "/paste")))
     (when bounds
       (list (car bounds) (cdr bounds) keywords
             :exclusive 'no))))
