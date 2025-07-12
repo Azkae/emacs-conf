@@ -1524,40 +1524,6 @@ is a prefix length override, which is t for manual completion."
   (add-to-list 'gptel-directives '(critical . "Prioritize substance, clarity, and depth. Challenge all my proposals, designs, and conclusions as hypotheses to be tested. Sharpen follow-up questions for precision, surfacing hidden assumptions, trade offs, and failure modes early. Default to terse, logically structured, information-dense responses unless detailed exploration is required. Skip unnecessary praise unless grounded in evidence. Explicitly acknowledge uncertainty when applicable. Always propose at least one alternative framing. Accept critical debate as normal and preferred. Treat all factual claims as provisional unless cited or clearly justified. Cite when appropriate. Acknowledge when claims rely on inference or incomplete information. Favor accuracy over sounding certain."))
 
   (gptel-make-tool
-   :name "read_buffer"
-   :function (lambda (buffer)
-               (unless (buffer-live-p (get-buffer buffer))
-                 (error "error: buffer %s is not live." buffer))
-               (with-current-buffer  buffer
-                 (buffer-substring-no-properties (point-min) (point-max))))
-   :description "return the contents of an emacs buffer"
-   :args (list '(:name "buffer"
-                       :type string
-                       :description "the name of the buffer whose contents are to be retrieved"))
-   :confirm t
-   :category "emacs")
-
-  (gptel-make-tool
-   :name "elisp_describe_variable"
-   :function (lambda (variable)
-               (save-window-excursion (describe-variable (intern variable))))
-   :description "describe variable of the current emacs session"
-   :args (list '(:name "variable"
-                       :type string
-                       :description "variable name"))
-   :category "emacs")
-
-  (gptel-make-tool
-   :name "elisp_describe_function"
-   :function (lambda (variable)
-               (save-window-excursion (describe-function (intern variable))))
-   :description "describe elisp function"
-   :args (list '(:name "variable"
-                       :type string
-                       :description "function name"))
-   :category "emacs")
-
-  (gptel-make-tool
    :name "elisp_eval"
    :function (lambda (code)
                (condition-case err
@@ -1570,6 +1536,43 @@ is a prefix length override, which is t for manual completion."
                        :type string
                        :description "The elisp code to evaluate"))
    :confirm t
+   :include t
+   :category "emacs-modify")
+
+  (gptel-make-tool
+   :name "read_buffer"
+   :function (lambda (buffer)
+               (unless (buffer-live-p (get-buffer buffer))
+                 (error "error: buffer %s is not live." buffer))
+               (with-current-buffer  buffer
+                 (buffer-substring-no-properties (point-min) (point-max))))
+   :description "return the contents of an emacs buffer"
+   :args (list '(:name "buffer"
+                       :type string
+                       :description "the name of the buffer whose contents are to be retrieved"))
+   :confirm t
+   :include t
+   :category "emacs")
+
+  (gptel-make-tool
+   :name "elisp_describe_variable"
+   :function (lambda (variable)
+               (save-window-excursion (describe-variable (intern variable))))
+   :description "describe variable of the current emacs session"
+   :args (list '(:name "variable"
+                       :type string
+                       :description "variable name"))
+   :include t
+   :category "emacs")
+
+  (gptel-make-tool
+   :name "elisp_describe_function"
+   :function (lambda (variable)
+               (save-window-excursion (describe-function (intern variable))))
+   :description "describe elisp function"
+   :args (list '(:name "variable"
+                       :type string
+                       :description "function name"))
    :include t
    :category "emacs")
 
@@ -1614,7 +1617,9 @@ is a prefix length override, which is t for manual completion."
                        :description "If true, show private symbols (those containing -- anywhere in the name)"
                        :optional t))
    :confirm nil
-   :category "emacs"))
+   :include t
+   :category "emacs")
+)
 
 (use-package sideline
   :custom
