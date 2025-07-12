@@ -2671,6 +2671,10 @@ With universal argument ARG, open in another window."
   :custom
   (casual-timezone-datestamp-format "%a %b %-e %Y, %H:%M"))
 
+(use-package org-download
+  :hook
+  (org-mode . org-download-enable))
+
 ;; TODO: test direnv
 
 ;; load graphic settings
