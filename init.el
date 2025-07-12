@@ -2476,6 +2476,14 @@ With universal argument ARG, open in another window."
      (t
       (funcall find-func (completing-read "Select file: " files nil t))))))
 
+(defun conf--consult-compile-error-in-compilation ()
+  "Run consult-compile-error in the compilation buffer."
+  (interactive)
+  (if-let ((comp-buffer (get-buffer "*compilation*")))
+      (with-current-buffer comp-buffer
+        (consult-compile-error))
+    (message "No compilation buffer found")))
+
 (global-set-key (kbd "M-p p") 'project-switch-project)
 (global-set-key (kbd "M-p f") 'project-find-file)
 (global-set-key (kbd "M-p s") 'consult-ripgrep)
@@ -2486,6 +2494,7 @@ With universal argument ARG, open in another window."
 (global-set-key (kbd "C-c p f") 'project-find-file)
 (global-set-key (kbd "C-c p s") 'consult-ripgrep)
 (global-set-key (kbd "C-c p k") 'project-compile)
+(global-set-key (kbd "C-c p e") 'conf--consult-compile-error-in-compilation)
 (global-set-key (kbd "C-c p a") 'conf--jump-to-same-base-name)
 
 (global-set-key (kbd "C-c f") 'find-file)
