@@ -594,8 +594,7 @@ Returns nil if there is no active region."
   (magit-auto-revert-immediately t)
   (magit-bury-buffer-function (lambda (_) (magit-mode-quit-window t)))
   (vc-display-status nil)
-  :config
-  (add-hook 'magit-pre-refresh-hook 'magit-maybe-prime-refresh-cache))
+  )
 
 ;; This git is faster got some reason
 (let ((git-path "/Applications/Xcode.app/Contents/Developer/usr/bin/git"))
@@ -2674,6 +2673,11 @@ With universal argument ARG, open in another window."
 (use-package org-download
   :hook
   (org-mode . org-download-enable))
+
+(use-package magit-prime
+  :straight (:type git :host github :repo "Azkae/magit-prime")
+  :config
+  (add-hook 'magit-pre-refresh-hook 'magit-prime-refresh-cache))
 
 ;; TODO: test direnv
 
