@@ -1505,6 +1505,11 @@ is a prefix length override, which is t for manual completion."
   (ns-do-show-character-palette))
 
 (use-package gptel
+  :hook
+  (gptel-mode . corfu-mode)
+  :bind
+  (:map gptel-mode-map
+        ("C-c C-k" . gptel-abort))
   :config
   (global-set-key (kbd "C-c , g") 'gptel)
   (global-set-key (kbd "C-c , m") 'gptel-menu)
@@ -1517,6 +1522,7 @@ is a prefix length override, which is t for manual completion."
 				     :key anthropic-api-key)))
 
   (setq gptel-default-mode 'org-mode)
+  (setq gptel-include-tool-results t)
   (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "* ")
 
   (add-to-list 'gptel-directives '(critical . "Prioritize substance, clarity, and depth. Challenge all my proposals, designs, and conclusions as hypotheses to be tested. Sharpen follow-up questions for precision, surfacing hidden assumptions, trade offs, and failure modes early. Default to terse, logically structured, information-dense responses unless detailed exploration is required. Skip unnecessary praise unless grounded in evidence. Explicitly acknowledge uncertainty when applicable. Always propose at least one alternative framing. Accept critical debate as normal and preferred. Treat all factual claims as provisional unless cited or clearly justified. Cite when appropriate. Acknowledge when claims rely on inference or incomplete information. Favor accuracy over sounding certain."))
@@ -2671,6 +2677,16 @@ With universal argument ARG, open in another window."
 (use-package org-download
   :hook
   (org-mode . org-download-enable))
+
+(use-package macher
+  :straight (:host github :repo "kmontag/macher")
+
+  :custom
+  ;; The org UI has structured navigation and nice content folding.
+  (macher-action-buffer-ui 'org)
+
+  :config
+  (with-eval-after-load 'gptel (macher-install)))
 
 (use-package magit-prime
   :straight (:type git :host github :repo "Azkae/magit-prime")
