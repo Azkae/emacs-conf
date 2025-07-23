@@ -779,6 +779,12 @@ Returns nil if there is no active region."
 (use-package nhexl-mode)
 
 (define-key hexl-mode-map (kbd "M-X") nil)
+(define-key hexl-mode-map (kbd "M-q") nil)
+(define-key hexl-mode-map (kbd "C-x C-h") nil)
+(define-key hexl-mode-map (kbd "C-x C-j") nil)
+(define-key hexl-mode-map (kbd "C-x C-k") nil)
+(define-key hexl-mode-map (kbd "C-x C-l") nil)
+(define-key hexl-mode-map (kbd "M-f") nil)
 
 (use-package dockerfile-mode)
 
