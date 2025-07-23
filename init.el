@@ -524,6 +524,7 @@ Returns nil if there is no active region."
   (setq symbol-overlay-inhibit-map t))
 
 (use-package cmake-mode
+  :defer t
   :bind
   (:map cmake-mode-map
         ;; dump-jump doesn't work on cmake
@@ -768,13 +769,17 @@ Returns nil if there is no active region."
   :hook
   (yaml-mode . toggle-truncate-lines))
 
-(use-package swift-mode)
+(use-package swift-mode
+  :defer t)
 
-(use-package cython-mode)
+(use-package cython-mode
+  :defer t)
 
-(use-package glsl-mode)
+(use-package glsl-mode
+  :defer t)
 
-(use-package jinja2-mode)
+(use-package jinja2-mode
+  :defer t)
 
 (use-package nhexl-mode)
 
@@ -849,29 +854,13 @@ Returns nil if there is no active region."
 
 (el-patch-feature eglot)
 
-(use-package clang-format)
-
 (use-package js
   :straight (:type built-in)
-  :bind
-  (:map js-json-mode-map
-        ("M-." . 'conf--consult-ripgrep))
   :hook
   (js-json-mode . (lambda () (setq indent-tabs-mode nil))))
 
-(use-package rust-mode)
-
-(use-package restclient)
-
-(defun restclient-collapse-all ()
-  (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (while (not (eq (point) (point-max)))
-      (restclient-toggle-body-visibility)
-      (restclient-jump-next))))
-
-(add-hook 'restclient-mode-hook 'restclient-collapse-all)
+(use-package rust-mode
+  :defer t)
 
 (defun smerge-next-safe ()
   (condition-case err
@@ -901,6 +890,7 @@ Returns nil if there is no active region."
 ;;   (add-hook 'solidity-mode-hook '--set-tab-with))
 
 (use-package sqlformat
+  :defer t
   :config
   (setq sqlformat-command 'pgformatter)
   (setq sqlformat-args '("-s2" "-g"))
@@ -1019,11 +1009,13 @@ Returns nil if there is no active region."
 (use-package pyvenv)
 
 (use-package kotlin-mode
+  :defer t
   :config
   (modify-syntax-entry ?< "(>" kotlin-mode-syntax-table)
   (modify-syntax-entry ?> ")<" kotlin-mode-syntax-table))
 
-(use-package groovy-mode)
+(use-package groovy-mode
+  :defer t)
 
 (use-package string-inflection
   :bind
@@ -1330,7 +1322,6 @@ is a prefix length override, which is t for manual completion."
   :custom
   (wgrep-auto-save-buffer t)
   (wgrep-enable-key "\C-c\C-e"))
-(use-package wgrep-helm)
 
 (use-package browse-at-remote
   :config
@@ -1456,6 +1447,7 @@ is a prefix length override, which is t for manual completion."
 ;;   codelldb-cc :cwd "/path/base_dir" :program "/path/base_dir/program" :request "attach" :pid <pid>
 
 (use-package gdscript-mode
+  :defer t
   :hook (gdscript-mode . eglot-ensure))
 
 (use-package org-modern
@@ -1474,6 +1466,7 @@ is a prefix length override, which is t for manual completion."
   )
 
 (use-package terraform-mode
+  :defer t
   :hook
   (terraform-mode . eglot-ensure))
 
@@ -1645,8 +1638,6 @@ is a prefix length override, which is t for manual completion."
   (defun conf--sideline-stop-p ()
     (or (buffer-modified-p) (sideline-stop-p)))
   (setq sideline-inhibit-display-function #'conf--sideline-stop-p))
-
-(use-package elysium)
 
 (defun conf--vertico-preview ()
   "Previews candidate in vertico buffer, unless it's a consult command"
@@ -2398,6 +2389,7 @@ The thing `string' is not available in Emacs 27.'"
          ("C-x C-j" . consult-dir-jump-file)))
 
 (use-package impatient-mode
+  :defer t
   :config
   (setq httpd-port 8087))
 
