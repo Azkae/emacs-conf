@@ -23,6 +23,6 @@
 
 (when (string-equal system-type "darwin")
   (setq mac-command-modifier 'meta
-  mac-option-modifier nil))
+        mac-option-modifier nil))
 
 (global-set-key (kbd "M-X") 'execute-extended-command)

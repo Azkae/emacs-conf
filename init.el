@@ -524,6 +524,7 @@ Returns nil if there is no active region."
   (setq symbol-overlay-inhibit-map t))
 
 (use-package cmake-mode
+  :if (not (eq system-type 'windows-nt))
   :defer t
   :bind
   (:map cmake-mode-map
@@ -898,6 +899,7 @@ Returns nil if there is no active region."
   (add-hook 'sql-mode-hook 'sqlformat-on-save-mode))
 
 (use-package vterm
+  :if (not (eq system-type 'windows-nt))
   :straight (vterm :fork (:host github :repo "Azkae/emacs-libvterm"))
   :init
   (setq vterm-keymap-exceptions '("M-q" "C-q" "C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-v" "M-v" "C-y" "M-y" "M-z" "M-X" "M-O" "M-e" "M-E" "M-l" "M-h"))
@@ -979,6 +981,7 @@ Returns nil if there is no active region."
       (vterm-toggle))))
 
 (use-package vterm-toggle
+  :if (not (eq system-type 'windows-nt))
   :bind
   (("M-e" . conf--vterm-toggle)
    ("M-E" . (lambda () (interactive) (conf--vterm-save-cd) (vterm-toggle-cd)))
@@ -1000,6 +1003,7 @@ Returns nil if there is no active region."
   :autoload vterm-toggle-cd-show vterm-toggle--get-window)
 
 (use-package multi-vterm
+  :if (not (eq system-type 'windows-nt))
   :bind
   (:map vterm-mode-map
         ("M-t" . multi-vterm)
@@ -1022,6 +1026,7 @@ Returns nil if there is no active region."
   ("C-c _" . string-inflection-toggle))
 
 (use-package org-roam
+  :if (not (eq system-type 'windows-nt))
   :diminish org-roam-mode
   :init
   (org-roam-db-autosync-mode)
@@ -2365,6 +2370,7 @@ The thing `string' is not available in Emacs 27.'"
 (add-to-list 'meow-char-thing-table '(?< . xml))
 
 (use-package meow-vterm
+  :if (not (eq system-type 'windows-nt))
   :straight (meow-vterm :type git :host github :repo "accelbread/meow-vterm")
   :bind ((:map meow-vterm-normal-mode-map
                ("M-t"       . multi-vterm)
@@ -2566,6 +2572,7 @@ With universal argument ARG, open in another window."
   (("C-c '" . cycle-quotes)))
 
 (use-package aidermacs
+  :if (not (eq system-type 'windows-nt))
   :bind
   (:map aidermacs-minor-mode
    ("C-c /" . insert-project-file-path))
