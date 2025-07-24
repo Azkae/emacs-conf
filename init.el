@@ -472,11 +472,6 @@ Returns nil if there is no active region."
 (add-to-list 'electric-pair-pairs '(?` . ?`))
 (add-to-list 'insert-pair-alist '(?` ?`))
 
-(use-package ws-butler
-  :straight (:type git :host github :repo "lewang/ws-butler")
-  :diminish ws-butler-mode
-  :hook (prog-mode . ws-butler-mode))
-
 (use-package vundo
   :bind
   (("C-x u" . vundo)
@@ -2700,6 +2695,10 @@ With universal argument ARG, open in another window."
   :straight (:type git :host github :repo "Azkae/magit-prime")
   :config
   (add-hook 'magit-pre-refresh-hook 'magit-prime-refresh-cache))
+
+(use-package ws-butler
+  :diminish ws-butler-mode
+  :hook (prog-mode . ws-butler-mode))
 
 ;; TODO: test direnv
 
