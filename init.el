@@ -1308,7 +1308,9 @@ is a prefix length override, which is t for manual completion."
 
 (use-package zygospore
   :bind
-  (("C-x 1" . zygospore-toggle-delete-other-windows)))
+  (("C-x 1" . zygospore-toggle-delete-other-windows))
+  :custom
+  (zygospore-spore-formation-register-name ?📘))
 
 ;; Note: use dtrt-indent-undo to undo the guess
 (use-package dtrt-indent
@@ -2564,7 +2566,6 @@ With universal argument ARG, open in another window."
   (("C-c '" . cycle-quotes)))
 
 (use-package aidermacs
-  :straight (:fork (:host github :repo "Azkae/aidermacs"))
   :bind
   (:map aidermacs-minor-mode
    ("C-c /" . insert-project-file-path))
