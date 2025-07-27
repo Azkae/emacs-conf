@@ -477,16 +477,14 @@ Returns nil if there is no active region."
   (("C-x u" . vundo)
    ("C-x C-u" . vundo)))
 
-(defun delete-slash ()
-  (search-backward "/")
-  (delete-region (point) (point-max)))
-
 (defun delete-until-slash ()
   (interactive)
-  (when (eq (char-before) ?/)
-    (delete-slash))
-  (delete-slash)
-  (insert "/"))
+  (when (memq (char-before) '(?/ ?:))
+    (delete-char -1))
+  (when (re-search-backward "[:/]" nil t)
+    (let ((separator (buffer-substring (point) (1+ (point)))))
+      (delete-region (point) (point-max))
+      (insert separator))))
 
 (defun delete-until-slash-maybe ()
   (interactive)
