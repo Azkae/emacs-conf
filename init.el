@@ -1268,9 +1268,15 @@ is a prefix length override, which is t for manual completion."
       (list (car bounds) (cdr bounds) keywords
             :exclusive 'no))))
 
+(defun conf--cape-dabbrev-and-enable-corfu ()
+  (interactive)
+  (when (not corfu-mode)
+    (corfu-mode))
+  (call-interactively 'cape-dabbrev))
+
 (use-package cape
   :bind
-  (("M-*" . cape-dabbrev))
+  (("M-*" . conf--cape-dabbrev-and-enable-corfu))
   :init
   (add-hook 'completion-at-point-functions #'cape-file)
 
