@@ -2712,6 +2712,7 @@ With universal argument ARG, open in another window."
   (add-hook 'magit-pre-refresh-hook 'magit-prime-refresh-cache))
 
 (use-package ws-butler
+  :straight (:type git :host github :repo "lewang/ws-butler")
   :diminish ws-butler-mode
   :hook (prog-mode . ws-butler-mode))
 
