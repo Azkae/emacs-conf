@@ -2446,6 +2446,7 @@ The thing `string' is not available in Emacs 27.'"
         tramp-use-scp-direct-remote-copying t
         remote-file-name-inhibit-auto-save-visited t)
 
+  (setq tramp-auto-save-directory "~/.emacs.d/tramp-autosave/")
   (setq tramp-copy-size-limit (* 1024 1024)) ;; 1MB
   (setq tramp-verbose 3)
 
