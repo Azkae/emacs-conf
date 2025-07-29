@@ -1195,8 +1195,7 @@ is a prefix length override, which is t for manual completion."
                   (add-hook 'yas-keymap-disable-hook 'conf--corfu-active-p nil t)
                   ;; (add-hook 'post-command-hook #'conf--corfu-post-command)
                   ))
-  ((git-commit-mode gptel-mode) . (lambda ()
-                                    (corfu-mode -1)))
+  (git-commit-mode . (lambda () (corfu-mode -1)))
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0.01)
