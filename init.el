@@ -1588,10 +1588,11 @@ is a prefix length override, which is t for manual completion."
 
   (gptel-make-tool
    :name "elisp_completion"
-   :function (lambda (prefix limit type show-private)
+   :function (lambda (prefix limit type show-private offset)
                (let ((completions '())
                      (case-fold-search nil)
-                     (max-results (or limit 50)))
+                     (max-results (or limit 50))
+                     (skip-count (or offset 0)))
                  (mapatoms
                   (lambda (symbol)
                     (when (and (string-prefix-p prefix (symbol-name symbol))
@@ -1603,12 +1604,18 @@ is a prefix length override, which is t for manual completion."
                                 ((string= type "face") (facep symbol))
                                 (t (or (fboundp symbol) (boundp symbol) (facep symbol)))))
                       (push (symbol-name symbol) completions))))
-                 (let ((sorted-completions (sort completions #'string<)))
-                   (if (<= (length sorted-completions) max-results)
-                       sorted-completions
-                     (append (seq-take sorted-completions max-results)
-                             (list (format "... and %d more"
-                                           (- (length sorted-completions) max-results))))))))
+                 (let* ((sorted-completions (sort completions #'string<))
+                        (total-count (length sorted-completions))
+                        (offset-completions (seq-drop sorted-completions skip-count))
+                        (final-completions (seq-take offset-completions max-results)))
+                   (if (and (> total-count skip-count)
+                            (> (length offset-completions) max-results))
+                       (append final-completions
+                               (list (format "... and %d more (total: %d, showing from %d)"
+                                             (- (length offset-completions) max-results)
+                                             total-count
+                                             (1+ skip-count))))
+                     final-completions))))
    :description "Get completion candidates for elisp symbols matching a prefix"
    :args (list '(:name "prefix"
                        :type string
@@ -1616,6 +1623,10 @@ is a prefix length override, which is t for manual completion."
                '(:name "limit"
                        :type integer
                        :description "Maximum number of results to return (default: 50)"
+                       :optional t)
+               '(:name "offset"
+                       :type integer
+                       :description "Number of results to skip from the beginning (default: 0)"
                        :optional t)
                '(:name "type"
                        :type string
@@ -1628,8 +1639,7 @@ is a prefix length override, which is t for manual completion."
                        :optional t))
    :confirm nil
    :include t
-   :category "emacs")
-)
+   :category "emacs"))
 
 (use-package sideline
   :custom
