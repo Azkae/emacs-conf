@@ -1602,15 +1602,16 @@ Provide only the improved version unless the user requests explanations or has s
 
   (gptel-make-tool
    :name "elisp_completion"
-   :function (lambda (prefix limit type show-private offset)
-               (let ((completions '())
-                     (case-fold-search nil)
-                     (max-results (or limit 50))
-                     (skip-count (or offset 0)))
+   :function (lambda (prefix limit page type show-private)
+               (let* ((completions '())
+                      (case-fold-search nil)
+                      (max-results (or limit 50))
+                      (page-num (or page 1))
+                      (skip-count (* (1- page-num) max-results)))
                  (mapatoms
                   (lambda (symbol)
                     (when (and (string-prefix-p prefix (symbol-name symbol))
-                               (or show-private
+                               (or (eq show-private t)
                                    (not (string-match-p "--" (symbol-name symbol))))
                                (cond
                                 ((string= type "function") (fboundp symbol))
@@ -1620,15 +1621,14 @@ Provide only the improved version unless the user requests explanations or has s
                       (push (symbol-name symbol) completions))))
                  (let* ((sorted-completions (sort completions #'string<))
                         (total-count (length sorted-completions))
+                        (total-pages (ceiling (/ (float total-count) max-results)))
                         (offset-completions (seq-drop sorted-completions skip-count))
                         (final-completions (seq-take offset-completions max-results)))
                    (if (and (> total-count skip-count)
                             (> (length offset-completions) max-results))
                        (append final-completions
-                               (list (format "... and %d more (total: %d, showing from %d)"
-                                             (- (length offset-completions) max-results)
-                                             total-count
-                                             (1+ skip-count))))
+                               (list (format "... page %d of %d (total: %d symbols)"
+                                             page-num total-pages total-count)))
                      final-completions))))
    :description "Get completion candidates for elisp symbols matching a prefix"
    :args (list '(:name "prefix"
@@ -1638,9 +1638,9 @@ Provide only the improved version unless the user requests explanations or has s
                        :type integer
                        :description "Maximum number of results to return (default: 50)"
                        :optional t)
-               '(:name "offset"
+               '(:name "page"
                        :type integer
-                       :description "Number of results to skip from the beginning (default: 0)"
+                       :description "Page number to display (default: 1, starts from 1)"
                        :optional t)
                '(:name "type"
                        :type string
@@ -1649,7 +1649,7 @@ Provide only the improved version unless the user requests explanations or has s
                        :optional t)
                '(:name "show-private"
                        :type boolean
-                       :description "If true, show private symbols (those containing -- anywhere in the name)"
+                       :description "If t, show private symbols. If nil, hide private symbols (the default)"
                        :optional t))
    :confirm nil
    :include t
