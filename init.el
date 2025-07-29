@@ -1512,6 +1512,7 @@ is a prefix length override, which is t for manual completion."
 (use-package gptel
   :hook
   (gptel-mode . corfu-mode)
+  (gptel-mode . (lambda () (setq-local completion-at-point-functions '(gptel-preset-capf))))
   :bind
   (:map gptel-mode-map
         ("C-c C-k" . gptel-abort))
