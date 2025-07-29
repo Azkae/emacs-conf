@@ -1561,20 +1561,20 @@ Simply provide the corrected version without explanations unless specifically as
    :include t
    :category "emacs-modify")
 
-  (gptel-make-tool
-   :name "read_buffer"
-   :function (lambda (buffer)
-               (unless (buffer-live-p (get-buffer buffer))
-                 (error "error: buffer %s is not live." buffer))
-               (with-current-buffer  buffer
-                 (buffer-substring-no-properties (point-min) (point-max))))
-   :description "return the contents of an emacs buffer"
-   :args (list '(:name "buffer"
-                       :type string
-                       :description "the name of the buffer whose contents are to be retrieved"))
-   :confirm t
-   :include t
-   :category "emacs")
+  ;; (gptel-make-tool
+  ;;  :name "read_buffer"
+  ;;  :function (lambda (buffer)
+  ;;              (unless (buffer-live-p (get-buffer buffer))
+  ;;                (error "error: buffer %s is not live." buffer))
+  ;;              (with-current-buffer  buffer
+  ;;                (buffer-substring-no-properties (point-min) (point-max))))
+  ;;  :description "return the contents of an emacs buffer"
+  ;;  :args (list '(:name "buffer"
+  ;;                      :type string
+  ;;                      :description "the name of the buffer whose contents are to be retrieved"))
+  ;;  :confirm t
+  ;;  :include t
+  ;;  :category "emacs")
 
   (gptel-make-tool
    :name "elisp_describe_variable"
