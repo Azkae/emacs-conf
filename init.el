@@ -1530,6 +1530,22 @@ is a prefix length override, which is t for manual completion."
 				     :stream t
 				     :key anthropic-api-key)))
 
+  (defun conf--gptel-start-rewrite-session ()
+    (interactive)
+    (let ((buffer-name (generate-new-buffer-name "*gptel-rewrite*")))
+      (gptel buffer-name nil "* @rewrite ")
+      (switch-to-buffer buffer-name)))
+
+  (global-set-key (kbd "C-c , r") 'conf--gptel-start-rewrite-session)
+
+  (defun conf--gptel-start-quick-session ()
+    (interactive)
+    (let ((buffer-name (generate-new-buffer-name "*gptel-quick*")))
+      (gptel buffer-name nil "* ")
+      (switch-to-buffer buffer-name)))
+
+  (global-set-key (kbd "C-c , q") 'conf--gptel-start-quick-session)
+
   (setq gptel-default-mode 'org-mode)
   (setq gptel-include-tool-results t)
   (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "* ")
