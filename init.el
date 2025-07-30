@@ -1289,7 +1289,10 @@ is a prefix length override, which is t for manual completion."
                   3)
                  'comint-completion-at-point t)))
 
-  (add-hook 'comint-mode-hook 'conf--setup-comint-mode-completions))
+  (add-hook 'comint-mode-hook 'conf--setup-comint-mode-completions)
+
+  ;; Disable ispell completion on text buffers
+  (setq text-mode-ispell-word-completion nil))
 
 (use-package apheleia
   :hook
@@ -1540,6 +1543,7 @@ is a prefix length override, which is t for manual completion."
 3. *Preserve voice*: Maintain the user's original tone, style, and level of formality
 4. *Keep meaning intact*: Ensure the core message and intent remain unchanged
 5. *Subtle improvements*: Make enhancements feel natural, not forced or over-polished
+6. *Formatting guideline*: Do not use em dashes (—) in your enhanced text. Use alternative punctuation such as commas, semicolons, parentheses, or periods instead.
 
 Provide only the improved version unless the user requests explanations or has specific questions about the changes."))
 
