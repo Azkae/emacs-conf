@@ -1934,28 +1934,11 @@ Used to preselect nearest headings and imenu items.")
                 (cl-return (max 0 (- index 1))))
            finally return (- index 1)))
 
-;; (defvar conf--minibuffer-command-stack nil
-;;   "Stack of commands that opened each minibuffer session, tracked by depth.")
-
-;; (defun conf--push-minibuffer-command ()
-;;   "Push the command that opens the minibuffer onto `conf--minibuffer-command-stack`."
-;;   (push this-command conf--minibuffer-command-stack))
-
-;; (defun conf--pop-minibuffer-command ()
-;;   "Pop the last command from `conf--minibuffer-command-stack` upon minibuffer exit."
-;;   (when conf--minibuffer-command-stack
-;;     (pop conf--minibuffer-command-stack)))
-
-;; ;; Add hooks to track entering and exiting minibuffers
-;; (add-hook 'minibuffer-setup-hook #'conf--push-minibuffer-command)
-;; (add-hook 'minibuffer-exit-hook #'conf--pop-minibuffer-command)
-
 (defun conf--consult-vertico-update-selection (orig-fun &rest args)
   "Pick the nearest candidate rather than the first after updating candidates."
   (setq conf--vertico-update-selection nil)
   (let ((result (apply orig-fun args))
-        (conf--current-minibuffer-command current-minibuffer-command ;; (car conf--minibuffer-command-stack)
-                                          ))
+        (conf--current-minibuffer-command current-minibuffer-command))
 
     ;; (message "conf--vertico-update-selection: %s" conf--vertico-update-selection)
     (when (and conf--vertico-update-selection
