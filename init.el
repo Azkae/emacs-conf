@@ -1522,6 +1522,7 @@ is a prefix length override, which is t for manual completion."
   :config
   (global-set-key (kbd "C-c , g") 'gptel)
   (global-set-key (kbd "C-c , m") 'gptel-menu)
+  (global-set-key (kbd "C-c , a") 'gptel-add)
   (global-set-key (kbd "C-c , ,") 'gptel-menu)
   (global-set-key (kbd "C-c , t") 'gptel-tools)
   (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
