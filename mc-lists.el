@@ -38,6 +38,7 @@
         meow-right
         meow-till
         my-backward-kill-word
+        org-beginning-of-line
         org-end-of-line
         org-self-insert-command
         org-yank
