@@ -2719,9 +2719,14 @@ With universal argument ARG, open in another window."
 (use-package minuet
   :bind
   (("C-c , c" . #'minuet-complete-with-minibuffer)
-   ("C-c m" . #'minuet-configure-provider))
-  :custom
-  (minuet-provider 'claude))
+   ("C-c m" . #'minuet-configure-provider)
+   :map minuet-active-mode-map
+   ;; These keymaps activate only when a minuet suggestion is displayed in the current buffer
+   ("M-p" . #'minuet-previous-suggestion) ;; invoke completion or cycle to next completion
+   ("M-n" . #'minuet-next-suggestion) ;; invoke completion or cycle to previous completion
+   ("M-A" . #'minuet-accept-suggestion)) ;; accept whole completion
+   :custom
+   (minuet-provider 'claude))
 
 (use-package casual
   :custom
