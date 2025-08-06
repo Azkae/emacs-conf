@@ -95,7 +95,7 @@
 ;; TODO: use bind-key: https://melpa.org/#/bind-key
 
 ;; basic keybindings
-(global-set-key (kbd "C-f") "\C-a\C-a\C-@\C-e")
+;; (global-set-key (kbd "C-f") "\C-a\C-a\C-@\C-e")
 (global-set-key [C-return] 'newline)
 (global-set-key (kbd "C-h") nil)
 
