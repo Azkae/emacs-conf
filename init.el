@@ -2404,6 +2404,21 @@ The thing `string' is not available in Emacs 27.'"
                      '(pair ("<") (">")))
 (add-to-list 'meow-char-thing-table '(?< . xml))
 
+;; Disable meow-select-on-change when using multiple cursors
+(defvar conf--meow-select-on-change-original nil
+  "Store the original value of meow-select-on-change")
+
+(defun conf--meow-handle-multiple-cursors ()
+  "Adjust meow-select-on-change based on multiple-cursors-mode state."
+  (if multiple-cursors-mode
+      (progn
+        (setq conf--meow-select-on-change-original meow-select-on-change)
+        (setq meow-select-on-change nil))
+    (setq meow-select-on-change conf--meow-select-on-change-original)))
+
+;; Add hook to handle multiple-cursors-mode changes
+(add-hook 'multiple-cursors-mode-hook #'conf--meow-handle-multiple-cursors)
+
 (use-package meow-vterm
   :if (not (eq system-type 'windows-nt))
   :straight (meow-vterm :type git :host github :repo "accelbread/meow-vterm")
