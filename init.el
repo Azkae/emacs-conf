@@ -1189,6 +1189,7 @@ is a prefix length override, which is t for manual completion."
         ("<tab>" . corfu-expand)
         ("RET" . corfu-insert)
         ("<ret>" . corfu-insert)
+        ("C-<return>" . corfu-insert)
         ("M-RET" . conf--corfu-reset))
   :hook
   (corfu-mode . (lambda ()
