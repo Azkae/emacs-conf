@@ -1370,6 +1370,12 @@ is a prefix length override, which is t for manual completion."
 
 (add-hook 'find-file-hook 'conf--python-track-virtualenv)
 
+(use-package python
+  :straight (:type built-in)
+  :bind
+  (:map python-ts-mode-map
+        ("C-c C-l" . nil)))
+
 ;; (define-minor-mode conf--poetry-tracking-mode
 ;;   "Global mode to track poetry projects"
 ;;   :global t
