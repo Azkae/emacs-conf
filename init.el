@@ -451,7 +451,7 @@ Returns nil if there is no active region."
   (modify-syntax-entry ?= "." org-mode-syntax-table)
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((dot . t) (python . t))))
+   '((dot . t) (python . t) (sql . t))))
 
 (use-package gcmh
   :config
