@@ -1525,7 +1525,8 @@ is a prefix length override, which is t for manual completion."
   (gptel-mode . (lambda () (setq-local completion-at-point-functions '(gptel-preset-capf))))
   :bind
   (:map gptel-mode-map
-        ("C-c C-k" . gptel-abort))
+        ("C-c C-k" . gptel-abort)
+        ("C-c C-<return>" . gptel-send))
   :config
   (global-set-key (kbd "C-c , g") 'gptel)
   (global-set-key (kbd "C-c , m") 'gptel-menu)
