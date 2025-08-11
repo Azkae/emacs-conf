@@ -1549,6 +1549,7 @@ is a prefix length override, which is t for manual completion."
       (switch-to-buffer buffer-name)))
 
   (global-set-key (kbd "C-c , r") 'conf--gptel-start-rewrite-session)
+  (global-set-key (kbd "C-c , R") 'gptel-rewrite)
 
   (defun conf--gptel-start-quick-session ()
     (interactive)
