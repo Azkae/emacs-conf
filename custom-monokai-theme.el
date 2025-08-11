@@ -37,7 +37,8 @@
       (monokai-yellow "#E6DB74")
       (monokai-orange-dark "#FF8C00")
       (monokai-yellow-dark "#75715E")
-      (monokai-yellow-light "#F8F8F2"))
+      (monokai-yellow-light "#F8F8F2")
+      (monokai-gray-slate "#2f4f4f"))
   (custom-theme-set-faces
    'custom-monokai
    ;; Frame
@@ -46,7 +47,7 @@
    `(hl-line ((t (:background ,monokai-gray-darkest))))
    `(minibuffer-prompt ((t (:foreground ,monokai-yellow-dark))))
    `(modeline ((t (:background ,monokai-gray-lightest :foreground ,monokai-gray-light))))
-   `(region ((t (:background ,monokai-brown))))
+   `(region ((t (:background ,monokai-gray-slate))))
    `(show-paren-match-face ((t (:background ,monokai-gray-lightest))))
    ;; Main
    `(font-lock-builtin-face ((t (:foreground ,monokai-green)))) ;green
