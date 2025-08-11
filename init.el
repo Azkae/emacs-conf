@@ -1627,6 +1627,17 @@ Provide only the improved version unless the user requests explanations or has s
    :category "emacs")
 
   (gptel-make-tool
+   :name "elisp_describe_face"
+   :function (lambda (variable)
+               (save-window-excursion (describe-face (intern variable))))
+   :description "describe variable of the current emacs session"
+   :args (list '(:name "variable"
+                       :type string
+                       :description "face name"))
+   :include t
+   :category "emacs")
+
+  (gptel-make-tool
    :name "elisp_describe_function"
    :function (lambda (variable)
                (save-window-excursion (describe-function (intern variable))))
