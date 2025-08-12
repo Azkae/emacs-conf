@@ -215,6 +215,10 @@
 (global-set-key (kbd "M-q M-k")    'windmove-up)
 (global-set-key (kbd "M-q M-l") 'windmove-right)
 
+(with-eval-after-load 'info
+  (define-key Info-mode-map (kbd "M-,") 'Info-history-back)
+  (define-key Info-mode-map (kbd "C-M-,") 'Info-history-forward))
+
 ;; fix some coding systems
 (define-coding-system-alias 'UTF-8 'utf-8)
 (define-coding-system-alias 'utf8 'utf-8)
