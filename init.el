@@ -457,7 +457,9 @@ Returns nil if there is no active region."
    'org-babel-load-languages
    '((dot . t) (python . t) (sql . t)))
   (setq org-babel-default-header-args:sql
-        '((:engine . "postgresql"))))
+        '((:engine . "postgresql")))
+  (setq org-babel-default-header-args:elisp
+        '((:lexical . t))))
 
 (use-package gcmh
   :config
