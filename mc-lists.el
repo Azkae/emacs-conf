@@ -37,6 +37,7 @@
         meow-replace
         meow-right
         meow-till
+        meow-pop-selection
         my-backward-kill-word
         org-beginning-of-line
         org-end-of-line
