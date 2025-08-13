@@ -2788,14 +2788,20 @@ With universal argument ARG, open in another window."
   (interactive)
   (when (minibufferp)
     (let* ((string-at-point (minibuffer-contents-no-properties))
-           (current-prompt (minibuffer-prompt)))
+           (current-prompt (minibuffer-prompt))
+           (capfs completion-at-point-functions)
+           (cursor-pos (- (point) (minibuffer-prompt-end))))
       (string-edit
        current-prompt
        string-at-point
        (lambda (result)
          (with-current-buffer (window-buffer (minibuffer-window))
            (delete-minibuffer-contents)
-           (insert result)))))))
+           (insert result))))
+      (with-current-buffer (get-buffer "*edit string*")
+        (setq-local completion-at-point-functions capfs)
+        (goto-char (point-max))
+        (backward-char (- (length string-at-point) cursor-pos))))))
 
 (define-key minibuffer-local-map (kbd "C-c C-e") 'string-edit-at-point-in-minibuffer)
 
