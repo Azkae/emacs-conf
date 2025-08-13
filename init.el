@@ -1828,7 +1828,7 @@ then \\[keyboard-quit] to abort the minibuffer."
       (pcase (car minibuffer-candidate)
         ('project-file (project-root
                         (project-current nil (expand-file-name (cdr minibuffer-candidate)))))
-        ('file (let ((path (expand-file-name (cdr minibuffer-candidate))))
+        ('file (let ((path (expand-file-name (substitute-in-file-name (cdr minibuffer-candidate)))))
                  (if (not (file-directory-p path))
                      (file-name-directory path)
                    path)))))))
