@@ -41,6 +41,9 @@
   (setq mac-command-modifier 'meta
         mac-option-modifier nil))
 
+(when (eq system-type 'windows-nt)
+  (add-to-list 'exec-path "C:/Program Files/Git/usr/bin/"))
+
 (setq ring-bell-function 'ignore)
 
 (require 'cl-lib)
