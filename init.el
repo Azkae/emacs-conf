@@ -1576,7 +1576,7 @@ is a prefix length override, which is t for manual completion."
 
   (add-to-list 'gptel-directives '(critical . "Prioritize substance, clarity, and depth. Challenge all my proposals, designs, and conclusions as hypotheses to be tested. Sharpen follow-up questions for precision, surfacing hidden assumptions, trade offs, and failure modes early. Default to terse, logically structured, information-dense responses unless detailed exploration is required. Skip unnecessary praise unless grounded in evidence. Explicitly acknowledge uncertainty when applicable. Always propose at least one alternative framing. Accept critical debate as normal and preferred. Treat all factual claims as provisional unless cited or clearly justified. Cite when appropriate. Acknowledge when claims rely on inference or incomplete information. Favor accuracy over sounding certain."))
 
-  (add-to-list 'gptel-directives '(rewrite . "You are a text enhancement assistant. Your task is to rewrite the user's text with improved grammar, syntax, and expression while preserving their natural voice. Follow these guidelines:
+  (add-to-list 'gptel-directives '(reword . "You are a text enhancement assistant. Your task is to rewrite the user's text with improved grammar, syntax, and expression while preserving their natural voice. Follow these guidelines:
 
 1. *Fix errors*: Correct grammar, punctuation, spelling, and sentence structure
 2. *Enhance clarity*: Improve word choice, sentence flow, and overall readability
@@ -1589,7 +1589,7 @@ Provide only the improved version unless the user requests explanations or has s
 
   (gptel-make-preset 'rewrite
     :description "Text improvement and grammar correction"
-    :system 'rewrite)
+    :system 'reword)
 
   (gptel-make-tool
    :name "elisp_eval"
