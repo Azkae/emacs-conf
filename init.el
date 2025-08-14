@@ -694,68 +694,38 @@ Returns nil if there is no active region."
                 (font-lock-ensure)))))
 
 (use-package magit-delta
-  ;; :straight (magit-delta :type git :host github :repo "dandavison/magit-delta"
-  ;;                    :fork (:host github :repo "jumper047/magit-delta"))
-
   :if (executable-find "delta")
-  ;; :hook (magit-mode . magit-delta-mode)
   :bind
-  (:map magit-mode-map
-        ("," . #'conf--magit-delta-toggle))
   :custom
   (magit-delta-default-dark-theme "Monokai Extended")
   (magit-delta-default-light-theme "Github")
   (magit-delta-hide-plus-minus-markers nil)
   :config
+  (add-hook 'magit-diff-wash-diffs-hook #'magit-delta-call-delta-and-convert-ansi-escape-sequences)
+  (setq magit-diff-refine-hunk nil)
 
-  (defun conf--magit-delta-toggle ()
-    "Toggle magit-delta-mode and refresh magit."
-    (interactive)
-    (progn
-      (call-interactively 'magit-delta-mode)
-      (magit-refresh)))
+  (defvar conf--magit-delta-setup nil)
 
-  (add-hook 'magit-delta-mode-hook
-            (lambda ()
-              (if magit-delta-mode
-                  (progn
-                    ;; For some reason (face-attribute 'diff-added :background) does not work if called top-level
-                    (setq magit-delta-delta-args `("--max-line-distance" "0.6" "--true-color" "always" "--color-only"
-                                                   "--plus-style" ,(format "syntax \"%s\"" (face-attribute 'diff-added :background))
-                                                   "--plus-emph-style" ,(format "syntax \"%s\"" (face-attribute 'diff-refine-added :background))
-                                                   "--minus-emph-style" ,(format "syntax \"%s\"" (face-attribute 'diff-refine-removed :background))
-                                                   "--minus-style" ,(format "normal \"%s\"" (face-attribute 'diff-removed :background))))
+  (defun conf--setup-magit-delta ()
+    (unless conf--magit-delta-setup
+      (setq conf--magit-delta-setup t)
+      (setq magit-delta-delta-args
+            `("--max-line-distance" "0.6" "--true-color" "always" "--color-only"
+              "--plus-style" ,(format "syntax \"%s\"" (face-attribute 'diff-added :background))
+              "--plus-emph-style" ,(format "syntax \"%s\"" (face-attribute 'diff-refine-added :background))
+              "--minus-emph-style" ,(format "syntax \"%s\"" (face-attribute 'diff-refine-removed :background))
+              "--minus-style" ,(format "normal \"%s\"" (face-attribute 'diff-removed :background))))
 
-                    (setq
-                     conf--saved-magit-diff-added-highlight (face-attribute 'magit-diff-added-highlight :background)
-                     conf--saved-magit-diff-added (face-attribute 'magit-diff-added :background)
-                     conf--saved-magit-diff-removed-highlight (face-attribute 'magit-diff-removed-highlight :background)
-                     conf--saved-magit-diff-removed (face-attribute 'magit-diff-removed :background))
+      (set-face-attribute 'magit-diff-added-highlight nil
+                          :background (face-attribute 'diff-added :background))
+      (set-face-attribute 'magit-diff-added nil
+                          :background (face-attribute 'diff-added :background))
+      (set-face-attribute 'magit-diff-removed-highlight nil
+                          :background (face-attribute 'diff-removed :background))
+      (set-face-attribute 'magit-diff-removed nil
+                          :background (face-attribute 'diff-removed :background))))
 
-                    (set-face-attribute 'magit-diff-added-highlight nil
-                                        :background (face-attribute 'diff-added :background))
-                    (set-face-attribute 'magit-diff-added nil
-                                        :background (face-attribute 'diff-added :background))
-                    (set-face-attribute 'magit-diff-removed-highlight nil
-                                        :background (face-attribute 'diff-removed :background))
-                    (set-face-attribute 'magit-diff-removed nil
-                                        :background (face-attribute 'diff-removed :background))
-
-                    (setq face-remapping-alist
-                          (seq-difference face-remapping-alist
-                                          '((magit-diff-removed . default)
-                                            (magit-diff-removed-highlight . default)
-                                            (magit-diff-added . default)
-                                            (magit-diff-added-highlight . default)))))
-
-                (set-face-attribute 'magit-diff-added-highlight nil
-                                    :background conf--saved-magit-diff-added-highlight)
-                (set-face-attribute 'magit-diff-added nil
-                                    :background conf--saved-magit-diff-added)
-                (set-face-attribute 'magit-diff-removed-highlight nil
-                                    :background conf--saved-magit-diff-removed-highlight)
-                (set-face-attribute 'magit-diff-removed nil
-                                    :background conf--saved-magit-diff-removed)))))
+  (add-hook 'magit-mode-hook 'conf--setup-magit-delta))
 
 (use-package quickrun
   :bind
