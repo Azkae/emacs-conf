@@ -63,7 +63,8 @@
     (when (>= emacs-major-version 30)
       (set-face-attribute 'flymake-note-echo-at-eol    nil :foreground "gray42"))
     (set-face-attribute 'highlight                     nil :background "#49483E")
-    (set-face-attribute 'gptel-context-highlight-face  nil :background "#2d3142")))
+    (set-face-attribute 'gptel-context-highlight-face  nil :background "#2d3142")
+    (set-face-attribute 'jinx-highlight nil :background 'unspecified :inherit nil)))
 
 (basic--set-faces (selected-frame))
 (add-hook 'after-make-frame-functions 'basic--set-faces)
