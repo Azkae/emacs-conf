@@ -7,6 +7,7 @@
         conf--meow-change-and-mark
         conf--meow-insert-wrap
         crux-upcase-region
+        cycle-quotes
         electric-pair-delete-pair
         end-of-buffer
         ignore
@@ -15,6 +16,7 @@
         kill-region-maybe
         mark-sexp
         markdown-beginning-of-line
+        markdown-cycle
         markdown-end-of-line
         markdown-outdent-or-delete
         meow-append
@@ -33,11 +35,12 @@
         meow-next
         meow-next-symbol
         meow-next-word
+        meow-pop-selection
         meow-prev
         meow-replace
         meow-right
         meow-till
-        meow-pop-selection
+        meow-yank
         my-backward-kill-word
         org-beginning-of-line
         org-end-of-line
