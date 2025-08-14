@@ -2751,12 +2751,26 @@ With universal argument ARG, open in another window."
   (("C-c , c" . #'minuet-complete-with-minibuffer)
    ("C-c m" . #'minuet-configure-provider)
    :map minuet-active-mode-map
-   ;; These keymaps activate only when a minuet suggestion is displayed in the current buffer
-   ("M-p" . #'minuet-previous-suggestion) ;; invoke completion or cycle to next completion
-   ("M-n" . #'minuet-next-suggestion) ;; invoke completion or cycle to previous completion
-   ("M-A" . #'minuet-accept-suggestion)) ;; accept whole completion
-   :custom
-   (minuet-provider 'claude))
+   ("M-p" . #'minuet-previous-suggestion)
+   ("M-n" . #'minuet-next-suggestion)
+   ("M-A" . #'minuet-accept-suggestion))
+  :config
+  ;; (setq minuet-provider 'claude)
+
+  (setq minuet-provider 'openai-fim-compatible)
+  (setq minuet-n-completions 1)
+  (setq minuet-context-window 512)
+  (plist-put minuet-openai-fim-compatible-options :end-point "http://localhost:11434/v1/completions")
+  (plist-put minuet-openai-fim-compatible-options :name "Ollama")
+  (plist-put minuet-openai-fim-compatible-options :api-key "TERM")
+  (plist-put minuet-openai-fim-compatible-options :model "qwen2.5-coder:3b")
+
+  (minuet-set-optional-options minuet-openai-fim-compatible-options :max_tokens 56)
+
+  (defun conf--block-minuet ()
+    (not (bound-and-true-p meow-insert-mode)))
+
+  (setq minuet-auto-suggestion-block-functions 'conf--block-minuet))
 
 (use-package casual
   :custom
