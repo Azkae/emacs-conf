@@ -2806,8 +2806,8 @@ With universal argument ARG, open in another window."
   :diminish ws-butler-mode
   :hook (prog-mode . ws-butler-mode))
 
-(defun string-edit-at-point-in-minibuffer ()
-  "Edit the string at point in the minibuffer using string-edit."
+(defun string-edit-in-minibuffer ()
+  "Edit the string in the minibuffer using string-edit."
   (interactive)
   (when (minibufferp)
     (let* ((string-at-point (minibuffer-contents-no-properties))
@@ -2820,13 +2820,14 @@ With universal argument ARG, open in another window."
        (lambda (result)
          (with-current-buffer (window-buffer (minibuffer-window))
            (delete-minibuffer-contents)
-           (insert result))))
+           (insert result)
+           (select-window (minibuffer-window)))))
       (with-current-buffer (get-buffer "*edit string*")
         (setq-local completion-at-point-functions capfs)
         (goto-char (point-max))
         (backward-char (- (length string-at-point) cursor-pos))))))
 
-(define-key minibuffer-local-map (kbd "C-c C-e") 'string-edit-at-point-in-minibuffer)
+(define-key minibuffer-local-map (kbd "C-c C-e") 'string-edit-in-minibuffer)
 
 ;; TODO: test direnv
 
