@@ -1968,7 +1968,8 @@ then \\[keyboard-quit] to abort the minibuffer."
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
                  (window-parameters (mode-line-format . none))))
-  (add-to-list 'embark-default-action-overrides '(file . find-file)))
+  (add-to-list 'embark-default-action-overrides '(file . find-file))
+  (define-key embark-region-map "h" nil))
 (require 'embark-consult)
 
 (defvar consult--previous-point nil
@@ -2120,36 +2121,28 @@ Used to preselect nearest headings and imenu items.")
 (add-to-list 'embark-pre-action-hooks '(conf--vterm-toggle embark--universal-argument))
 (add-to-list 'embark-around-action-hooks '(conf--vterm-toggle embark--cd))
 
-(defun rename-file-and-buffer (old-name new-name &optional ok-if-already-exists)
+(defun embark--rename-file-and-buffer (old-name)
   "Rename OLD-NAME to NEW-NAME, updating associated buffer if it exists."
-  (interactive
-   (let* ((current-file (and (buffer-file-name) (file-name-nondirectory (buffer-file-name))))
-          (old (read-file-name (if current-file
-                                   (format "Rename file ('%s' by default): "
-                                           (file-name-nondirectory (buffer-file-name)))
-                                 "Rename file: ")
-                               nil (buffer-file-name) t))
-          (new (read-file-name (format "Rename '%s' to file: " old) (file-name-directory old))))
-     (list old new current-prefix-arg)))
+  (let ((new-name (read-file-name (format "Rename '%s' to file: " (file-name-nondirectory old-name)) (file-name-directory old-name))))
 
-  (when (not (file-directory-p (file-name-directory new-name)))
-    (if (y-or-n-p (format "Create directory '%s'? "
-                          (file-name-directory new-name)))
-        (make-directory (file-name-directory new-name))
-      (error "Cancelled")))
+    (when (not (file-directory-p (file-name-directory new-name)))
+      (if (y-or-n-p (format "Create directory '%s'? "
+                            (file-name-directory new-name)))
+          (make-directory (file-name-directory new-name))
+        (error "Cancelled")))
 
-  (rename-file old-name new-name ok-if-already-exists)
+    (rename-file old-name new-name)
 
-  (let ((buf (find-buffer-visiting old-name)))
-    (when buf
-      (with-current-buffer buf
-        (set-visited-file-name new-name nil t)
-        (rename-buffer (file-name-nondirectory new-name))
-        (set-buffer-modified-p nil)
-        (message "Renamed buffer associated with '%s' to '%s'" old-name new-name)))))
+    (let ((buf (find-buffer-visiting old-name)))
+      (when buf
+        (with-current-buffer buf
+          (set-visited-file-name new-name nil t)
+          (rename-buffer (file-name-nondirectory new-name))
+          (set-buffer-modified-p nil)
+          (message "Renamed buffer associated with '%s' to '%s'" old-name new-name))))))
 
-(define-key embark-file-map "r" #'rename-file-and-buffer)
-(add-to-list 'embark-post-action-hooks '(rename-file-and-buffer embark--restart))
+(define-key embark-file-map "r" #'embark--rename-file-and-buffer)
+(add-to-list 'embark-post-action-hooks '(embark--rename-file-and-buffer embark--restart))
 
 (defun delete-file-and-buffer (filename delete-buffer)
   "Delete the file FILENAME and its associated buffer, if any."
