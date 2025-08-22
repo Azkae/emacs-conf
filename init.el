@@ -822,6 +822,72 @@ Returns nil if there is no active region."
 
 (el-patch-feature eglot)
 
+;; Fix highlighting of eldoc parameters, fixed in emacs31
+;; See 04a8faef0948f46b16172855ee337f59819f22a7
+(with-eval-after-load 'eglot
+  (el-patch-defun eglot--sig-info (sig &optional sig-active briefp)
+    (eglot--dbind ((SignatureInformation)
+                   ((:label siglabel))
+                   ((:documentation sigdoc)) parameters activeParameter)
+        sig
+      (with-temp-buffer
+        (insert siglabel)
+        ;; Add documentation, indented so we can distinguish multiple signatures
+        (when-let* ((doc (and (not briefp) sigdoc (eglot--format-markup sigdoc))))
+          (goto-char (point-max))
+          (insert "\n" (replace-regexp-in-string "^" "  " doc)))
+        ;; Try to highlight function name only
+        (let (first-parlabel)
+          (cond ((and (cl-plusp (length parameters))
+                      (vectorp (setq first-parlabel
+                                     (plist-get (aref parameters 0) :label))))
+                 (save-excursion
+                   (goto-char (elt first-parlabel 0))
+                   (skip-syntax-backward "^w")
+                   (add-face-text-property (point-min) (point)
+                                           'font-lock-function-name-face)))
+                ((save-excursion
+                   (goto-char (point-min))
+                   (looking-at "\\([^(]*\\)([^)]*)"))
+                 (add-face-text-property (match-beginning 1) (match-end 1)
+                                         'font-lock-function-name-face))))
+        ;; Now to the parameters
+        (cl-loop
+         with active-param = (el-patch-swap (or sig-active activeParameter)
+                                            (or activeParameter sig-active))
+         for i from 0 for parameter across parameters do
+         (eglot--dbind ((ParameterInformation)
+                        ((:label parlabel))
+                        ((:documentation pardoc)))
+             parameter
+           ;; ...perhaps highlight it in the formals list
+           (when (eq i active-param)
+             (save-excursion
+               (goto-char (point-min))
+               (pcase-let
+                   ((`(,beg ,end)
+                     (if (stringp parlabel)
+                         (let ((case-fold-search nil))
+                           (and (search-forward parlabel (line-end-position) t)
+                                (list (match-beginning 0) (match-end 0))))
+                       (mapcar #'1+ (append parlabel nil)))))
+                 (if (and beg end)
+                     (add-face-text-property
+                      beg end
+                      'eldoc-highlight-function-argument)))))
+           ;; ...and/or maybe add its doc on a line by its own.
+           (let (fpardoc)
+             (when (and pardoc (not briefp)
+                        (not (string-empty-p
+                              (setq fpardoc (eglot--format-markup pardoc)))))
+               (insert "\n  "
+                       (propertize
+                        (if (stringp parlabel) parlabel
+                          (apply #'substring siglabel (mapcar #'1+ parlabel)))
+                        'face (and (eq i active-param) 'eldoc-highlight-function-argument))
+                       ": " fpardoc)))))
+        (buffer-string)))))
+
 (use-package js
   :straight (:type built-in)
   :hook
