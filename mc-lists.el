@@ -8,6 +8,7 @@
         conf--meow-insert-wrap
         crux-upcase-region
         cycle-quotes
+        duplicate-line-or-region
         electric-pair-delete-pair
         end-of-buffer
         ignore
