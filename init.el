@@ -462,7 +462,10 @@ Returns nil if there is no active region."
   (setq org-babel-default-header-args:sql
         '((:engine . "postgresql")))
   (setq org-babel-default-header-args:elisp
-        '((:lexical . t))))
+        '((:lexical . t)))
+  (add-to-list 'org-src-lang-modes '("tsx" . tsx-ts))
+  (add-to-list 'org-src-lang-modes '("jsx" . tsx-ts))
+  (add-to-list 'org-src-lang-modes '("typescript" . tsx-ts)))
 
 (use-package gcmh
   :config
