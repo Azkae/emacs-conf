@@ -1284,12 +1284,12 @@ is a prefix length override, which is t for manual completion."
       (async-start
        (lambda ()
          (require 'project)
-         (mapcar (lambda (f)
-                   (file-relative-name f root))
-                 (project-files project)))
+         (project-files project))
 
        (lambda (result)
-         (puthash root result conf--project-files-cache))))
+         (puthash root
+                  (mapcar (lambda (f) (file-relative-name f root)) result)
+                  conf--project-files-cache))))
     (gethash root conf--project-files-cache)))
 
 (defun conf--project-files-capf ()
