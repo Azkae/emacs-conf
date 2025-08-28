@@ -2512,7 +2512,15 @@ The thing `string' is not available in Emacs 27.'"
          ("M-p" . nil)
          ("M-n" . nil))
   :custom
-  (jinx-languages "en_US fr"))
+  (jinx-languages "en_US fr")
+  :config
+  (with-eval-after-load 'gptel
+    (defun jinx--gptel-ignored-p (start)
+      "Return t if the word at START has the 'gptel property."
+      (get-char-property start 'gptel))
+
+    ;; Disable spell checking for llm response
+    (add-to-list 'jinx--predicates 'jinx--gptel-ignored-p)))
 
 ;; (use-package recursion-indicator
 ;;   :config
