@@ -2197,6 +2197,15 @@ Used to preselect nearest headings and imenu items.")
 (define-key embark-identifier-map "R" #'eglot-rename)
 (push 'embark--allow-edit (alist-get 'eglot-rename embark-target-injection-hooks))
 
+(defun xref-with-dumb-jump ()
+  "Use xref with only dumb-jump backend."
+  (interactive)
+  (let ((xref-backend-functions '(dumb-jump-xref-activate)))
+    (call-interactively 'xref-find-definitions)))
+
+(define-key embark-identifier-map "s" #'xref-with-dumb-jump)
+(add-to-list 'embark-target-injection-hooks '(xref-with-dumb-jump embark--ignore-target))
+
 (use-package meow
   :config
   (setq meow--kbd-forward-char "C-%")
