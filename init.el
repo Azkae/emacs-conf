@@ -156,8 +156,8 @@
 ;; (global-set-key (kbd "<mouse-3>") 'xref-find-definitions)
 ;; (global-set-key (kbd "<mouse-4>") 'xref-go-back)
 
-;; Disable mouse highlighting
-;; (setq mouse-highlight nil)
+;; Disable mouse highlighting when typing
+;; (setq mouse-highlight 1)
 
 (defun conf--disable-keys (map keys)
   (dolist (key keys)
