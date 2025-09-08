@@ -1860,7 +1860,7 @@ Provide only the improved version unless the user requests explanations or has s
         ("M-<down>" . (lambda() (interactive) (scroll-other-window 5)))
         ("M-k" . (lambda() (interactive) (scroll-other-window-down 5)))
         ("M-j" . (lambda() (interactive) (scroll-other-window 5)))
-        ("C-SPC" . embark-select)
+        ("C-SPC" . (lambda () (interactive) (call-interactively 'embark-select) (vertico-next)))
         ("C-j" . next-line)
         ("C-k" . previous-line)
         ("C-<return>" . vertico-exit)
@@ -1913,14 +1913,12 @@ Provide only the improved version unless the user requests explanations or has s
   (interactive)
   (consult-ripgrep nil (thing-at-point 'symbol)))
 
-(defun conf--minibuffer-keyboard-quit ()
-  "Abort recursive edit.
-In Delete Selection mode, if the mark is active, just deactivate it;
-then \\[keyboard-quit] to abort the minibuffer."
-  (interactive)
+(defun conf--deactivate-region-before-quit ()
+  "Deactivate region before keyboard quit if delete-selection-mode is active."
   (when (and delete-selection-mode (region-active-p))
-    (setq deactivate-mark t))
-  (abort-minibuffers))
+    (deactivate-mark)))
+
+(advice-add 'minibuffer-keyboard-quit :before #'conf--deactivate-region-before-quit)
 
 (defun conf--minibuffer-candidate ()
   (if (and (bound-and-true-p vertico--input) (minibufferp))
@@ -1987,8 +1985,6 @@ then \\[keyboard-quit] to abort the minibuffer."
    ;; ("M-."         . conf--consult-ripgrep)
    :map minibuffer-local-map
    ([M-backspace] . delete-until-slash-maybe)
-   ("C-g" . conf--minibuffer-keyboard-quit)
-   ("M-g" . conf--minibuffer-keyboard-quit)
    ("C-x g" . conf--magit-in-selected-directory)
    ("M-e" . conf--vterm-in-selected-directory)
    )
