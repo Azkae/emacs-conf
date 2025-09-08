@@ -798,7 +798,7 @@ Returns nil if there is no active region."
   (("M-." . conf--xref-find-definitions)
    ("M-?" . conf--xref-find-references)
    :map eglot-mode-map
-   ("<mouse-2>" . eglot-code-actions-at-mouse))
+   ("<mouse-3>" . eglot-code-actions-at-mouse))
   :hook
   ((c-mode c++-mode c-ts-mode c++-ts-mode) . eglot-ensure)
   ((c-mode c++-mode c-ts-mode c++-ts-mode) . (lambda () (setq-local eglot-ignored-server-capabilities '(:inlayHintProvider))))
