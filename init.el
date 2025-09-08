@@ -1706,7 +1706,7 @@ Provide only the improved version unless the user requests explanations or has s
    :category "emacs")
 
   (gptel-make-tool
-   :name "elisp_completion"
+   :name "elisp_prefix_completion"
    :function (lambda (prefix limit page type show-private)
                (let* ((completions '())
                       (case-fold-search nil)
@@ -1737,6 +1737,61 @@ Provide only the improved version unless the user requests explanations or has s
                      final-completions))))
    :description "Get completion candidates for elisp symbols matching a prefix"
    :args (list '(:name "prefix"
+                       :type string
+                       :description "The partial symbol name to complete")
+               '(:name "limit"
+                       :type integer
+                       :description "Maximum number of results to return (default: 50)"
+                       :optional t)
+               '(:name "page"
+                       :type integer
+                       :description "Page number to display (default: 1, starts from 1)"
+                       :optional t)
+               '(:name "type"
+                       :type string
+                       :enum ["function" "variable" "face"]
+                       :description "Filter by symbol type: function, variable, or face. If not specified, returns all types"
+                       :optional t)
+               '(:name "show-private"
+                       :type boolean
+                       :description "If t, show private symbols. If nil, hide private symbols (the default)"
+                       :optional t))
+   :confirm nil
+   :include t
+   :category "emacs")
+
+  (gptel-make-tool
+   :name "elisp_regexp_completion"
+   :function (lambda (regexp limit page type show-private)
+               (let* ((completions '())
+                      (case-fold-search nil)
+                      (max-results (or limit 50))
+                      (page-num (or page 1))
+                      (skip-count (* (1- page-num) max-results)))
+                 (mapatoms
+                  (lambda (symbol)
+                    (when (and (string-match-p regexp (symbol-name symbol))
+                               (or (eq show-private t)
+                                   (not (string-match-p "--" (symbol-name symbol))))
+                               (cond
+                                ((string= type "function") (fboundp symbol))
+                                ((string= type "variable") (boundp symbol))
+                                ((string= type "face") (facep symbol))
+                                (t (or (fboundp symbol) (boundp symbol) (facep symbol)))))
+                      (push (symbol-name symbol) completions))))
+                 (let* ((sorted-completions (sort completions #'string<))
+                        (total-count (length sorted-completions))
+                        (total-pages (ceiling (/ (float total-count) max-results)))
+                        (offset-completions (seq-drop sorted-completions skip-count))
+                        (final-completions (seq-take offset-completions max-results)))
+                   (if (and (> total-count skip-count)
+                            (> (length offset-completions) max-results))
+                       (append final-completions
+                               (list (format "... page %d of %d (total: %d symbols)"
+                                             page-num total-pages total-count)))
+                     final-completions))))
+   :description "Get completion candidates for elisp symbols matching a regexp"
+   :args (list '(:name "regexp"
                        :type string
                        :description "The partial symbol name to complete")
                '(:name "limit"
