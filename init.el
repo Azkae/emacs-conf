@@ -852,7 +852,7 @@ Returns nil if there is no active region."
       (with-temp-buffer
         (insert siglabel)
         ;; Add documentation, indented so we can distinguish multiple signatures
-        (when-let* ((doc (and (not briefp) sigdoc (eglot--format-markup sigdoc))))
+        (when-let (doc (and (not briefp) sigdoc (eglot--format-markup sigdoc)))
           (goto-char (point-max))
           (insert "\n" (replace-regexp-in-string "^" "  " doc)))
         ;; Try to highlight function name only
