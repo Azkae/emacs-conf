@@ -443,18 +443,33 @@ Returns nil if there is no active region."
 (use-package org
   :straight (:type built-in)
   :bind
-  (:map org-mode-map
-        ("M-." . org-open-at-point)
-        ("M-<return>" . conf--org-open-link-maybe)
-        ("M-<up>"     . (lambda () (interactive) (move-up 4)))
-        ("M-<down>"   . (lambda () (interactive) (move-down 4)))
-        ("M-H"        . org-shiftmetaleft)
-        ("M-L"        . org-shiftmetaright)
-        ("C-c /"      . nil))
+  (("C-c A"      . org-agenda)
+   :map org-mode-map
+   ("M-."        . org-open-at-point)
+   ("M-<return>" . conf--org-open-link-maybe)
+   ("M-<up>"     . (lambda () (interactive) (move-up 4)))
+   ("M-<down>"   . (lambda () (interactive) (move-down 4)))
+   ("M-H"        . org-shiftmetaleft)
+   ("M-L"        . org-shiftmetaright)
+   ("C-c /"      . nil)
+   :map org-read-date-minibuffer-local-map
+   ("M-h"        . org-calendar-backward-day)
+   ("M-j"        . org-calendar-forward-week)
+   ("M-k"        . org-calendar-backward-week)
+   ("M-l"        . org-calendar-forward-day))
   :config
   ;; (setq org-startup-folded t)
   (setq org-confirm-babel-evaluate nil)
   (setq org-support-shift-select t)
+
+  (setq org-M-RET-may-split-line '((default . nil)))
+  ;; (setq org-insert-heading-respect-content t)
+  (setq org-log-done 'time)
+  (setq org-log-into-drawer t)
+
+  (setq org-directory "~/Dropbox/org-roam/")
+  (setq org-agenda-files (list org-directory "~/Dropbox/org-roam/daily/"))
+
   (modify-syntax-entry ?= "." org-mode-syntax-table)
   (org-babel-do-load-languages
    'org-babel-load-languages
