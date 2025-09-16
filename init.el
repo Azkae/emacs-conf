@@ -2220,7 +2220,8 @@ Used to preselect nearest headings and imenu items.")
 (defun xref-with-dumb-jump ()
   "Use xref with only dumb-jump backend."
   (interactive)
-  (let ((xref-backend-functions '(dumb-jump-xref-activate)))
+  (let ((xref-backend-functions '(dumb-jump-xref-activate))
+        (xref-prompt-for-identifier nil))
     (call-interactively 'xref-find-definitions)))
 
 (define-key embark-identifier-map "s" #'xref-with-dumb-jump)
