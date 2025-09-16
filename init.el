@@ -452,6 +452,7 @@ Returns nil if there is no active region."
    ("M-H"        . org-shiftmetaleft)
    ("M-L"        . org-shiftmetaright)
    ("C-c /"      . nil)
+   ("M-,"        . org-mark-ring-goto)
    :map org-read-date-minibuffer-local-map
    ("M-h"        . org-calendar-backward-day)
    ("M-j"        . org-calendar-forward-week)
@@ -467,8 +468,8 @@ Returns nil if there is no active region."
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
 
-  (setq org-directory "~/Dropbox/org-roam/")
-  (setq org-agenda-files (list org-directory "~/Dropbox/org-roam/daily/"))
+  (setq org-directory "~/Dropbox/denotes/")
+  (setq org-agenda-files (list org-directory "~/Dropbox/denotes/"))
 
   (modify-syntax-entry ?= "." org-mode-syntax-table)
   (org-babel-do-load-languages
@@ -1076,61 +1077,6 @@ Returns nil if there is no active region."
 (use-package string-inflection
   :bind
   ("C-c _" . string-inflection-toggle))
-
-(use-package org-roam
-  :if (not (eq system-type 'windows-nt))
-  :diminish org-roam-mode
-  :init
-  (org-roam-db-autosync-mode)
-  :custom
-  (org-roam-directory (expand-file-name "~/Dropbox/org-roam"))
-  (org-roam-verbose nil)
-  ;; Create encrypted files by default
-  (org-roam-capture-templates '(("d" "default" plain "%?" :target
-                                 (file+head "%<%Y%m%d%H%M%S>-${slug}.org.gpg"
-                                            "#+title: ${title}")
-                                 :unnarrowed t)))
-  :bind
-  (("C-c n f" . org-roam-node-find)
-   ("C-c n t" . org-roam-dailies-goto-today)
-   ("C-c n y" . org-roam-dailies-goto-yesterday)
-   ("C-c n g" . org-roam-graph)
-   :map org-mode-map
-   (("C-c n i" . org-roam-node-insert))
-   (("M-," . org-mark-ring-goto)))
-  :config
-  (defun org-hide-properties ()
-    "Hide all org-mode headline property drawers in buffer. Could be slow if it has a lot of overlays."
-    (interactive)
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward
-              "^ *:properties:\n\\( *:.+?:.*\n\\)+ *:end:\n" nil t)
-        (let ((ov_this (make-overlay (match-beginning 0) (match-end 0))))
-          (overlay-put ov_this 'display "")
-          (overlay-put ov_this 'hidden-prop-drawer t))))
-    (put 'org-toggle-properties-hide-state 'state 'hidden))
-
-  (defun org-show-properties ()
-    "Show all org-mode property drawers hidden by org-hide-properties."
-    (interactive)
-    (remove-overlays (point-min) (point-max) 'hidden-prop-drawer t)
-    (put 'org-toggle-properties-hide-state 'state 'shown))
-
-  (defun org-toggle-properties ()
-    "Toggle visibility of property drawers."
-    (interactive)
-    (if (eq (get 'org-toggle-properties-hide-state 'state) 'hidden)
-        (org-show-properties)
-      (org-hide-properties)))
-
-  ;; call org-hide-properties after inserting a new node
-  (add-hook 'org-roam-post-node-insert-hook #'(lambda (_ _) (org-hide-properties))))
-
-(defun get-string-from-file (filePath)
-  (with-temp-buffer
-    (insert-file-contents filePath)
-    (buffer-string)))
 
 (use-package typescript-ts-mode
   :straight (:type built-in)
@@ -2915,6 +2861,76 @@ With universal argument ARG, open in another window."
         (backward-char (- (length string-at-point) cursor-pos))))))
 
 (define-key minibuffer-local-map (kbd "C-c C-e") 'string-edit-in-minibuffer)
+
+(use-package denote
+  :ensure t
+  :hook (dired-mode . denote-dired-mode)
+  :bind
+  (("C-c n n" . denote)
+   ("C-c n r" . denote-rename-file)
+   ("C-c n l" . denote-link)
+   ("C-c n b" . denote-backlinks)
+   ("C-c n d" . denote-dired)
+   ("C-c n g" . denote-grep))
+  :config
+  (setq denote-directory (expand-file-name "~/Dropbox/denotes/"))
+  (setq denote-known-keywords '("carbon" "emacs" "personal"))
+
+  (setq denote-prompts-with-history-as-completion
+        (remove 'denote-title-prompt denote-prompts-with-history-as-completion))
+  ;; (denote-rename-buffer-mode 1)
+  )
+
+(use-package consult-denote
+  :ensure t
+  :bind
+  (("C-c n f" . consult-denote-find)
+   ("C-c n g" . consult-denote-grep))
+  :config
+  (consult-denote-mode 1))
+
+(defun conf--denote-dired ()
+  (interactive)
+  (dired denote-directory))
+
+(use-package consult-denote
+  :ensure t
+  :bind
+  (("C-c n f" . consult-denote-find)
+   ("C-c n g" . consult-denote-grep))
+  :config
+  (consult-denote-mode 1))
+
+(defvar conf--project-local-identifier ".project"
+  "Filename(s) that identifies a directory as a project.
+You can specify a single filename or a list of names.")
+
+(defun conf--project-try-local (dir)
+  "Determine if DIR is a non-VC project.
+DIR must include a .project file to be considered a project."
+  (if-let ((root (if (listp conf--project-local-identifier)
+                     (seq-some (lambda (n)
+                                 (locate-dominating-file dir n))
+                               conf--project-local-identifier)
+                   (locate-dominating-file dir conf--project-local-identifier))))
+      (cons 'local root)))
+
+(cl-defmethod project-root ((project (head local)))
+  "Return root directory of current PROJECT."
+  (cdr project))
+
+(cl-defmethod project-ignores ((project (head local)) dir)
+  "Return list of ignore patterns for the local PROJECT in DIR."
+  (let ((default-ignores (cl-call-next-method project dir)))
+    (append default-ignores
+            (if (listp conf--project-local-identifier)
+                conf--project-local-identifier
+              (list conf--project-local-identifier)))))
+
+(use-package project
+  :straight (:type built-in)
+  :config
+  (add-hook 'project-find-functions 'conf--project-try-local 90))
 
 ;; TODO: test direnv
 
