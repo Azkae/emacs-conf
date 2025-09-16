@@ -2227,6 +2227,14 @@ Used to preselect nearest headings and imenu items.")
 (define-key embark-identifier-map "s" #'xref-with-dumb-jump)
 (add-to-list 'embark-target-injection-hooks '(xref-with-dumb-jump embark--ignore-target))
 
+(define-key grep-mode-map (kbd "TAB") 'compilation-display-error)
+(define-key compilation-mode-map (kbd "TAB") 'compilation-display-error)
+
+;; (define-key grep-mode-map (kbd "TAB") 'next-error-no-select)
+;; (define-key grep-mode-map (kbd "S-<tab>") 'previous-error-no-select)
+;; (define-key compilation-mode-map (kbd "TAB") 'next-error-no-select)
+;; (define-key compilation-mode-map (kbd "S-<tab>") 'previous-error-no-select)
+
 (use-package meow
   :config
   (setq meow--kbd-forward-char "C-%")
