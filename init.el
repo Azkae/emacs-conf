@@ -1379,7 +1379,15 @@ is a prefix length override, which is t for manual completion."
   :straight (:type built-in)
   :bind
   (:map python-ts-mode-map
-        ("C-c C-l" . nil)))
+        ("C-c C-l" . nil))
+  :config
+  (defun my-remove-python-completion-at-point ()
+    "Remove python-completion-at-point from completion-at-point-functions."
+    (setq completion-at-point-functions
+          (remove #'python-completion-at-point completion-at-point-functions)))
+
+  (add-hook 'python-mode-hook #'my-remove-python-completion-at-point)
+  (add-hook 'python-ts-mode-hook #'my-remove-python-completion-at-point))
 
 ;; (define-minor-mode conf--poetry-tracking-mode
 ;;   "Global mode to track poetry projects"
