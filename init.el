@@ -2897,21 +2897,19 @@ With universal argument ARG, open in another window."
    ("C-c n l" . denote-link)
    ("C-c n b" . denote-backlinks)
    ("C-c n d" . denote-dired)
-   ("C-c n g" . denote-grep))
+   ("C-c n g" . denote-grep)
+   ("C-c n f" . denote-open-or-create))
   :config
   (setq denote-directory (expand-file-name "~/Dropbox/denotes/"))
   (setq denote-known-keywords '("carbon" "emacs" "personal"))
 
   (setq denote-prompts-with-history-as-completion
-        (remove 'denote-title-prompt denote-prompts-with-history-as-completion))
-  ;; (denote-rename-buffer-mode 1)
-  )
+        (remove 'denote-title-prompt denote-prompts-with-history-as-completion)))
 
 (use-package consult-denote
   :ensure t
   :bind
-  (("C-c n f" . consult-denote-find)
-   ("C-c n g" . consult-denote-grep))
+  (("C-c n g" . consult-denote-grep))
   :config
   (consult-denote-mode 1))
 
