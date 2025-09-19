@@ -1876,6 +1876,7 @@ Provide only the improved version unless the user requests explanations or has s
   (interactive)
   (consult-ripgrep nil (thing-at-point 'symbol)))
 
+;; TODO: this could be replaced by just rebinding C-g to `abort-minibuffers`
 (defun conf--deactivate-region-before-quit ()
   "Deactivate region before keyboard quit if delete-selection-mode is active."
   (when (and delete-selection-mode (region-active-p))
