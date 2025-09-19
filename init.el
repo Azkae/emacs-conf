@@ -509,12 +509,21 @@ Returns nil if there is no active region."
 
 (defun delete-until-slash ()
   (interactive)
-  (when (memq (char-before) '(?/ ?:))
-    (delete-char -1))
-  (when (re-search-backward "[:/]" nil t)
-    (let ((separator (buffer-substring (point) (1+ (point)))))
-      (delete-region (point) (point-max))
-      (insert separator))))
+  (let ((start-pos (if (minibufferp)
+                       (minibuffer-prompt-end)
+                     (point-min))))
+    ;; Only delete the character before if it's past the start position
+    (when (and (memq (char-before) '(?/ ?:))
+               (> (point) start-pos))
+      (delete-char -1))
+    ;; Search backwards for separator, but don't go past the start position
+    (if (re-search-backward "[:/]" start-pos t)
+        ;; Found separator: delete everything after it and reinsert the separator
+        (let ((separator (buffer-substring (point) (1+ (point)))))
+          (delete-region (point) (point-max))
+          (insert separator))
+      ;; No separator found: delete everything until start position
+      (delete-region start-pos (point-max)))))
 
 (defun delete-until-slash-maybe ()
   (interactive)
