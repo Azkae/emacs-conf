@@ -2436,6 +2436,7 @@ Used to preselect nearest headings and imenu items.")
   (add-hook 'vterm-mode-hook 'meow-insert-mode)
   (add-hook 'meow-global-mode-hook (lambda () (setq delete-active-region t)))
   (add-to-list 'meow-mode-state-list '(Custom-mode . normal))
+  (add-to-list 'meow-mode-state-list '(eww-mode . normal))
   (meow-global-mode))
 
 (el-patch-feature meow)
