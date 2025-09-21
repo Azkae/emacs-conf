@@ -1967,6 +1967,7 @@ Provide only the improved version unless the user requests explanations or has s
  consult-bookmark consult-recent-file consult-xref
  consult--source-bookmark consult--source-file-register
  consult--source-recent-file consult--source-project-recent-file
+ conf--consult-ripgrep
  :preview-key '(:debounce 0.1 any)) ;; Option 1: Delay preview
 
 ;; (consult-customize
@@ -2234,11 +2235,11 @@ Used to preselect nearest headings and imenu items.")
         (xref-prompt-for-identifier nil))
     (call-interactively 'xref-find-definitions)))
 
-(define-key embark-identifier-map "s" #'xref-with-dumb-jump)
+(define-key embark-identifier-map "f" #'xref-with-dumb-jump)
 (add-to-list 'embark-target-injection-hooks '(xref-with-dumb-jump embark--ignore-target))
 
-(define-key grep-mode-map (kbd "TAB") 'compilation-display-error)
-(define-key compilation-mode-map (kbd "TAB") 'compilation-display-error)
+(define-key embark-identifier-map "s" #'conf--consult-ripgrep)
+(add-to-list 'embark-target-injection-hooks '(conf--consult-ripgrep embark--ignore-target))
 
 ;; (define-key grep-mode-map (kbd "TAB") 'next-error-no-select)
 ;; (define-key grep-mode-map (kbd "S-<tab>") 'previous-error-no-select)
