@@ -1917,7 +1917,8 @@ Provide only the improved version unless the user requests explanations or has s
   (interactive)
   (let ((path (or (conf--minibuffer-selected-directory-maybe)
                   (read-directory-name "Select directory: "))))
-    (conf--exit-minibuffer-and-execute (lambda () (consult-ripgrep path)))))
+    (conf--exit-minibuffer-and-execute (lambda () (let ((this-command 'consult-ripgrep))
+                                                    (consult-ripgrep path))))))
 
 (defun conf--magit-in-selected-directory ()
   (interactive)
