@@ -2910,11 +2910,10 @@ With universal argument ARG, open in another window."
    ("C-c n l" . denote-link)
    ("C-c n b" . denote-backlinks)
    ("C-c n d" . denote-dired)
-   ("C-c n g" . denote-grep)
    ("C-c n f" . denote-open-or-create))
   :config
   (setq denote-directory (expand-file-name "~/Dropbox/denotes/"))
-  (setq denote-known-keywords '("carbon" "emacs" "personal"))
+  (setq denote-known-keywords '("carbon" "emacs" "personal" "temporary"))
 
   (setq denote-prompts-with-history-as-completion
         (remove 'denote-title-prompt denote-prompts-with-history-as-completion)))
@@ -2922,21 +2921,13 @@ With universal argument ARG, open in another window."
 (use-package consult-denote
   :ensure t
   :bind
-  (("C-c n g" . consult-denote-grep))
+  (("C-c n s" . consult-denote-grep))
   :config
   (consult-denote-mode 1))
 
 (defun conf--denote-dired ()
   (interactive)
   (dired denote-directory))
-
-(use-package consult-denote
-  :ensure t
-  :bind
-  (("C-c n f" . consult-denote-find)
-   ("C-c n g" . consult-denote-grep))
-  :config
-  (consult-denote-mode 1))
 
 (defvar conf--project-local-identifier ".project"
   "Filename(s) that identifies a directory as a project.
