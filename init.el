@@ -1977,7 +1977,7 @@ Provide only the improved version unless the user requests explanations or has s
  consult-bookmark consult-recent-file consult-xref
  consult--source-bookmark consult--source-file-register
  consult--source-recent-file consult--source-project-recent-file
- conf--consult-ripgrep
+ conf--consult-ripgrep conf--select-directory-and-ripgrep
  :preview-key '(:debounce 0.1 any)) ;; Option 1: Delay preview
 
 ;; (consult-customize
