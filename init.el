@@ -471,6 +471,15 @@ Returns nil if there is no active region."
   (setq org-directory "~/Dropbox/denotes/")
   (setq org-agenda-files (list org-directory "~/Dropbox/denotes/"))
 
+  (defun conf--org-table-align-after-yank (&rest _args)
+    "Align org table after yanking if point is in a table."
+    (when (and (eq major-mode 'org-mode)
+               (org-at-table-p))
+      (org-table-align)))
+
+  (advice-add 'yank :after #'conf--org-table-align-after-yank)
+  (advice-add 'yank-pop :after #'conf--org-table-align-after-yank)
+
   (modify-syntax-entry ?= "." org-mode-syntax-table)
   (org-babel-do-load-languages
    'org-babel-load-languages
