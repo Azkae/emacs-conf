@@ -1981,13 +1981,16 @@ Provide only the improved version unless the user requests explanations or has s
    )
   :custom
   (consult-async-input-debounce 0.1)
+  (consult-async-input-throttle 0.3)
   (consult-line-start-from-top 't)
   (consult-narrow-key "<")
   :config
   (custom-set-faces
     '(consult-line-number-wrapped ((t (:inherit consult-line-number-prefix)))))
   (setq xref-show-xrefs-function 'consult-xref)
-  (setq xref-show-definitions-function 'consult-xref))
+  (setq xref-show-definitions-function 'consult-xref)
+
+  (add-to-list 'consult-preview-excluded-files "\\.gpg\\'"))
 
 (consult-customize
  consult-ripgrep consult-git-grep consult-grep
