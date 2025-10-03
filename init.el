@@ -421,9 +421,26 @@ Returns nil if there is no active region."
 (setq epa-file-select-keys 'silent)
 (setq epa-file-encrypt-to '("C37350DE46EE427FC9FA5ADFF63419C720EB67CE"))
 
+(defun conf--toggle-flymake-error-color ()
+  "Toggle the flymake-error face between its original red underline and no color."
+  (interactive)
+  (let ((current-underline (face-attribute 'flymake-error :underline)))
+    (if (and current-underline
+             (listp current-underline)
+             (string= (plist-get current-underline :color) "Red1"))
+        ;; Currently has red color, remove it
+        (progn
+          (set-face-attribute 'flymake-error nil :underline nil)
+          (message "Flymake error color disabled"))
+      ;; Currently has no color or different color, restore original
+      (progn
+        (set-face-attribute 'flymake-error nil :underline '(:style wave :color "Red1"))
+        (message "Flymake error color enabled")))))
+
 (use-package flymake
   :bind
   (("C-c i f" . flymake-mode)
+   ("C-c i t" . conf--toggle-flymake-error-color)
    ;; ("C-c i r" . conf--toggle-flymake-end-of-line)
    :map flymake-mode-map
    ("C-c i l" . flymake-show-buffer-diagnostics)
