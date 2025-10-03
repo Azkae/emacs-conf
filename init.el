@@ -2983,6 +2983,8 @@ DIR must include a .project file to be considered a project."
   :config
   (add-hook 'project-find-functions 'conf--project-try-local 90))
 
+(midnight-mode)
+
 ;; TODO: test direnv
 
 ;; load graphic settings
