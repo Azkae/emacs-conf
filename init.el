@@ -2436,7 +2436,7 @@ Used to preselect nearest headings and imenu items.")
      '("q" . nil)
      '("Q" . meow-goto-line)
      '("r" . meow-replace)
-     '("R" . meow-replace)
+     '("R" . meow-swap-grab)            ;meow-replace
      '("s" . meow-kill)
      '("t" . meow-till)
      '("T" . (lambda () (interactive) (let ((current-prefix-arg -1))
