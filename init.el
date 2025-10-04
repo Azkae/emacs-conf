@@ -742,6 +742,7 @@ Returns nil if there is no active region."
   (add-hook 'git-timemachine-mode-hook #'meow--switch-to-motion))
 
 (use-package magit-delta
+  :straight (:fork (:host github :repo "Azkae/magit-delta"))
   :if (executable-find "delta")
   :bind
   :custom
@@ -749,31 +750,7 @@ Returns nil if there is no active region."
   (magit-delta-default-light-theme "Github")
   (magit-delta-hide-plus-minus-markers nil)
   :config
-  (add-hook 'magit-diff-wash-diffs-hook #'magit-delta-call-delta-and-convert-ansi-escape-sequences)
-  (setq magit-diff-refine-hunk nil)
-
-  (defvar conf--magit-delta-setup nil)
-
-  (defun conf--setup-magit-delta ()
-    (unless conf--magit-delta-setup
-      (setq conf--magit-delta-setup t)
-      (setq magit-delta-delta-args
-            `("--max-line-distance" "0.6" "--true-color" "always" "--color-only"
-              "--plus-style" ,(format "syntax \"%s\"" (face-attribute 'diff-added :background))
-              "--plus-emph-style" ,(format "syntax \"%s\"" (face-attribute 'diff-refine-added :background))
-              "--minus-emph-style" ,(format "syntax \"%s\"" (face-attribute 'diff-refine-removed :background))
-              "--minus-style" ,(format "normal \"%s\"" (face-attribute 'diff-removed :background))))
-
-      (set-face-attribute 'magit-diff-added-highlight nil
-                          :background (face-attribute 'diff-added :background))
-      (set-face-attribute 'magit-diff-added nil
-                          :background (face-attribute 'diff-added :background))
-      (set-face-attribute 'magit-diff-removed-highlight nil
-                          :background (face-attribute 'diff-removed :background))
-      (set-face-attribute 'magit-diff-removed nil
-                          :background (face-attribute 'diff-removed :background))))
-
-  (add-hook 'magit-mode-hook 'conf--setup-magit-delta))
+  (add-hook 'magit-mode-hook #'(lambda () (magit-delta-mode +1))))
 
 (use-package quickrun
   :bind
