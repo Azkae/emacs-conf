@@ -1380,8 +1380,8 @@ is a prefix length override, which is t for manual completion."
 (use-package diff-hl
   :init
   (global-diff-hl-mode)
-  (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+  ;; (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
+  ;; (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
   :custom
   (diff-hl-update-async t)
   (diff-hl-disable-on-remote t))
