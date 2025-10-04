@@ -2895,7 +2895,7 @@ With universal argument ARG, open in another window."
 (use-package magit-prime
   :straight (:type git :host github :repo "Azkae/magit-prime")
   :config
-  (add-hook 'magit-pre-refresh-hook 'magit-prime-refresh-cache))
+  (magit-prime-mode))
 
 (use-package ws-butler
   :straight (:type git :host github :repo "lewang/ws-butler")
