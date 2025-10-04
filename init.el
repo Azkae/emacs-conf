@@ -486,7 +486,8 @@ Returns nil if there is no active region."
   (setq org-log-into-drawer t)
 
   (setq org-directory "~/Dropbox/denotes/")
-  (setq org-agenda-files (list org-directory "~/.notes"))
+  (setq org-agenda-files (list org-directory "~/Dropbox/todo.org"))
+  (setq org-default-notes-file "~/Dropbox/todo.org")
 
   (defun conf--org-table-align-after-yank (&rest _args)
     "Align org table after yanking if point is in a table."
