@@ -640,8 +640,9 @@ Returns nil if there is no active region."
 
 (use-package magit
   :bind
-  (("C-x g" . magit-status)
+  (("C-x g"   . magit-status)
    ("C-x v l" . magit-log-buffer-file)
+   ("C-x v f" . magit-find-file)
    :map magit-status-mode-map
    ("M-p" . nil)
    :map magit-diff-mode-map
@@ -654,8 +655,7 @@ Returns nil if there is no active region."
   (magit-diff-visit-avoid-head-blob t)
   (magit-auto-revert-immediately t)
   (magit-bury-buffer-function (lambda (_) (magit-mode-quit-window t)))
-  (vc-display-status nil)
-  )
+  (vc-display-status nil))
 
 ;; This git is faster got some reason
 (let ((git-path "/Applications/Xcode.app/Contents/Developer/usr/bin/git"))
