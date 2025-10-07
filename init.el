@@ -461,6 +461,7 @@ Returns nil if there is no active region."
   :straight (:type built-in)
   :bind
   (("C-c A"      . org-agenda)
+   ("C-c Z"      . org-capture)
    :map org-mode-map
    ("M-."        . org-open-at-point)
    ("M-<return>" . conf--org-open-link-maybe)
