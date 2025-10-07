@@ -485,6 +485,7 @@ Returns nil if there is no active region."
   ;; (setq org-insert-heading-respect-content t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
+  (setq org-tags-column -90)
 
   (setq org-directory "~/Dropbox/denotes/")
   (setq org-agenda-files (list org-directory "~/Dropbox/todo.org"))
