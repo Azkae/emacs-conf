@@ -650,6 +650,7 @@ Returns nil if there is no active region."
   (("C-x g"   . magit-status)
    ("C-x v l" . magit-log-buffer-file)
    ("C-x v f" . magit-find-file)
+   ("C-x v s" . magit-show-commit)
    :map magit-status-mode-map
    ("M-p" . nil)
    :map magit-diff-mode-map
