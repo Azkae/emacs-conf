@@ -490,6 +490,11 @@ Returns nil if there is no active region."
   (setq org-agenda-files (list org-directory "~/Dropbox/todo.org"))
   (setq org-default-notes-file "~/Dropbox/todo.org")
 
+  (setq org-capture-templates
+        '(("t" "Tasks" entry
+           (file "")
+           "* TODO %?\n%u\n%a")))
+
   (defun conf--org-table-align-after-yank (&rest _args)
     "Align org table after yanking if point is in a table."
     (when (and (eq major-mode 'org-mode)
