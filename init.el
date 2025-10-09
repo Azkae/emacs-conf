@@ -2525,13 +2525,18 @@ The thing `string' is not available in Emacs 27.'"
 (defvar conf--meow-select-on-change-original nil
   "Store the original value of meow-select-on-change")
 
+(defvar conf--meow-mc-enabled nil)
+
 (defun conf--meow-handle-multiple-cursors ()
   "Adjust meow-select-on-change based on multiple-cursors-mode state."
   (if multiple-cursors-mode
       (progn
-        (setq conf--meow-select-on-change-original meow-select-on-change)
-        (setq meow-select-on-change nil))
-    (setq meow-select-on-change conf--meow-select-on-change-original)))
+        (unless conf--meow-mc-enabled
+          (setq conf--meow-mc-enabled t)
+          (setq conf--meow-select-on-change-original meow-select-on-change)
+          (setq meow-select-on-change nil)))
+    (setq meow-select-on-change conf--meow-select-on-change-original)
+    (setq conf--meow-mc-enabled nil)))
 
 ;; Add hook to handle multiple-cursors-mode changes
 (add-hook 'multiple-cursors-mode-hook #'conf--meow-handle-multiple-cursors)
