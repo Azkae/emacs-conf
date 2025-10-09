@@ -662,7 +662,7 @@ Returns nil if there is no active region."
   (magit-list-refs-sortby "-creatordate")
   (magit-diff-visit-avoid-head-blob t)
   (magit-auto-revert-immediately t)
-  (magit-bury-buffer-function (lambda (_) (diff-hl-magit-post-refresh) (magit-mode-quit-window t)))
+  (magit-bury-buffer-function (lambda (_) (magit-mode-quit-window t)))
   (vc-display-status nil))
 
 ;; This git is faster got some reason
@@ -1368,6 +1368,8 @@ is a prefix length override, which is t for manual completion."
   (global-diff-hl-mode)
   ;; (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
   ;; (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+  (add-hook 'git-commit-post-finish-hook 'diff-hl-magit-post-refresh)
+  (add-hook 'magit-post-commit-hook 'diff-hl-magit-post-refresh)
   :custom
   (diff-hl-update-async t)
   (diff-hl-disable-on-remote t))
