@@ -2532,9 +2532,9 @@ The thing `string' is not available in Emacs 27.'"
   (if multiple-cursors-mode
       (progn
         (unless conf--meow-mc-enabled
-          (setq conf--meow-mc-enabled t)
           (setq conf--meow-select-on-change-original meow-select-on-change)
-          (setq meow-select-on-change nil)))
+          (setq meow-select-on-change nil)
+          (setq conf--meow-mc-enabled t)))
     (setq meow-select-on-change conf--meow-select-on-change-original)
     (setq conf--meow-mc-enabled nil)))
 
