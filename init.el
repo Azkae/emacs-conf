@@ -29,6 +29,9 @@
 (add-to-list 'custom-theme-load-path conf--base-dir)
 (add-to-list 'load-path conf--base-dir)
 
+(setq custom-file (concat conf--base-dir "custom.el"))
+(load custom-file)
+
 (defun load-if-exists (f)
   (if (file-exists-p (expand-file-name f))
       (load-file (expand-file-name f))))
