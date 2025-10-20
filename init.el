@@ -483,6 +483,7 @@ Returns nil if there is no active region."
   ;; (setq org-startup-folded t)
   (setq org-confirm-babel-evaluate nil)
   (setq org-support-shift-select t)
+  (setq org-special-ctrl-a/e t)
 
   (setq org-M-RET-may-split-line '((default . nil)))
   ;; (setq org-insert-heading-respect-content t)
