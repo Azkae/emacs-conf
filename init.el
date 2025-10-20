@@ -2627,6 +2627,7 @@ The thing `string' is not available in Emacs 27.'"
   (setq tramp-auto-save-directory "~/.emacs.d/tramp-autosave/")
   (setq tramp-copy-size-limit (* 1024 1024)) ;; 1MB
   (setq tramp-verbose 3)
+  (setq tramp-kubernetes-namespace nil)
 
   ;; see https://coredumped.dev/2025/06/18/making-tramp-go-brrrr./
   (setq tramp-ssh-controlmaster-options "-o ControlMaster=auto -o ControlPath='/tmp/tramp.%%C' -o ControlPersist=3600")
