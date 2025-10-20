@@ -1262,7 +1262,8 @@ is a prefix length override, which is t for manual completion."
 (defvar conf--project-files-cache-time (make-hash-table :test 'equal))
 
 (defun conf--project-files-cached (project)
-  (let* ((root (project-root project))
+  (let* ((load-dir conf--base-dir)
+         (root (project-root project))
          (cache-time (gethash root conf--project-files-cache-time))
          (now (current-time)))
     (when (or (not cache-time)
@@ -1270,7 +1271,9 @@ is a prefix length override, which is t for manual completion."
       (puthash root now conf--project-files-cache-time)
       (async-start
        (lambda ()
+         (add-to-list 'load-path load-dir)
          (require 'project)
+         (require 'project-local)
          (project-files project))
 
        (lambda (result)
