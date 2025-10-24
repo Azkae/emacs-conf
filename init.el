@@ -1516,9 +1516,10 @@ is a prefix length override, which is t for manual completion."
       (read-number "Pid: ")))
 
   (defun conf--dape-config-autopid (config)
-    (when (eq (plist-get config :processId) :autopid)
+    (if (eq (plist-get config :processId) :autopid)
       (let ((pid (conf--dape-read-pid)))
-        (plist-put config :processId pid))))
+        (plist-put config :processId pid))
+      config))
 
   (add-to-list 'dape-default-config-functions 'conf--dape-config-autopid)
 
