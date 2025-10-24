@@ -1497,6 +1497,40 @@ is a prefix length override, which is t for manual completion."
        :request "attach"
        :type "python"
        :justMyCode nil
+       :showReturnValue t))
+
+  (defun conf--dape-read-pid ()
+    "Read pid of active processes if possible."
+    (if-let ((pids (list-system-processes)))
+        (let ((collection
+               (mapcar (lambda (pid)
+                         (let ((args (alist-get 'args (process-attributes pid))))
+                           (cons (concat
+                                  (format "%d" pid)
+                                  (when args
+                                    (format ": %s" args)))
+                                 pid)))
+                       pids)))
+          (alist-get (completing-read "Pid: " collection)
+                     collection nil nil 'equal))
+      (read-number "Pid: ")))
+
+  (defun conf--dape-config-autopid (config)
+    (when (eq (plist-get config :processId) :autopid)
+      (let ((pid (conf--dape-read-pid)))
+        (plist-put config :processId pid))))
+
+  (add-to-list 'dape-default-config-functions 'conf--dape-config-autopid)
+
+  (add-to-list 'dape-configs
+    '(debugpy-attach-pid
+       modes (python-mode python-ts-mode)
+       command "python3"
+       command-args ("-m" "debugpy.adapter")
+       :request "attach"
+       :type "python"
+       :processId :autopid
+       :justMyCode nil
        :showReturnValue t)))
 
 ;; Build and run in debugger:
