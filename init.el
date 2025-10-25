@@ -1893,9 +1893,11 @@ Provide only the improved version unless the user requests explanations or has s
         ("C-l" . right-char)
         ("C-d" . conf--vertico-preview))
         ("M-t" . vertico-buffer-mode)
-  (:map minibuffer-local-map
-        ("C-p" . previous-history-element)
-        ("C-n" . next-history-element))
+        (:map minibuffer-local-map
+              ("C-h" . left-char)
+              ("C-l" . right-char)
+              ("C-p" . previous-history-element)
+              ("C-n" . next-history-element))
   :init
   (vertico-mode)
   (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
