@@ -136,6 +136,11 @@
   (if (use-region-p)
       (call-interactively 'kill-region)))
 
+(defun conf--scroll-left ()
+  (interactive)
+  (unless (window-hscroll)
+    (scroll-left)))
+
 (global-set-key (kbd "M-x") 'kill-region-maybe)
 (global-set-key (kbd "M-c") 'kill-ring-save)
 (global-set-key (kbd "M-v") 'yank)
@@ -146,8 +151,8 @@
 ;; (global-set-key (kbd "M-k") 'compile)
 (global-set-key (kbd "C-x C-c") nil)
 (global-set-key (kbd "C-M-l") nil)
-(global-set-key (kbd "M-h") nil)
-(global-set-key (kbd "M-l") nil)
+(global-set-key (kbd "M-h") 'conf--scroll-left)
+(global-set-key (kbd "M-l") 'scroll-right)
 (global-set-key (kbd "M-u") nil)
 (global-set-key (kbd "C-S-x C-S-c") 'save-buffers-kill-terminal)
 
@@ -1871,6 +1876,25 @@ Provide only the improved version unless the user requests explanations or has s
       (let ((embark-quit-after-action nil))
         (embark-dwim)))))
 
+(defvar minibuffer-hscroll-step 10
+  "Number of columns to scroll horizontally in minibuffer.")
+
+(defun scroll-minibuffer-right ()
+  "Scroll minibuffer content to the right."
+  (interactive)
+  (let ((window (minibuffer-window)))
+    (when window
+      (set-window-hscroll window
+                          (+ (window-hscroll window) minibuffer-hscroll-step)))))
+
+(defun scroll-minibuffer-left ()
+  "Scroll minibuffer content to the left."
+  (interactive)
+  (let ((window (minibuffer-window)))
+    (when window
+      (set-window-hscroll window
+                          (max 0 (- (window-hscroll window) minibuffer-hscroll-step))))))
+
 ;; Enable vertico
 (use-package vertico
   :custom
@@ -1899,6 +1923,8 @@ Provide only the improved version unless the user requests explanations or has s
         (:map minibuffer-local-map
               ("C-h" . left-char)
               ("C-l" . right-char)
+              ("M-h" . scroll-minibuffer-left)
+              ("M-l" . scroll-minibuffer-right)
               ("C-p" . previous-history-element)
               ("C-n" . next-history-element))
   :init
