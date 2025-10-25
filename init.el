@@ -1490,6 +1490,9 @@ is a prefix length override, which is t for manual completion."
 
   (add-hook 'dape-start-hook 'delete-other-windows)
 
+  ;; disable C-c d i repeat
+  (put 'dape-info 'repeat-map nil)
+
   (add-to-list 'dape-configs
     '(debugpy-attach-port
        modes (python-mode python-ts-mode)
