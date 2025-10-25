@@ -485,7 +485,7 @@ Returns nil if there is no active region."
    ("M-k"        . org-calendar-backward-week)
    ("M-l"        . org-calendar-forward-day))
   :config
-  ;; (setq org-startup-folded t)
+  (setq org-startup-folded t)
   (setq org-confirm-babel-evaluate nil)
   (setq org-support-shift-select t)
   (setq org-special-ctrl-a/e t)
@@ -503,7 +503,7 @@ Returns nil if there is no active region."
   (setq org-capture-templates
         '(("t" "Tasks" entry
            (file "")
-           "* TODO %?\n%u\n%a")))
+           "* TODO %?\n%a")))
 
   (defun conf--org-table-align-after-yank (&rest _args)
     "Align org table after yanking if point is in a table."
