@@ -1514,8 +1514,46 @@ is a prefix length override, which is t for manual completion."
 
   (add-hook 'dape-start-hook 'delete-other-windows)
 
-  ;; disable C-c d i repeat
-  (put 'dape-info 'repeat-map nil)
+  ;; customize dape repeat
+  (defvar dape-global-repeat-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map "p" #'dape-pause)
+      (define-key map "c" #'dape-continue)
+      (define-key map "n" #'dape-next)
+      (define-key map "s" #'dape-step-in)
+      (define-key map "o" #'dape-step-out)
+      (define-key map "r" #'dape-restart)
+      (define-key map "u" #'dape-until)
+      (define-key map "b" #'dape-breakpoint-toggle)
+      (define-key map "B" #'dape-breakpoint-remove-all)
+      (define-key map "t" #'dape-select-thread)
+      (define-key map "S" #'dape-select-stack)
+      (define-key map ">" #'dape-stack-select-down)
+      (define-key map "<" #'dape-stack-select-up)
+      (define-key map "q" #'dape-quit)
+      map))
+
+  (dolist (cmd '(dape
+                 dape-pause
+                 dape-continue
+                 dape-next
+                 dape-step-in
+                 dape-step-out
+                 dape-restart
+                 dape-restart-frame
+                 dape-until
+                 dape-breakpoint-log
+                 dape-breakpoint-expression
+                 dape-breakpoint-hits
+                 dape-breakpoint-toggle
+                 dape-breakpoint-remove-all
+                 dape-stack-select-up
+                 dape-stack-select-down
+                 dape-select-stack
+                 dape-select-thread
+                 dape-watch-dwim
+                 dape-evaluate-expression))
+    (put cmd 'repeat-map 'dape-global-repeat-map))
 
   (add-to-list 'dape-configs
     '(debugpy-attach-port
