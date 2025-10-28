@@ -1923,8 +1923,6 @@ Provide only the improved version unless the user requests explanations or has s
         (:map minibuffer-local-map
               ("C-h" . left-char)
               ("C-l" . right-char)
-              ("M-h" . conf--scroll-left)
-              ("M-l" . conf--scroll-right)
               ("C-p" . previous-history-element)
               ("C-n" . next-history-element))
   :init
