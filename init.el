@@ -1958,6 +1958,7 @@ Provide only the improved version unless the user requests explanations or has s
         ("C-l" . right-char)
         ("C-d" . conf--vertico-preview))
         ("M-t" . vertico-buffer-mode)
+        ("M-RET" . vertico-exit)
         (:map minibuffer-local-map
               ("C-h" . left-char)
               ("C-l" . right-char)
