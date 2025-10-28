@@ -1327,14 +1327,25 @@ is a prefix length override, which is t for manual completion."
   :init
   (add-hook 'completion-at-point-functions #'cape-file)
 
+  (defun conf--dabbrev-buffers ()
+    (cape--buffer-list
+     (lambda (buf)
+       (let ((mode (buffer-local-value 'major-mode buf)))
+         (and (or (provided-mode-derived-p mode #'text-mode)
+                  (provided-mode-derived-p mode #'prog-mode))
+              (< (buffer-size buf) 200000))))))
+
+  (setq cape-dabbrev-buffer-function 'conf--dabbrev-buffers)
+
   (defun conf--setup-comint-mode-completions ()
     (setq-local completion-at-point-functions
                 (list
-                 (cape-capf-prefix-length
-                  (cape-capf-super 'conf--project-files-capf
-                                   #'cape-dabbrev
-                                   'conf--aidermacs-keywords-completion-at-point)
-                  3)
+                 (cape-capf-prefix-length (cape-capf-super
+                                           'conf--project-files-capf
+                                           #'cape-dabbrev
+                                           'conf--aidermacs-keywords-completion-at-point)
+                                          3)
+                 #'cape-dabbrev
                  'comint-completion-at-point t)))
 
   (add-hook 'comint-mode-hook 'conf--setup-comint-mode-completions)
