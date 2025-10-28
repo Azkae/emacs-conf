@@ -774,7 +774,7 @@ Returns nil if there is no active region."
   (magit-delta-default-dark-theme "Monokai Extended")
   (magit-delta-default-light-theme "Github")
   (magit-delta-hide-plus-minus-markers nil)
-  (magit-delta-max-size 100000)
+  (magit-delta-max-size 200000)
   :config
   (add-hook 'magit-mode-hook #'(lambda () (magit-delta-mode +1))))
 
