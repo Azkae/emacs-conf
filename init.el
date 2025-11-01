@@ -475,23 +475,21 @@ Returns nil if there is no active region."
 (use-package org
   :straight (:type built-in)
   :bind
-  (("C-c A"      . org-agenda)
-   ("C-c Z"      . org-capture)
-   :map org-mode-map
-   ("M-."        . org-open-at-point)
-   ("M-<return>" . conf--org-open-link-maybe)
-   ("M-<up>"     . (lambda () (interactive) (move-up 4)))
-   ("M-<down>"   . (lambda () (interactive) (move-down 4)))
-   ("M-H"        . org-shiftmetaleft)
-   ("M-L"        . org-shiftmetaright)
-   ("C-c /"      . nil)
-   ("M-,"        . org-mark-ring-goto)
-   ("M-h"        . nil)
-   :map org-read-date-minibuffer-local-map
-   ("M-h"        . org-calendar-backward-day)
-   ("M-j"        . org-calendar-forward-week)
-   ("M-k"        . org-calendar-backward-week)
-   ("M-l"        . org-calendar-forward-day))
+  (:map org-mode-map
+        ("M-."        . org-open-at-point)
+        ("M-<return>" . conf--org-open-link-maybe)
+        ("M-<up>"     . (lambda () (interactive) (move-up 4)))
+        ("M-<down>"   . (lambda () (interactive) (move-down 4)))
+        ("M-H"        . org-shiftmetaleft)
+        ("M-L"        . org-shiftmetaright)
+        ("C-c /"      . nil)
+        ("M-,"        . org-mark-ring-goto)
+        ("M-h"        . nil)
+        :map org-read-date-minibuffer-local-map
+        ("M-h"        . org-calendar-backward-day)
+        ("M-j"        . org-calendar-forward-week)
+        ("M-k"        . org-calendar-backward-week)
+        ("M-l"        . org-calendar-forward-day))
   :config
   (setq org-startup-folded t)
   (setq org-confirm-babel-evaluate nil)
@@ -503,15 +501,6 @@ Returns nil if there is no active region."
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
   (setq org-tags-column -90)
-
-  (setq org-directory "~/Dropbox/denotes/")
-  (setq org-agenda-files (list org-directory "~/Dropbox/todo.org"))
-  (setq org-default-notes-file "~/Dropbox/todo.org")
-
-  (setq org-capture-templates
-        '(("t" "Tasks" entry
-           (file "")
-           "* TODO %?\n%a")))
 
   (defun conf--org-table-align-after-yank (&rest _args)
     "Align org table after yanking if point is in a table."
@@ -533,6 +522,23 @@ Returns nil if there is no active region."
   (add-to-list 'org-src-lang-modes '("tsx" . tsx-ts))
   (add-to-list 'org-src-lang-modes '("jsx" . tsx-ts))
   (add-to-list 'org-src-lang-modes '("typescript" . tsx-ts)))
+
+(use-package org-agenda
+  :straight (:type built-in)
+  :bind
+  (("C-c A"      . org-agenda)
+   ("C-c Z"      . org-capture)
+   :map org-agenda-mode-map
+   ("L"          . nil))
+  :config
+  (setq org-directory "~/Dropbox/denotes/")
+  (setq org-agenda-files (list org-directory "~/Dropbox/todo.org"))
+  (setq org-default-notes-file "~/Dropbox/todo.org")
+
+  (setq org-capture-templates
+        '(("t" "Tasks" entry
+           (file "")
+           "* TODO %?\n%a"))))
 
 (use-package gcmh
   :config
