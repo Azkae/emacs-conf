@@ -1516,6 +1516,8 @@ is a prefix length override, which is t for manual completion."
   (setq dape-key-prefix "\C-cd")
   (add-hook 'dape-compile-compile-hooks 'kill-buffer)
   :config
+  ;; Allow setting breakpoint with mouse
+  (dape-breakpoint-global-mode)
   (set-face-attribute 'dape-exception-description-face nil :foreground "black")
 
   (add-hook 'dape-start-hook 'delete-other-windows)
