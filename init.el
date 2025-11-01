@@ -2923,6 +2923,7 @@ With universal argument ARG, open in another window."
   :config
   (setq ediff-split-window-function	'split-window-horizontally)
   (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+  (setq ediff-keep-variants nil)
   ;; (winner-mode)
   ;; (add-hook 'ediff-after-quit-hook-internal 'winner-undo)
   
