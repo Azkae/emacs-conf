@@ -2848,8 +2848,7 @@ With universal argument ARG, open in another window."
 (use-package crux
   :bind
   (("C-c C-u" . crux-upcase-region)
-   ("C-c C-l" . crux-downcase-region)
-   ("C-c M-c" . crux-capitalize-region)))
+   ("C-c C-l" . crux-downcase-region)))
 
 (use-package highlight-parentheses
   :hook
