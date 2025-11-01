@@ -1380,8 +1380,8 @@ is a prefix length override, which is t for manual completion."
 (use-package zygospore
   :bind
   (("C-x 1" . zygospore-toggle-delete-other-windows))
-  :custom
-  (zygospore-spore-formation-register-name ?📘))
+  :init
+  (setq zygospore-spore-formation-register-name ?📘))
 
 ;; Note: use dtrt-indent-undo to undo the guess
 (use-package dtrt-indent
