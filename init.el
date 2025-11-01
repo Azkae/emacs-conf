@@ -2558,7 +2558,7 @@ Used to preselect nearest headings and imenu items.")
      '("u" . ignore)
      '("U" . meow-undo)
      '("M-U" . undo-fu-only-redo)
-     '("v" . meow-visit)
+     '("v" . nil)                       ;meow-visit
      '("w" . meow-mark-word)
      '("W" . meow-mark-symbol)
      '("x" . meow-line)
