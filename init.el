@@ -2084,6 +2084,8 @@ Provide only the improved version unless the user requests explanations or has s
    ("M-X"         . execute-extended-command)
    ("M-o"         . find-file)
    ("M-O"         . consult-buffer)
+   ("C-x r r"     . consult-bookmark)
+   ("C-x r s"     . bookmark-set)
    :map prog-mode-map
    ;; ("M-."         . conf--consult-ripgrep)
    :map minibuffer-local-map
