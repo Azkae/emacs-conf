@@ -3083,6 +3083,13 @@ With universal argument ARG, open in another window."
 
 (midnight-mode)
 
+(use-package shell-maker)
+(use-package acp
+  :straight (:type git :host github :repo "xenodium/acp.el"))
+
+(use-package agent-shell
+  :straight (:type git :host github :repo "xenodium/agent-shell"))
+
 ;; TODO: test direnv
 
 ;; load graphic settings
