@@ -1911,7 +1911,21 @@ Provide only the improved version unless the user requests explanations or has s
                        :optional t))
    :confirm nil
    :include t
-   :category "emacs"))
+   :category "emacs")
+
+  (gptel-make-preset 'visible-buffers
+    :description "Include the full text of all buffers visible in the frame."
+    :context
+    '(:eval (mapcar #'window-buffer (remove (selected-window)
+                                            (window-list (selected-frame))))))
+
+  (gptel-make-preset 'visible-text
+    :description "Include visible text from all windows in the frame."
+    :context
+    '(:eval (mapcar (lambda (win) ;; Create (<buffer> :bounds ((start . end)))
+                      `(,(window-buffer win)
+                        :bounds ((,(window-start win) . ,(window-end win)))))
+                    (remove (selected-window) (window-list (selected-frame)))))))
 
 (use-package sideline
   :custom
