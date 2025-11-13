@@ -483,6 +483,7 @@ Returns nil if there is no active region."
         ("M-H"        . org-shiftmetaleft)
         ("M-L"        . org-shiftmetaright)
         ("C-c /"      . nil)
+        ("C-c C-u"    . nil)
         ("M-,"        . org-mark-ring-goto)
         ("M-h"        . nil)
         :map org-read-date-minibuffer-local-map
