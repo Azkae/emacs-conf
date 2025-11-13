@@ -1413,7 +1413,7 @@ is a prefix length override, which is t for manual completion."
 ;; Poetry/UV project tracking
 
 (defvar conf--python-current-root nil)
-(defun conf--python-track-virtualenv()
+(defun conf--python-track-venv()
   (interactive)
   (when (not (file-remote-p buffer-file-name))
     (let ((root (locate-dominating-file default-directory "pyproject.toml")))
@@ -1433,7 +1433,7 @@ is a prefix length override, which is t for manual completion."
             (setq conf--python-current-root root)
             (pyvenv-activate venv))))))))
 
-(add-hook 'find-file-hook 'conf--python-track-virtualenv)
+(add-hook 'find-file-hook 'conf--python-track-venv)
 
 (use-package python
   :straight (:type built-in)
