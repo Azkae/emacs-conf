@@ -2153,6 +2153,7 @@ Provide only the improved version unless the user requests explanations or has s
  consult--source-bookmark consult--source-file-register
  consult--source-recent-file consult--source-project-recent-file
  conf--consult-ripgrep conf--select-directory-and-ripgrep
+ project-switch-project
  :preview-key '(:debounce 0.1 any)) ;; Option 1: Delay preview
 
 ;; (consult-customize
