@@ -1924,7 +1924,35 @@ Provide only the improved version unless the user requests explanations or has s
     '(:eval (mapcar (lambda (win) ;; Create (<buffer> :bounds ((start . end)))
                       `(,(window-buffer win)
                         :bounds ((,(window-start win) . ,(window-end win)))))
-                    (remove (selected-window) (window-list (selected-frame)))))))
+                    (remove (selected-window) (window-list (selected-frame))))))
+
+  (defun gptel-review-code ()
+    "Send current region or buffer for code review in a dedicated buffer."
+    (interactive)
+    (let* ((review-buffer (get-buffer-create "*Code Review*"))
+           (code-text (if (use-region-p)
+                          (buffer-substring-no-properties (region-beginning) (region-end))
+                        (buffer-substring-no-properties (point-min) (point-max))))
+           (source-info (format "Code review for %s:\n" (buffer-name)))
+           (prompt (concat "Please review this code:\n\n=\n" code-text "\n=")))
+
+      ;; Setup the review buffer
+      (with-current-buffer review-buffer
+        (erase-buffer)
+        (markdown-mode)
+        (insert source-info)
+        (insert "=" (make-string 50 ?=) "=\n\n")
+        (insert "Requesting code review...\n\n"))
+
+      ;; Send request directly to the review buffer
+      (gptel-request prompt
+                     :buffer review-buffer
+                     :position (with-current-buffer review-buffer (point-max))
+                     :system "You are a code reviewer. Provide a concise review focusing on critical issues, bugs, and immediate improvements. Keep responses brief."
+                     :stream t)
+
+      ;; Show the buffer
+      (pop-to-buffer review-buffer))))
 
 (use-package sideline
   :custom
