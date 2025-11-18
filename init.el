@@ -2194,52 +2194,45 @@ Provide only the improved version unless the user requests explanations or has s
 (require 'embark-consult)
 
 (defvar consult--previous-point nil
-    "Location of point before entering minibuffer.
-Used to preselect nearest headings and imenu items.")
+  "Location of point before entering minibuffer.
+    Used to preselect nearest headings and imenu items.")
+
+(defvar consult--vertico-updated-selection nil
+  "Used to see if vertico recomputed candidates.")
 
 (defun consult--set-previous-point (&optional arg1 arg2)
   "Save location of point. Used before entering the minibuffer."
   (setq consult--previous-point (point)))
 
-(advice-add #'consult-org-heading :before #'consult--set-previous-point)
-(advice-add #'consult-outline :before #'consult--set-previous-point)
-(advice-add #'consult-line :before #'consult--set-previous-point)
-
-
-(advice-add #'vertico--update :around #'conf--consult-vertico-update-selection)
-(advice-add #'vertico--recompute :after #'conf--vertico-set-update-selection)
-
-(defun conf--vertico-set-update-selection(&rest _)
+(defun vertico--set-updated-selection(&rest _)
   "Used to re-trigger a candidate selection after a new input"
-  (setq conf--vertico-update-selection t))
+  (setq consult--vertico-updated-selection t))
 
-(defun conf--closest-candidates-index (target candidates predicate)
+(defun my/closest-candidates-index (target candidates predicate)
   "Return the index of the closest candidate to TARGET using PREDICATE to extract candidate position."
   (cl-loop for candidate in candidates
            for index from 0
            for candidate-pos = (funcall predicate candidate)
-           do (when (>= candidate-pos target)
+           do (when (> candidate-pos target)
                 (cl-return (max 0 (- index 1))))
            finally return (- index 1)))
 
-(defun conf--consult-vertico-update-selection (orig-fun &rest args)
+(defun vertico--update-selected-candidate-maybe (orig-fun &rest args)
   "Pick the nearest candidate rather than the first after updating candidates."
-  (setq conf--vertico-update-selection nil)
-  (let ((result (apply orig-fun args))
-        (conf--current-minibuffer-command current-minibuffer-command))
+  (setq consult--vertico-updated-selection nil)
+  (let ((result (apply orig-fun args)))
 
-    ;; (message "conf--vertico-update-selection: %s" conf--vertico-update-selection)
-    (when (and conf--vertico-update-selection
+    (when (and consult--vertico-updated-selection
                consult--previous-point vertico--candidates
-               (memq conf--current-minibuffer-command
+               (memq current-minibuffer-command
                      '(consult-org-heading consult-outline consult-line conf--consult-line)))
       (setq vertico--index
             (max 0
-                 (or (conf--closest-candidates-index
+                 (or (my/closest-candidates-index
                       consult--previous-point
                       vertico--candidates
                       (lambda (cand)
-                        (cl-case conf--current-minibuffer-command
+                        (cl-case current-minibuffer-command
                           (consult-outline
                            (car (consult--get-location cand)))
                           (consult-org-heading
@@ -2261,6 +2254,15 @@ Used to preselect nearest headings and imenu items.")
                             (goto-char (minibuffer-prompt-end))
                             (push-mark (point-max) nil t))))
   (consult-line (thing-at-point 'symbol)))
+
+
+(advice-add #'consult-org-heading :before #'consult--set-previous-point)
+(advice-add #'consult-outline :before #'consult--set-previous-point)
+(advice-add #'consult-line :before #'consult--set-previous-point)
+(advice-add #'vertico--update :around #'vertico--update-selected-candidate-maybe)
+(advice-add #'vertico--recompute :after #'vertico--set-updated-selection)
+
+(setq consult-line-start-from-top t)
 
 (require 'vertico-multiform)
 (vertico-multiform-mode +1)
