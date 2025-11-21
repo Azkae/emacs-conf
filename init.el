@@ -2140,8 +2140,6 @@ Provide only the improved version unless the user requests explanations or has s
   (consult-line-start-from-top 't)
   (consult-narrow-key "<")
   :config
-  (custom-set-faces
-    '(consult-line-number-wrapped ((t (:inherit consult-line-number-prefix)))))
   (setq xref-show-xrefs-function 'consult-xref)
   (setq xref-show-definitions-function 'consult-xref)
 
