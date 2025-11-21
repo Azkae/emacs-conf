@@ -1266,8 +1266,7 @@ is a prefix length override, which is t for manual completion."
 (use-package orderless
   :init
   (setq completion-styles '(tab orderless basic)
-        completion-category-defaults nil
-        completion-category-overrides '((file (styles partial-completion)))))
+        completion-category-defaults nil))
 
 (when (< emacs-major-version 29)
   (advice-add 'pcomplete-completions-at-point :around #'cape-wrap-silent)
