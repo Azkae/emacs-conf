@@ -2264,17 +2264,12 @@ Provide only the improved version unless the user requests explanations or has s
                  (or (my/closest-candidates-index
                       consult--previous-point
                       vertico--candidates
-                      (lambda (cand)
-                        (cl-case current-minibuffer-command
-                          (consult-outline
-                           (car (consult--get-location cand)))
-                          (consult-org-heading
-                           (get-text-property 0 'consult--candidate cand))
-                          (consult-line
-                           (car (consult--get-location cand)))
-                          (conf--consult-line
-                           (car (consult--get-location cand)))
-                          (t (error "Missing conf--consult-vertico-update-selection config")))))
+                      (pcase current-minibuffer-command
+                        ((or 'consult-outline 'consult-line 'conf--consult-line)
+                         (lambda (cand) (car (consult--get-location cand))))
+                        ('consult-org-heading
+                         (lambda (cand) (get-text-property 0 'consult--candidate cand)))
+                        (_ (error (format "Unsupported command in vertico--update-selected-candidate-maybe: %s" current-minibuffer-command)))))
                      (length vertico--candidates)))))
 
     result))
