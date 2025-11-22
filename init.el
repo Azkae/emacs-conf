@@ -529,8 +529,9 @@ Returns nil if there is no active region."
   :bind
   (("C-c A"      . org-agenda)
    ("C-c Z"      . org-capture)
-   :map org-agenda-mode-map
-   ("L"          . nil))
+   ;; :map org-agenda-mode-map
+   ;; ("L"          . nil)
+   )
   :config
   (setq org-directory "~/Dropbox/denotes/")
   (setq org-agenda-files (list org-directory "~/Dropbox/todo.org"))
