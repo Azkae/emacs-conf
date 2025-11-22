@@ -2178,7 +2178,8 @@ Provide only the improved version unless the user requests explanations or has s
   (setq xref-show-xrefs-function 'consult-xref)
   (setq xref-show-definitions-function 'consult-xref)
 
-  (add-to-list 'consult-preview-excluded-files "\\.gpg\\'"))
+  (add-to-list 'consult-preview-excluded-files "\\.gpg\\'")
+  (require 'consult-compile))
 
 (consult-customize
  consult-ripgrep consult-git-grep consult-grep
