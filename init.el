@@ -521,6 +521,7 @@ Returns nil if there is no active region."
         '((:engine . "postgresql")))
   (setq org-babel-default-header-args:elisp
         '((:lexical . t)))
+  (add-to-list 'org-src-lang-modes '("json" . js-json))
   (add-to-list 'org-src-lang-modes '("tsx" . tsx-ts))
   (add-to-list 'org-src-lang-modes '("jsx" . tsx-ts))
   (add-to-list 'org-src-lang-modes '("typescript" . tsx-ts)))
