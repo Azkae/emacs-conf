@@ -3170,6 +3170,11 @@ With universal argument ARG, open in another window."
 (use-package agent-shell
   :straight (:type git :host github :repo "xenodium/agent-shell"))
 
+(use-package verb
+  :config
+  (with-eval-after-load 'org
+    (define-key org-mode-map (kbd "C-c C-r") verb-command-map)))
+
 ;; TODO: test direnv
 
 ;; load graphic settings
