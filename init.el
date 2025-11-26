@@ -158,6 +158,8 @@
 ;; (global-set-key (kbd "M-k") 'compile)
 (global-set-key (kbd "C-x C-c") nil)
 (global-set-key (kbd "C-M-l") nil)
+(global-set-key (kbd "M-l") nil)
+(global-set-key (kbd "M-h") nil)
 (global-set-key (kbd "M-H") 'conf--scroll-left)
 (global-set-key (kbd "M-L") 'conf--scroll-right)
 (global-set-key (kbd "M-u") nil)
