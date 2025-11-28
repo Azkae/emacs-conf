@@ -20,6 +20,8 @@
         markdown-cycle
         markdown-end-of-line
         markdown-outdent-or-delete
+        mc--insert-letter-and-increase
+        mc--insert-number-and-increase
         meow-append
         meow-back-word
         meow-bounds-of-thing
@@ -38,6 +40,7 @@
         meow-next
         meow-next-symbol
         meow-next-word
+        meow-open-above
         meow-pop-selection
         meow-prev
         meow-replace
