@@ -2728,35 +2728,6 @@ Respond with a a complete Verb file and nothing else.")
 
 (el-patch-feature meow)
 
-(defun conf--treesit-string-bounds-at-point ()
-  (when-let* ((node (treesit-node-at (point)))
-              (parent (treesit-node-parent node))
-              (is-string (member (treesit-node-type parent) '("string" "template_string"))))
-    (cons (treesit-node-start parent)
-          (treesit-node-end parent))))
-
-;; Fix bound of string in tsx mode, uses treesitter instead of bounds-of-thing-at-point
-(el-patch-defun meow--bounds-of-string-1 ()
-  "Return the bounds of the string under the cursor.
-
-The thing `string' is not available in Emacs 27.'"
-  (if (version< emacs-version "28")
-      (when (meow--in-string-p)
-        (let (beg end)
-          (save-mark-and-excursion
-            (while (meow--in-string-p)
-              (backward-char 1))
-            (setq beg (point)))
-          (save-mark-and-excursion
-            (while (meow--in-string-p)
-              (forward-char 1))
-            (setq end (point)))
-          (cons beg end)))
-    (el-patch-swap (bounds-of-thing-at-point 'string)
-                   (if (treesit-language-at (point))
-                       (conf--treesit-string-bounds-at-point)
-                     (bounds-of-thing-at-point 'string)))))
-
 (el-patch-defun meow--bounds-of-string (&optional inner)
   (when-let* ((bounds (meow--bounds-of-string-1)))
     (let ((beg (car bounds))
