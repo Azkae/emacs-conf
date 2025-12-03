@@ -1143,7 +1143,8 @@ Returns nil if there is no active region."
 (use-package markdown-mode
   :bind
   (:map markdown-mode-map
-   ("M-p" . nil))
+        ("M-p" . nil)
+        ("C-c C-u" . nil))
   :custom
   (markdown-fontify-code-blocks-natively t)
   :config
