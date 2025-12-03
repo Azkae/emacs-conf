@@ -2011,7 +2011,7 @@ POST /alerts
 GET /alerts/{{(read-string \"Alert ID: \")}}/status
 ```
 
-Respond with a a complete, ready-to-use Verb mode file that allows users to interact with the API.")
+Respond with a a complete Verb file and nothing else.")
 
   (gptel-make-preset 'visible-text
     :description "Include visible text from all windows in the frame."
