@@ -1335,6 +1335,7 @@ is a prefix length override, which is t for manual completion."
   (("M-*" . conf--cape-dabbrev-and-enable-corfu))
   :init
   (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-dabbrev)
 
   (defun conf--dabbrev-buffers ()
     (cape--buffer-list
