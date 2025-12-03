@@ -1412,6 +1412,7 @@ is a prefix length override, which is t for manual completion."
   (add-hook 'git-commit-post-finish-hook 'diff-hl-magit-post-refresh)
   (add-hook 'magit-post-commit-hook 'diff-hl-magit-post-refresh)
   :custom
+  (diff-hl-show-hunk-inline-smart-lines nil)
   (diff-hl-update-async t)
   (diff-hl-disable-on-remote t))
 
