@@ -538,13 +538,41 @@ Returns nil if there is no active region."
    )
   :config
   (setq org-directory "~/Dropbox/denotes/")
-  (setq org-agenda-files (list org-directory "~/Dropbox/todo.org"))
+  (setq org-agenda-files (list org-directory "~/Dropbox/todo.org" "~/Dropbox/archive-todo.org"))
   (setq org-default-notes-file "~/Dropbox/todo.org")
 
   (setq org-capture-templates
         '(("t" "Tasks" entry
            (file "")
            "* TODO %?\n%a"))))
+
+(setq org-archive-location "archive-%s::")
+
+(defun org-archive-all-done ()
+  "Archive all DONE items in the current buffer."
+  (interactive)
+  (let ((done-positions '())
+        (archived-count 0))
+    ;; First pass: collect all DONE item positions
+    (org-map-entries
+     (lambda ()
+       (push (point) done-positions))
+     "TODO=\"DONE\"")
+    ;; Second pass: archive from bottom to top (so positions stay valid)
+    (dolist (pos (sort done-positions '>))
+      (goto-char pos)
+      (when (org-entry-is-done-p)  ; Double-check it's still DONE
+        (org-archive-subtree)
+        (setq archived-count (1+ archived-count))))
+    (message "Archived %d DONE items" archived-count)))
+
+(defun org-archive-all-done-confirm ()
+  "Archive all DONE items with confirmation."
+  (interactive)
+  (let ((done-count (length (org-map-entries t "TODO=\"DONE\""))))
+    (when (and (> done-count 0)
+               (y-or-n-p (format "Archive %d DONE items? " done-count)))
+      (org-archive-all-done))))
 
 (use-package gcmh
   :config
