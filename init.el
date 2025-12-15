@@ -3239,6 +3239,10 @@ With universal argument ARG, open in another window."
   (with-eval-after-load 'org
     (define-key org-mode-map (kbd "C-c C-r") verb-command-map)))
 
+(with-eval-after-load 'eww
+  (define-key eww-mode-map (kbd "M-,") 'eww-back-url)
+  (define-key eww-mode-map (kbd "C-M-,") 'eww-forward-url))
+
 ;; TODO: test direnv
 
 ;; load graphic settings
