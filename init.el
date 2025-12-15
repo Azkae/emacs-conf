@@ -3228,7 +3228,11 @@ With universal argument ARG, open in another window."
   :straight (:type git :host github :repo "xenodium/acp.el"))
 
 (use-package agent-shell
-  :straight (:type git :host github :repo "xenodium/agent-shell"))
+  :straight (:type git :host github :repo "xenodium/agent-shell")
+  :config
+  (with-eval-after-load 'shell-maker
+    (define-key agent-shell-mode-map (kbd "C-M-h") nil))
+  (setq agent-shell-anthropic-default-session-mode-id "plan"))
 
 (use-package verb
   :config
