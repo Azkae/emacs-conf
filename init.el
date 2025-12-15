@@ -2430,22 +2430,26 @@ Respond with a a complete Verb file and nothing else.")
 
 (defun conf--embark-consult-export-xref (items)
   "Create a grep-like buffer listing ITEMS from xref."
-  (embark-consult--export-grep
-   :header "Exported xref results:\n\n"
-   :lines items
-   :insert
-   (lambda (items)
-     (let ((count 0))
-       (dolist (item items)
-         (let* ((xref (get-text-property 0 'consult-xref item))
-                (loc (xref-item-location xref))
-                (file (or (xref-file-location-file loc) ""))
-                (line (xref-location-line loc))
-                (summary (xref-item-summary xref)))
-           (insert (format "%s:%d:%s\n" file line summary))
-           (cl-incf count)))
-       count))
-   :footer #'ignore))
+  (let ((project-path (when-let ((project (project-current)))
+                        (project-root project))))
+    (embark-consult--export-grep
+     :header "Exported xref results:\n\n"
+     :lines items
+     :insert
+     (lambda (items)
+       (let ((count 0))
+         (dolist (item items)
+           (let* ((xref (get-text-property 0 'consult-xref item))
+                  (loc (xref-item-location xref))
+                  (file (or (xref-file-location-file loc) ""))
+                  (line (xref-location-line loc))
+                  (summary (xref-item-summary xref)))
+             (insert (format "%s:%d:%s\n" (file-relative-name file project-path) line summary))
+             (cl-incf count)))
+         count))
+     :footer (lambda ()
+               (when project-path
+                 (setq default-directory project-path))))))
 
 ;; export grep result with consult-line
 (setf (alist-get 'consult-location embark-exporters-alist)
