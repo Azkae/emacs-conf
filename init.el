@@ -1363,7 +1363,7 @@ is a prefix length override, which is t for manual completion."
   (("M-*" . conf--cape-dabbrev-and-enable-corfu))
   :init
   (add-hook 'completion-at-point-functions #'cape-file)
-  (add-hook 'completion-at-point-functions #'cape-dabbrev)
+  (add-hook 'completion-at-point-functions (cape-capf-prefix-length #'cape-dabbrev 3))
 
   (defun conf--dabbrev-buffers ()
     (cape--buffer-list
@@ -1383,7 +1383,7 @@ is a prefix length override, which is t for manual completion."
                                            #'cape-dabbrev
                                            'conf--aidermacs-keywords-completion-at-point)
                                           3)
-                 #'cape-dabbrev
+                 (cape-capf-prefix-length #'cape-dabbrev 3)
                  'comint-completion-at-point t)))
 
   (add-hook 'comint-mode-hook 'conf--setup-comint-mode-completions)
