@@ -1160,7 +1160,41 @@ Returns nil if there is no active region."
   :mode (("\\.ts\\'" . typescript-ts-mode)
          ("\\.tsx\\'" . tsx-ts-mode))
   :custom
-  (typescript-ts-mode-indent-offset 4))
+  (typescript-ts-mode-indent-offset 4)
+  :config
+
+  ;; Fix bound of string on tsx
+  (defun tsx-string-bounds-at-point ()
+    "Get bounds of string at point in TSX mode, handling string_fragment."
+    (when (treesit-available-p)
+      (let* ((node (treesit-node-at (point)))
+             (node-type (treesit-node-type node)))
+        (cond
+         ;; Handle string_fragment - get the parent string node
+         ((equal node-type "string_fragment")
+          (let ((parent (treesit-node-parent node)))
+            (when (and parent
+                       (string-match-p "string\\|template_string"
+                                       (treesit-node-type parent)))
+              (cons (treesit-node-start parent) (treesit-node-end parent)))))
+         ;; Handle direct string nodes
+         ((string-match-p "string\\|template_string\\|jsx_text" node-type)
+          (cons (treesit-node-start node) (treesit-node-end node)))
+         ;; Fallback: try parent
+         (t (let ((parent (treesit-node-parent node)))
+              (when (and parent
+                         (string-match-p "string\\|template_string"
+                                         (treesit-node-type parent)))
+                (cons (treesit-node-start parent) (treesit-node-end parent)))))))))
+
+  (defun tsx-setup-string-bounds ()
+    "Setup proper string bounds detection for TSX mode."
+    (setq-local bounds-of-thing-at-point-provider-alist
+                (cons '(string . tsx-string-bounds-at-point)
+                      (assq-delete-all 'string bounds-of-thing-at-point-provider-alist))))
+
+  ;; Add to tsx-ts-mode hook
+  (add-hook 'tsx-ts-mode-hook #'tsx-setup-string-bounds))
 
 (with-eval-after-load 'tsx-ts-mode
   (modify-syntax-entry ?` "\"" tsx-ts-mode-syntax-table))
