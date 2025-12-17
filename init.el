@@ -1794,7 +1794,7 @@ is a prefix length override, which is t for manual completion."
   (global-set-key (kbd "C-c , t") 'gptel-tools)
   (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
     (setq
-     gptel-model 'claude-sonnet-4-20250514
+     gptel-model 'claude-sonnet-4-5-20250929
      gptel-backend (gptel-make-anthropic "Claude"
 				     :stream t
 				     :key anthropic-api-key)))
