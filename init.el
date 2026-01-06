@@ -1792,6 +1792,7 @@ is a prefix length override, which is t for manual completion."
   (global-set-key (kbd "C-c , a") 'gptel-add)
   (global-set-key (kbd "C-c , ,") 'gptel-menu)
   (global-set-key (kbd "C-c , t") 'gptel-tools)
+  (global-set-key (kbd "C-c , C") 'gptel--suffix-context-buffer)
   (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
     (setq
      gptel-model 'claude-sonnet-4-5-20250929
