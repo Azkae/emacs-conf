@@ -3169,7 +3169,8 @@ With universal argument ARG, open in another window."
    :map minuet-active-mode-map
    ("M-p" . #'minuet-previous-suggestion)
    ("M-n" . #'minuet-next-suggestion)
-   ("M-A" . #'minuet-accept-suggestion))
+   ("M-A" . #'minuet-accept-suggestion)
+   ("M-a" . #'minuet-accept-suggestion-line))
   :config
   ;; (setq minuet-provider 'claude)
 
