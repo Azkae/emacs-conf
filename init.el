@@ -3073,7 +3073,7 @@ With universal argument ARG, open in another window."
   (setq aidermacs-default-model "sonnet")
   (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
     (setenv "ANTHROPIC_API_KEY" anthropic-api-key))
-  (global-set-key (kbd "C-c a") 'aidermacs-transient-menu)
+  ;; (global-set-key (kbd "C-c a") 'aidermacs-transient-menu)
   (add-to-list 'aidermacs-language-name-map '("tsx" . "tsx-ts"))
   (add-to-list 'aidermacs-language-name-map '("typescript" . "tsx-ts")))
 
@@ -3093,7 +3093,7 @@ With universal argument ARG, open in another window."
 
 (advice-add 'aidermacs-run :around #'conf--aidermacs-run-advice)
 
-(add-to-list 'project-switch-commands '(aidermacs-run "Aider" "a"))
+(add-to-list 'project-switch-commands '(agent-shell "Agent shell" "a"))
 
 ;; Maybe we should do the opposite, a whitelist instead of a blacklist
 (defvar conf--use-default-history '(extended-command-history))
@@ -3288,6 +3288,21 @@ With universal argument ARG, open in another window."
   (with-eval-after-load 'shell-maker
     (define-key agent-shell-mode-map (kbd "C-M-h") nil))
   (setq agent-shell-anthropic-default-session-mode-id "plan"))
+
+(transient-define-prefix conf--agent-shell-menu ()
+  "Transient menu for agent-shell commands."
+  ["Agent Shell"
+   ["Core"
+    ("a" "Start agent shell" agent-shell)
+    ("m" "Set session mode" agent-shell-set-session-mode)]
+   ["Send"
+    ("r" "Send region" agent-shell-send-region)
+    ("f" "Send file" agent-shell-send-file)
+    ("c" "Prompt compose" agent-shell-prompt-compose)]
+   ["Other"
+    ("!" "Insert shell command output" agent-shell-insert-shell-command-output)]])
+
+(global-set-key (kbd "C-c a") 'conf--agent-shell-menu)
 
 (use-package verb
   :config
