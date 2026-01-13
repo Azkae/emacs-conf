@@ -3287,6 +3287,12 @@ With universal argument ARG, open in another window."
     (define-key agent-shell-mode-map (kbd "C-M-h") nil))
   (setq agent-shell-anthropic-default-session-mode-id "plan"))
 
+(defun conf--agent-shell-send-current-file ()
+  (interactive)
+  (when (buffer-file-name)
+    (agent-shell--insert-to-shell-buffer
+     :text (agent-shell--processed-files :files (list (buffer-file-name))))))
+
 (transient-define-prefix conf--agent-shell-menu ()
   "Transient menu for agent-shell commands."
   ["Agent Shell"
@@ -3296,6 +3302,7 @@ With universal argument ARG, open in another window."
    ["Send"
     ("r" "Send region" agent-shell-send-region)
     ("f" "Send file" agent-shell-send-file)
+    ("F" "Send current file" conf--agent-shell-send-current-file)
     ("c" "Prompt compose" agent-shell-prompt-compose)]
    ["Other"
     ("!" "Insert shell command output" agent-shell-insert-shell-command-output)]])
