@@ -2817,7 +2817,9 @@ Respond with a a complete Verb file and nothing else.")
          (goto-char beg)
          (el-patch-add
            (when (and inner (looking-at "f"))
-             (forward-char)))
+             (forward-char))
+           (when (and (not inner) (looking-back "f" 1))
+             (backward-char)))
          (funcall (if inner #'skip-syntax-forward #'skip-syntax-backward) "\"|")
          (point))
        (save-mark-and-excursion
