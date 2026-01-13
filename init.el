@@ -1722,12 +1722,9 @@ is a prefix length override, which is t for manual completion."
 (use-package org-modern
   :config
   (global-org-modern-mode)
-
-  ; (setq  ;; Org styling, hide markup etc.
-  ;  org-hide-emphasis-markers t
-  ;  org-pretty-entities t
-  ;  org-ellipsis "…")
-  (setq org-modern-fold-stars '(("▸" . "▾") ("▹" . "▿") ("▸" . "▾") ("▹" . "▿") ("▸" . "▾"))))
+  (setq org-modern-star nil)
+  ;; (setq org-modern-fold-stars '(("▸" . "▾") ("▹" . "▿") ("▸" . "▾") ("▹" . "▿") ("▸" . "▾")))
+  )
 
 (use-package org-modern-indent
   :straight (org-modern-indent :type git :host github :repo "jdtsmith/org-modern-indent")
