@@ -596,7 +596,12 @@ Returns nil if there is no active region."
 (use-package vundo
   :bind
   (("C-x u" . vundo)
-   ("C-x C-u" . vundo)))
+   ("C-x C-u" . vundo)
+   :map vundo-mode-map
+   ("h" . vundo-backward)
+   ("l" . vundo-forward)
+   ("j" . vundo-next)
+   ("k" . vundo-previous)))
 
 (defun delete-until-slash ()
   (interactive)
@@ -2804,6 +2809,7 @@ Respond with a a complete Verb file and nothing else.")
   (add-hook 'meow-global-mode-hook (lambda () (setq delete-active-region t)))
   (add-to-list 'meow-mode-state-list '(Custom-mode . normal))
   (add-to-list 'meow-mode-state-list '(eww-mode . normal))
+  (add-hook 'vundo-mode-hook (lambda () (meow-mode -1)))
   (meow-global-mode))
 
 (el-patch-feature meow)
