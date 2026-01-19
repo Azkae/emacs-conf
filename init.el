@@ -3299,14 +3299,15 @@ With universal argument ARG, open in another window."
   (interactive)
   (when (buffer-file-name)
     (agent-shell--insert-to-shell-buffer
-     :text (agent-shell--processed-files :files (list (buffer-file-name))))))
+     :text (agent-shell--get-files-context :files (list (buffer-file-name))))))
 
 (transient-define-prefix conf--agent-shell-menu ()
   "Transient menu for agent-shell commands."
   ["Agent Shell"
    ["Core"
     ("a" "Start agent shell" agent-shell)
-    ("m" "Set session mode" agent-shell-set-session-mode)]
+    ("m" "Set session mode" agent-shell-set-session-mode)
+    ("v" "Set model" agent-shell-set-session-model)]
    ["Send"
     ("r" "Send region" agent-shell-send-region)
     ("f" "Send file" agent-shell-send-file)
