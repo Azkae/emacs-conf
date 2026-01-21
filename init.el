@@ -506,6 +506,10 @@ Returns nil if there is no active region."
   (setq org-special-ctrl-a/e t)
   (setq org-src-preserve-indentation t)
 
+  (setq org-startup-with-inline-images t)
+  (setq org-image-actual-width nil)
+  (add-hook 'org-attach-after-change-hook #'(lambda (dir) (run-with-timer 0.1 nil 'org-display-inline-images)))
+
   (setq org-M-RET-may-split-line '((default . nil)))
   (setq org-insert-heading-respect-content t)
   (setq org-log-done 'time)
