@@ -514,7 +514,7 @@ Returns nil if there is no active region."
   (setq org-insert-heading-respect-content t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
-  (setq org-tags-column -90)
+  ;; (setq org-tags-column -90)
 
   (defun conf--org-table-align-after-yank (&rest _args)
     "Align org table after yanking if point is in a table."
