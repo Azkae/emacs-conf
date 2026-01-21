@@ -474,12 +474,18 @@ Returns nil if there is no active region."
       (call-interactively 'org-open-at-point)
     (call-interactively 'org-meta-return)))
 
+(defun conf--org-meta-return-split()
+  (interactive)
+  (let ((org-insert-heading-respect-content nil))
+    (call-interactively 'org-meta-return)))
+
 (use-package org
   :straight (:type built-in)
   :bind
   (:map org-mode-map
         ("M-."        . org-open-at-point)
         ("M-<return>" . conf--org-open-link-maybe)
+        ("C-M-<return>" . conf--org-meta-return-split)
         ("M-<up>"     . (lambda () (interactive) (move-up 4)))
         ("M-<down>"   . (lambda () (interactive) (move-down 4)))
         ("M-H"        . org-shiftmetaleft)
