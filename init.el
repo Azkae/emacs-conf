@@ -1382,6 +1382,9 @@ is a prefix length override, which is t for manual completion."
                   conf--project-files-cache))))
     (gethash root conf--project-files-cache)))
 
+(defun conf--project-files-cached-current ()
+  (conf--project-files-cached (project-current)))
+
 (defun conf--project-files-capf ()
   (when-let* ((project (project-current))
               (bounds (bounds-of-thing-at-point 'filename))
