@@ -2177,6 +2177,19 @@ and prepend it with a timestamp. Otherwise, save normally."
   (with-eval-after-load 'gptel
     (define-key gptel-mode-map (kbd "M-s") #'conf--gptel-save-buffer)))
 
+(use-package mcp
+  :config
+  (require 'gptel-integrations)
+  (setq mcp-hub-servers nil)
+  (add-to-list 'mcp-hub-servers '("deepwiki" :url "https://mcp.deepwiki.com/sse"))
+  (when-let ((brave-api-key (password-store-get "brave-api-key")))
+    (add-to-list 'mcp-hub-servers
+               `("brave"
+                 :command "docker"
+                 :args ("run", "-i", "--rm", "-e", "BRAVE_API_KEY", "docker.io/mcp/brave-search")
+                 :env (:BRAVE_API_KEY ,brave-api-key)))))
+
+
 (use-package sideline
   :custom
   (sideline-truncate t)
