@@ -505,6 +505,7 @@ Returns nil if there is no active region."
   (setq org-support-shift-select t)
   (setq org-special-ctrl-a/e t)
   (setq org-src-preserve-indentation t)
+  (setq org-hide-emphasis-markers t)
 
   (setq org-startup-with-inline-images t)
   (setq org-image-actual-width nil)
