@@ -2145,7 +2145,36 @@ Respond with a a complete Verb file and nothing else.")
         (add-file-local-variable-prop-line
          'eval '(and (fboundp 'gptel-mode) (gptel-mode 1))))))
 
-  (add-hook 'gptel-save-state-hook #'conf--gptel-add-auto-local-var))
+  (add-hook 'gptel-save-state-hook #'conf--gptel-add-auto-local-var)
+
+  (defvar conf--gptel-save-directory "~/gptel-chats/"
+  "Directory where gptel conversations are saved.")
+
+  (defun conf--gptel-save-buffer ()
+    "Save the current gptel buffer with proper integration.
+If the buffer is not yet associated with a file, prompt for a filename
+and prepend it with a timestamp. Otherwise, save normally."
+    (interactive)
+    (if (buffer-file-name)
+        ;; Buffer already has a file, just save it normally
+        (save-buffer)
+      ;; Buffer doesn't have a file yet, create timestamped filename
+      (unless (file-exists-p gptel-save-directory)
+        (make-directory gptel-save-directory t))
+
+      (let* ((timestamp (format-time-string "%Y%m%dT%H%M%S"))
+             (user-filename (read-string "Filename: "))
+             (full-filename (concat timestamp "_" user-filename ".org"))
+             (filepath (expand-file-name full-filename gptel-save-directory)))
+
+        ;; Set the buffer's file name and save
+        (set-visited-file-name filepath)
+        (save-buffer)
+        (message "Saved to %s" filepath))))
+
+  ;; Add the keybinding to gptel-mode-map
+  (with-eval-after-load 'gptel
+    (define-key gptel-mode-map (kbd "M-s") #'conf--gptel-save-buffer)))
 
 (use-package sideline
   :custom
