@@ -3373,6 +3373,15 @@ With universal argument ARG, open in another window."
   (define-key eww-mode-map (kbd "M-,") 'eww-back-url)
   (define-key eww-mode-map (kbd "C-M-,") 'eww-forward-url))
 
+(defun start-process@use-pipe (fn &rest args)
+    ;; checkdoc-params: (fn args)
+    "Advice to ensure that `start-process' uses a pipe rather than
+a pty for the compilation command. This increases performance on OSX
+by a factor of 10, as the default pty size is a pitiful 1024 bytes."
+    (let ((process-connection-type nil))
+      (apply fn args)))
+(setq magit-process-connection-type nil)
+
 ;; TODO: test direnv
 
 ;; load graphic settings
