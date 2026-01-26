@@ -1826,7 +1826,11 @@ is a prefix length override, which is t for manual completion."
 
   (defun conf--gptel-start-quick-session ()
     (interactive)
-    (let ((buffer-name (generate-new-buffer-name "*gptel-quick*")))
+    (let ((buffer-name (generate-new-buffer-name "*gptel-quick*"))
+          (default-directory (or (and (fboundp 'project-root)
+                                      (project-current)
+                                      (project-root (project-current)))
+                                 default-directory)))
       (gptel buffer-name nil "* ")
       (switch-to-buffer buffer-name)))
 
