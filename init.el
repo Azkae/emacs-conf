@@ -3353,7 +3353,8 @@ With universal argument ARG, open in another window."
   :config
   (with-eval-after-load 'shell-maker
     (define-key agent-shell-mode-map (kbd "C-M-h") nil))
-  (setq agent-shell-anthropic-default-session-mode-id "plan"))
+  (setq agent-shell-anthropic-default-session-mode-id "plan")
+  (advice-add 'agent-shell--project-files :override #'conf--project-files-cached-current))
 
 (defun conf--agent-shell-send-current-file ()
   (interactive)
