@@ -2165,7 +2165,7 @@ and prepend it with a timestamp. Otherwise, save normally."
 
       (let* ((timestamp (format-time-string "%Y%m%dT%H%M%S"))
              (user-filename (read-string "Filename: "))
-             (full-filename (concat timestamp "_" user-filename ".org"))
+             (full-filename (concat timestamp "--" (string-replace " " "-" user-filename) ".org"))
              (filepath (expand-file-name full-filename gptel-save-directory)))
 
         ;; Set the buffer's file name and save
