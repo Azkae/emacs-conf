@@ -2191,12 +2191,13 @@ and prepend it with a timestamp. Otherwise, save normally."
   :config
   (require 'gptel-integrations)
   (setq mcp-hub-servers nil)
-  (add-to-list 'mcp-hub-servers '("deepwiki" :url "https://mcp.deepwiki.com/sse"))
+  (add-to-list 'mcp-hub-servers '("deepwiki" :command "npx"
+                                  :args ("mcp-remote" "https://mcp.deepwiki.com/sse")))
   (when-let ((brave-api-key (password-store-get "brave-api-key")))
     (add-to-list 'mcp-hub-servers
                `("brave"
                  :command "docker"
-                 :args ("run", "-i", "--rm", "-e", "BRAVE_API_KEY", "docker.io/mcp/brave-search")
+                 :args ("run" "-i" "--rm" "-e" "BRAVE_API_KEY" "docker.io/mcp/brave-search")
                  :env (:BRAVE_API_KEY ,brave-api-key)))))
 
 
