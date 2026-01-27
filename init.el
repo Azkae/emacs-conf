@@ -2935,6 +2935,7 @@ and prepend it with a timestamp. Otherwise, save normally."
   :straight (meow-vterm :type git :host github :repo "accelbread/meow-vterm")
   :bind ((:map meow-vterm-normal-mode-map
                ("M-t"       . multi-vterm)
+               ("M-f"       . (lambda () (interactive) (vterm-copy-mode 1) (conf--consult-line)))
                ("M-E"       . (lambda () (interactive)
                                 (meow-insert)
                                 (conf--vterm-insert-cd)))
