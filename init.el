@@ -2158,7 +2158,7 @@ Respond with a a complete Verb file and nothing else.")
 
   (add-hook 'gptel-save-state-hook #'conf--gptel-add-auto-local-var)
 
-  (defvar conf--gptel-save-directory "~/gptel-chats/"
+  (defvar conf--gptel-save-directory "~/Dropbox/gptel-chats/"
   "Directory where gptel conversations are saved.")
 
   (defun conf--gptel-save-buffer ()
@@ -2170,13 +2170,13 @@ and prepend it with a timestamp. Otherwise, save normally."
         ;; Buffer already has a file, just save it normally
         (save-buffer)
       ;; Buffer doesn't have a file yet, create timestamped filename
-      (unless (file-exists-p gptel-save-directory)
-        (make-directory gptel-save-directory t))
+      (unless (file-exists-p conf--gptel-save-directory)
+        (make-directory conf--gptel-save-directory t))
 
       (let* ((timestamp (format-time-string "%Y%m%dT%H%M%S"))
              (user-filename (read-string "Filename: "))
              (full-filename (concat timestamp "--" (string-replace " " "-" user-filename) ".org"))
-             (filepath (expand-file-name full-filename gptel-save-directory)))
+             (filepath (expand-file-name full-filename conf--gptel-save-directory)))
 
         ;; Set the buffer's file name and save
         (set-visited-file-name filepath)
