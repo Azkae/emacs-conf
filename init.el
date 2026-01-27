@@ -2142,6 +2142,16 @@ Respond with a a complete Verb file and nothing else.")
       ;; Show the buffer
       (pop-to-buffer review-buffer)))
 
+  (defun gptel-collapse-tool-blocks ()
+    "Collapse all #+begin_tool blocks in the current org buffer."
+    (interactive)
+    (org-block-map
+     (lambda ()
+       (when (save-excursion
+               (beginning-of-line 1)
+               (looking-at "^[ \t]*#\\+begin_tool\\b"))
+         (org-fold-hide-block-toggle t)))))
+
   (defun conf--gptel-add-auto-local-var ()
     "Ensure that this file opens with `gptel-mode' enabled."
     (save-excursion
