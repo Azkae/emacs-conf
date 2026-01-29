@@ -1419,7 +1419,7 @@ is a prefix length override, which is t for manual completion."
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions (cape-capf-prefix-length #'cape-dabbrev 3))
 
-  (setq dabbrev-abbrev-char-regexp "\\sw\\|_")
+  (setq dabbrev-abbrev-char-regexp "\\sw\\|_\\|-")
 
   (defun conf--dabbrev-buffers ()
     (cape--buffer-list
