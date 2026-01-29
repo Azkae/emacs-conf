@@ -151,7 +151,6 @@
 (global-set-key (kbd "M-x") 'kill-region-maybe)
 (global-set-key (kbd "M-c") 'kill-ring-save)
 (global-set-key (kbd "M-v") 'yank)
-(global-set-key (kbd "M-d") "\C-a\C-@\C-e")
 (global-set-key (kbd "M-s") 'save-buffer)
 (global-set-key (kbd "M-N") 'goto-line)
 (global-set-key (kbd "M-a") 'recenter)
