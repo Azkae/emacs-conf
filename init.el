@@ -1413,7 +1413,7 @@ is a prefix length override, which is t for manual completion."
 
 (use-package cape
   :bind
-  (("M-*" . conf--cape-dabbrev-and-enable-corfu))
+  (("M-d" . conf--cape-dabbrev-and-enable-corfu))
   :init
   (require 'dabbrev)
   (add-hook 'completion-at-point-functions #'cape-file)
