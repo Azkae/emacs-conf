@@ -1496,11 +1496,13 @@ is a prefix length override, which is t for manual completion."
   (add-hook 'git-commit-post-finish-hook 'diff-hl-magit-post-refresh)
   (add-hook 'magit-post-commit-hook 'diff-hl-magit-post-refresh)
 
-  ;; This gives diff-hl even higher precedence than normal minor modes
-  ;; Fixes conflict with meow
-  (add-to-list 'emulation-mode-map-alists
-               `((diff-hl-show-hunk-inline-transient-mode
-                  . ,diff-hl-show-hunk-inline-transient-mode-map)))
+  ;; Fixes conflict with meow (n/p)
+  ;; Make sure to add after initializing meow since it also add keymaps to emulation-mode-map-alists
+  (require 'diff-hl-show-hunk-inline)
+  (add-hook 'meow-global-mode-hook
+            #'(lambda () (add-to-list 'emulation-mode-map-alists
+                                      `((diff-hl-show-hunk-inline-transient-mode
+                                         . ,diff-hl-show-hunk-inline-transient-mode-map)))))
   :custom
   (diff-hl-show-hunk-inline-smart-lines nil)
   (diff-hl-show-hunk-inline-hide-hunk t)
