@@ -3045,6 +3045,8 @@ and prepend it with a timestamp. Otherwise, save normally."
       save-some-buffers-action-alist)
 
 (use-package dirvish
+  :custom
+  (dired-listing-switches "-alFh")
   :init
   (dirvish-override-dired-mode)
   ;; (dirvish-peek-mode)
