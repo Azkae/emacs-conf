@@ -165,6 +165,7 @@
 (global-set-key (kbd "C-S-x C-S-c") 'save-buffers-kill-terminal)
 
 (global-set-key (kbd "C-c e") 'kmacro-end-and-call-macro)
+(global-set-key (kbd "M-£") 'shell-command-on-region)
 
 ;; remap registers
 (define-key global-map (kbd "C-c r") ctl-x-r-map)
