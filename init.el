@@ -2203,7 +2203,36 @@ and prepend it with a timestamp. Otherwise, save normally."
 
   ;; Add the keybinding to gptel-mode-map
   (with-eval-after-load 'gptel
-    (define-key gptel-mode-map (kbd "M-s") #'conf--gptel-save-buffer)))
+    (define-key gptel-mode-map (kbd "M-s") #'conf--gptel-save-buffer))
+
+  (defun gptel-psql-execute (sql-command &optional database)
+    "Execute a PostgreSQL command using psql -c.
+SQL-COMMAND is the SQL query to execute.
+DATABASE is optional and specifies which database to connect to."
+    (let* ((db-arg (if (and database (not (string-empty-p database)))
+                       (list "-d" database)
+                     nil))
+           (args (append '("-c") (list sql-command) db-arg))
+           (output (with-output-to-string
+                     (with-current-buffer standard-output
+                       (apply #'call-process "psql" nil t nil args)))))
+      output))
+
+  (gptel-make-tool
+   :name "execute_psql"
+   :function #'gptel-psql-execute
+   :description "Execute a PostgreSQL SQL command using psql -c and return the results. This can be used to query databases, check table schemas, or run any valid SQL command."
+   :args (list
+          '(:name "sql_command"
+            :type string
+            :description "The SQL command to execute, e.g. 'SELECT * FROM users LIMIT 10;' or '\\dt' to list tables")
+          '(:name "database"
+            :type string
+            :description "The database name to connect to. If not provided, uses the default database."
+            :optional t))
+   :category "database"
+   :confirm t
+   :include t))
 
 (use-package mcp
   :config
