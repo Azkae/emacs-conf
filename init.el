@@ -153,7 +153,7 @@
 (global-set-key (kbd "M-v") 'yank)
 (global-set-key (kbd "M-s") 'save-buffer)
 (global-set-key (kbd "M-N") 'goto-line)
-(global-set-key (kbd "M-a") 'recenter)
+(global-set-key (kbd "M-a") 'recenter-top-bottom)
 ;; (global-set-key (kbd "M-k") 'compile)
 (global-set-key (kbd "C-x C-c") nil)
 (global-set-key (kbd "C-M-l") nil)
