@@ -23,6 +23,7 @@
         mc--insert-letter-and-increase
         mc--insert-number-and-increase
         meow-append
+        meow-back-symbol
         meow-back-word
         meow-bounds-of-thing
         meow-cancel-selection
