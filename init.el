@@ -1210,7 +1210,13 @@ Returns nil if there is no active region."
                       (assq-delete-all 'string bounds-of-thing-at-point-provider-alist))))
 
   ;; Add to tsx-ts-mode hook
-  (add-hook 'tsx-ts-mode-hook #'tsx-setup-string-bounds))
+  (add-hook 'tsx-ts-mode-hook #'tsx-setup-string-bounds)
+  (add-to-list 'typescript-ts-mode--sexp-nodes "object_type")
+  (add-to-list 'typescript-ts-mode--sexp-nodes "interface_body")
+  (add-to-list 'typescript-ts-mode--sexp-nodes "class_body")
+  (add-to-list 'typescript-ts-mode--sexp-nodes "formal_parameters")
+  (add-to-list 'typescript-ts-mode--sexp-nodes "statement_block")
+  (add-to-list 'typescript-ts-mode--sexp-nodes "object"))
 
 (with-eval-after-load 'tsx-ts-mode
   (modify-syntax-entry ?` "\"" tsx-ts-mode-syntax-table))
