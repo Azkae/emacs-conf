@@ -755,6 +755,13 @@ Returns nil if there is no active region."
   (when (file-exists-p git-path)
     (setq magit-git-executable git-path)))
 
+(defun my/forget-project-after-worktree-delete (worktree)
+  "Remove WORKTREE from project.el's known projects after deletion."
+  (when (require 'project nil t)
+    (project-forget-project worktree)))
+
+(advice-add 'magit-worktree-delete :after #'my/forget-project-after-worktree-delete)
+
 (setq smerge-command-prefix "\C-cv")
 
 (use-package request)
