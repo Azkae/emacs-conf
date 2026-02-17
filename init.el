@@ -526,6 +526,17 @@ Returns nil if there is no active region."
   (advice-add 'yank :after #'conf--org-table-align-after-yank)
   (advice-add 'yank-pop :after #'conf--org-table-align-after-yank)
 
+  ;; fold heading when task is done
+  (defun my/org-fold-done-tasks (plist)
+    "Fold heading when changed to DONE state."
+    (when (and (eq (plist-get plist :type) 'todo-state-change)
+               (member (plist-get plist :to) org-done-keywords))
+      (save-excursion
+        (org-back-to-heading t)
+        (outline-hide-subtree))))
+
+  (add-hook 'org-trigger-hook #'my/org-fold-done-tasks)
+
   (modify-syntax-entry ?= "." org-mode-syntax-table)
   (org-babel-do-load-languages
    'org-babel-load-languages
