@@ -93,6 +93,7 @@
   (setq-default comint-scroll-to-bottom-on-output nil)
   (setq-default comint-scroll-to-bottom-on-input t)
   (setq-default comint-scroll-show-maximum-output nil)
+  (setq-default comint-prompt-read-only t)
   (define-key comint-mode-map (kbd "M-p") #'comint-previous-input)
   (define-key comint-mode-map (kbd "M-b") #'comint-previous-input)
   (define-key comint-mode-map (kbd "M-r") nil)
