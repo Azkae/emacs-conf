@@ -1056,6 +1056,13 @@ Returns nil if there is no active region."
 ;;   :config
 ;;   (add-hook 'solidity-mode-hook '--set-tab-with))
 
+(use-package sql
+  :straight (:type built-in)
+  :hook
+  (sql-interactive-mode . toggle-truncate-lines)
+  :config
+  (modify-syntax-entry ?- "w" sql-mode-syntax-table))
+
 (use-package sqlformat
   :defer t
   :config
