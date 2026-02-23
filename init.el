@@ -2292,6 +2292,9 @@ Do not use this tool to modify the user database. Use it solely to explore datab
                  :env (:BRAVE_API_KEY ,brave-api-key)))))
 
 
+(use-package gptel-agent
+  :config (gptel-agent-update))
+
 (use-package sideline
   :custom
   (sideline-truncate t)
