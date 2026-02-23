@@ -139,15 +139,15 @@
 
 (defun conf--scroll-left ()
   (interactive)
-  (let ((window (selected-window)))
-    (when (and window)
-      (set-window-hscroll window (max 0 (- (window-hscroll window) 10))))))
+  (scroll-right 10)
+  (unless (minibufferp)
+    (move-to-column (+ (window-hscroll) (/ (window-width) 2)))))
 
 (defun conf--scroll-right ()
   (interactive)
-  (let ((window (selected-window)))
-    (when window
-      (set-window-hscroll window (+ (window-hscroll window) 10)))))
+  (scroll-left 10)
+  (unless (minibufferp)
+    (move-to-column (+ (window-hscroll) (/ (window-width) 2)))))
 
 (global-set-key (kbd "M-x") 'kill-region-maybe)
 (global-set-key (kbd "M-c") 'kill-ring-save)
