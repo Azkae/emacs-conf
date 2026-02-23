@@ -2260,7 +2260,23 @@ Do not use this tool to modify the user database. Use it solely to explore datab
             :optional t))
    :category "database"
    :confirm t
-   :include t))
+   :include t)
+
+  (gptel-make-preset 'psql
+    :description "Access to postgres db"
+    :tools '(:append "execute_psql"))
+
+  (gptel-make-preset 'json
+    :description "JIT only: use json schema following @json cookie"
+    :pre (lambda ()
+           (setq-local gptel--schema
+                       (buffer-substring-no-properties (point) (point-max)))
+           (delete-region (point) (point-max)))
+    :include-reasoning nil)
+
+  (gptel-make-preset 'cli
+    :description "Write cli commands"
+    :system "The user will ask for a cli command. Respond with only the cli command, without code fences"))
 
 (use-package mcp
   :config
