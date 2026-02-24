@@ -1,3 +1,5 @@
+;;; -*- lexical-binding: t; -*-
+
 (el-patch-feature python)
 
 (el-patch-defvar python--treesit-settings
