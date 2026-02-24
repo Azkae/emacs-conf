@@ -1,4 +1,4 @@
-;;; monokai-theme.el --- REQUIRES EMACS 24: Monokai Color Theme for Emacs.
+;;; monokai-theme.el --- REQUIRES EMACS 24: Monokai Color Theme for Emacs. -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2012 Lorenzo Villani.
 ;;
