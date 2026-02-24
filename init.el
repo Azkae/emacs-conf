@@ -916,7 +916,7 @@ Returns nil if there is no active region."
    ("<mouse-3>" . eglot-code-actions-at-mouse))
   :hook
   ((c-mode c++-mode c-ts-mode c++-ts-mode) . eglot-ensure)
-  ((c-mode c++-mode c-ts-mode c++-ts-mode python-mode python-ts-mode) . (lambda () (setq-local eglot-ignored-server-capabilities '(:inlayHintProvider))))
+  ((c-mode c++-mode c-ts-mode c++-ts-mode python-mode python-ts-mode) . (lambda () (setq-local eglot-ignored-server-capabilities '(:inlayHintProvider :semanticTokensProvider))))
   ((typescript-ts-mode tsx-ts-mode) . eglot-ensure)
   ((python-mode python-ts-mode) . eglot-ensure)
   (rust-mode . eglot-ensure)
@@ -932,6 +932,9 @@ Returns nil if there is no active region."
   (add-to-list 'eglot-server-programs `(web-mode . ,(eglot-alternatives
                                                      '(("vscode-html-language-server" "--stdio")
                                                        ("html-languageserver" "--stdio")))))
+  (add-to-list 'eglot-server-programs `(python-mode . ,(eglot-alternatives
+                                                        '(("basedpyright-langserver" "--stdio")
+                                                          ("pyright-langserver" "--stdio")))))
   (setq eldoc-echo-area-use-multiline-p nil)
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
