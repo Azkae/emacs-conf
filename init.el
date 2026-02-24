@@ -456,6 +456,7 @@ Returns nil if there is no active region."
         (message "Flymake error color enabled")))))
 
 (use-package flymake
+  :straight (:type built-in)
   :bind
   (("C-c i f" . flymake-mode)
    ("C-c i t" . conf--toggle-flymake-error-color)
