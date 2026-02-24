@@ -3464,7 +3464,8 @@ With universal argument ARG, open in another window."
     (define-key agent-shell-mode-map (kbd "C-M-h") nil))
   (setq agent-shell-anthropic-default-session-mode-id "plan")
   (advice-add 'agent-shell--project-files :override #'conf--project-files-cached-current)
-  (setq agent-shell-highlight-blocks t))
+  (setq agent-shell-highlight-blocks t)
+  (setq agent-shell-session-strategy 'prompt))
 
 (defun conf--agent-shell-send-current-file ()
   (interactive)
