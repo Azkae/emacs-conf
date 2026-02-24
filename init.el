@@ -1411,6 +1411,7 @@ is a prefix length override, which is t for manual completion."
          (add-to-list 'load-path load-dir)
          (require 'project)
          (require 'project-local)
+         (require 'vc-git)
          (project-files project))
 
        (lambda (result)
