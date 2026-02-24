@@ -110,7 +110,7 @@
 (global-set-key (kbd "M-)") 'enlarge-window-horizontally)
 
 (global-set-key (kbd "C-c b") 'pop-tag-mark)
-(global-set-key (kbd "C-q") 'kill-this-buffer)
+(global-set-key (kbd "C-q") 'kill-current-buffer)
 (global-set-key [C-backspace] 'delete-backward-char)
 
 ;; remove annoying keybindings
@@ -357,15 +357,15 @@ Returns nil if there is no active region."
   (interactive)
   (conf--skip-temp-buffers 'previous-buffer))
 
-(defun kill-this-buffer-avoid-boring ()
+(defun kill-current-buffer-avoid-boring ()
   (interactive)
-  (kill-this-buffer)
+  (kill-current-buffer)
   (when (not (is-buffer-valid (buffer-name)))
     (conf--skip-temp-buffers 'previous-buffer)))
 
 (global-set-key [remap next-buffer] 'conf--next-buffer)
 (global-set-key [remap previous-buffer] 'conf--prev-buffer)
-(global-set-key [remap kill-this-buffer] 'kill-this-buffer-avoid-boring)
+(global-set-key [remap kill-current-buffer] 'kill-current-buffer-avoid-boring)
 
 ;; better process performance
 (setq read-process-output-max (* 1024 1024))
