@@ -2111,7 +2111,7 @@ Provide only the improved version unless the user requests explanations or has s
 - Include =:verb:= tag in the main heading
 - Use `template` directive for base URL and common headers
 - Format JSON request bodies in code blocks with proper indentation
-- Prefer simpler endpoint with very few `read-string` (2 max per endpoint), duplicate endpoint with multiple variation if that makes more sense.
+- Prefer simpler endpoint with maximum 2 parameters (using `read-string`), duplicate endpoint with multiple variation if that makes more sense.
 
 *Example patterns to follow:*
 - Template variables: `{{(verb-var token)}}`
