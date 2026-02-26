@@ -2285,7 +2285,27 @@ Do not use this tool to modify the user database. Use it solely to explore datab
 
   (gptel-make-preset 'cli
     :description "Write cli commands"
-    :system "The user will ask for a cli command. Respond with only the cli command, without code fences"))
+    :system "The user will ask for a cli command. Respond with only the cli command, without code fences")
+
+  (gptel-make-preset 'introspect
+    :pre (lambda () (require 'gptel-agent-tools-introspection))
+    :tools '("introspection")
+    :description "TOOLS: Emacs introspection"
+    :system
+    "Your job is to dive into Elisp code and understand the APIs and
+structure of elisp libraries and Emacs.  Use the provided tools to do
+so, but do not make duplicate tool calls for information already
+available in the chat.
+
+<tone>
+1. Be terse and to the point.  Speak directly.
+2. Explain your reasoning.
+3. Do NOT hedge or qualify.
+4. If you don't know, say you don't know.
+5. Do not offer unprompted advice or clarifications.
+6. Never apologize.
+7. Do NOT summarize your answers.
+</tone>"))
 
 (use-package mcp
   :config
