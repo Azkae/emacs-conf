@@ -2393,7 +2393,10 @@ available in the chat.
         (vertico-insert)
       (minibuffer-complete)))
 
-  (keymap-set vertico-map "TAB" #'conf--minibuffer-complete-or-insert-directory))
+  (keymap-set vertico-map "TAB" #'conf--minibuffer-complete-or-insert-directory)
+
+  (add-to-list 'vertico-multiform-commands
+               '(denote-open-or-create (vertico-sort-function . nil))))
 
 (use-package emacs
   :custom
@@ -3459,7 +3462,14 @@ With universal argument ARG, open in another window."
   (setq denote-known-keywords '("carbon" "emacs" "personal" "temporary"))
 
   (setq denote-prompts-with-history-as-completion
-        (remove 'denote-title-prompt denote-prompts-with-history-as-completion)))
+        (remove 'denote-title-prompt denote-prompts-with-history-as-completion))
+
+  (setq denote-directory-get-files-function
+      (lambda ()
+        (sort (denote-directory-get-files)
+              (lambda (a b)
+                (string> (file-name-nondirectory a)
+                         (file-name-nondirectory b)))))))
 
 (use-package consult-denote
   :ensure t
