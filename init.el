@@ -3418,7 +3418,6 @@ With universal argument ARG, open in another window."
   (magit-prime-mode))
 
 (use-package ws-butler
-  :straight (:type git :host github :repo "lewang/ws-butler")
   :diminish ws-butler-mode
   :hook (prog-mode . ws-butler-mode))
 
