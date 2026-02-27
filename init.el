@@ -3491,11 +3491,9 @@ With universal argument ARG, open in another window."
 (midnight-mode)
 
 (use-package shell-maker)
-(use-package acp
-  :straight (:type git :host github :repo "xenodium/acp.el"))
+(use-package acp)
 
 (use-package agent-shell
-  :straight (:type git :host github :repo "xenodium/agent-shell")
   :config
   (with-eval-after-load 'shell-maker
     (define-key agent-shell-mode-map (kbd "C-M-h") nil))
