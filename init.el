@@ -2275,7 +2275,7 @@ Do not use this tool to modify the user database. Use it solely to explore datab
     :tools '(:append "execute_psql"))
 
   (gptel-make-preset 'emacs
-    :description "Access to postgres db"
+    :description "Access to emacs tools"
     :tools '(:append ("elisp_describe_variable" "elisp_describe_face" "elisp_describe_function" "elisp_prefix_completion" "elisp_regexp_completion")))
 
   (gptel-make-preset 'json
