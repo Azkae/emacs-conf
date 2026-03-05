@@ -9,7 +9,8 @@
    '(:last-refile "org-refile-last-stored" :last-capture-marker
                   "org-capture-last-stored-marker"))
  '(safe-local-variable-values
-   '((eval and (fboundp 'gptel-mode) (gptel-mode 1))
+   '((eval and (fboundp 'verb-mode) (verb-mode 1))
+     (eval and (fboundp 'gptel-mode) (gptel-mode 1))
      (editorconfig-lisp-use-default-indent . t)
      (eval and buffer-file-name
            (not (eq major-mode 'package-recipe-mode))
