@@ -2398,6 +2398,53 @@ available in the chat.
 
   (keymap-set vertico-map "TAB" #'conf--minibuffer-complete-or-insert-directory)
 
+  (require 'vertico-multiform)
+  (vertico-multiform-mode +1)
+  (define-key vertico-multiform-map (kbd "M-R") nil)
+  (define-key vertico-multiform-map (kbd "M-B") nil)
+  (defvar +vertico-transform-functions nil)
+
+  (cl-defmethod vertico--format-candidate :around
+    (cand prefix suffix index start &context ((not +vertico-transform-functions) null))
+    (dolist (fun (ensure-list +vertico-transform-functions))
+      (setq cand (funcall fun cand)))
+    (cl-call-next-method cand prefix suffix index start))
+
+  ;; (defun +vertico-highlight-unsaved-buffer (buffer-name)
+  ;;   (let ((buffer (get-buffer buffer-name)))
+  ;;     (if (and buffer
+  ;;                (buffer-live-p buffer)
+  ;;                (buffer-modified-p buffer))
+  ;;         (propertize buffer-name 'face 'font-lock-constant-face)
+  ;;       buffer-name)))
+
+  (defun +vertico-highlight-directory (file)
+    "If FILE ends with a slash, highlight it as a directory."
+    (if (string-suffix-p "/" file)
+        (propertize file 'face 'marginalia-file-priv-dir) ; or face 'dired-directory
+      file))
+
+  ;; function to highlight enabled modes similar to counsel-M-x
+  (defun +vertico-highlight-enabled-mode (cmd)
+    "If MODE is enabled, highlight it as font-lock-constant-face."
+    (let ((sym (intern cmd)))
+      (if (or (eq sym major-mode)
+              (and
+               (memq sym minor-mode-list)
+               (boundp sym)))
+          (propertize cmd 'face 'font-lock-constant-face)
+        cmd)))
+
+  (add-to-list 'vertico-multiform-categories
+               '(file
+                 ;; (vertico-sort-function . sort-directories-first)
+                 (+vertico-transform-functions . +vertico-highlight-directory)))
+
+  (add-to-list 'vertico-multiform-commands
+               '(execute-extended-command
+                 ;; reverse
+                 (+vertico-transform-functions . +vertico-highlight-enabled-mode)))
+
   (add-to-list 'vertico-multiform-commands
                '(denote-open-or-create (vertico-sort-function . nil))))
 
@@ -2633,53 +2680,6 @@ available in the chat.
 (advice-add #'vertico--recompute :after #'vertico--set-updated-selection)
 
 (setq consult-line-start-from-top t)
-
-(require 'vertico-multiform)
-(vertico-multiform-mode +1)
-(define-key vertico-multiform-map (kbd "M-R") nil)
-(define-key vertico-multiform-map (kbd "M-B") nil)
-(defvar +vertico-transform-functions nil)
-
-(cl-defmethod vertico--format-candidate :around
-  (cand prefix suffix index start &context ((not +vertico-transform-functions) null))
-  (dolist (fun (ensure-list +vertico-transform-functions))
-    (setq cand (funcall fun cand)))
-  (cl-call-next-method cand prefix suffix index start))
-
-;; (defun +vertico-highlight-unsaved-buffer (buffer-name)
-;;   (let ((buffer (get-buffer buffer-name)))
-;;     (if (and buffer
-;;                (buffer-live-p buffer)
-;;                (buffer-modified-p buffer))
-;;         (propertize buffer-name 'face 'font-lock-constant-face)
-;;       buffer-name)))
-
-(defun +vertico-highlight-directory (file)
-  "If FILE ends with a slash, highlight it as a directory."
-  (if (string-suffix-p "/" file)
-      (propertize file 'face 'marginalia-file-priv-dir) ; or face 'dired-directory
-    file))
-
-;; function to highlight enabled modes similar to counsel-M-x
-(defun +vertico-highlight-enabled-mode (cmd)
-  "If MODE is enabled, highlight it as font-lock-constant-face."
-  (let ((sym (intern cmd)))
-    (if (or (eq sym major-mode)
-            (and
-             (memq sym minor-mode-list)
-             (boundp sym)))
-      (propertize cmd 'face 'font-lock-constant-face)
-      cmd)))
-
-(add-to-list 'vertico-multiform-categories
-             '(file
-               ;; (vertico-sort-function . sort-directories-first)
-               (+vertico-transform-functions . +vertico-highlight-directory)))
-
-(add-to-list 'vertico-multiform-commands
-             '(execute-extended-command
-               ;; reverse
-               (+vertico-transform-functions . +vertico-highlight-enabled-mode)))
 
 (defun conf--embark-consult-export-xref (items)
   "Create a grep-like buffer listing ITEMS from xref."
