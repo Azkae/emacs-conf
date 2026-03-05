@@ -3205,6 +3205,7 @@ With universal argument ARG, open in another window."
 (global-set-key (kbd "C-c p k") 'project-compile)
 (global-set-key (kbd "C-c p e") 'conf--consult-compile-error-in-compilation)
 (global-set-key (kbd "C-c p a") 'conf--jump-to-same-base-name)
+(global-set-key (kbd "C-c p &") 'project-async-shell-command)
 
 (global-set-key (kbd "C-c f") 'find-file)
 
@@ -3213,7 +3214,8 @@ With universal argument ARG, open in another window."
                                 (consult-ripgrep "ripgrep" "s")
                                 (magit-project-status "Magit" "g")
                                 (conf--vterm-toggle-project "Vterm" "e")
-                                (project-compile "Compike" "k")))
+                                (project-compile "Compile" "k")
+                                (project-async-shell-command "Command" "&")))
 
 ;; (which-function-mode)
 
