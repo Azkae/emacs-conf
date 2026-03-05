@@ -645,9 +645,12 @@ Returns nil if there is no active region."
       ;; No separator found: delete everything until start position
       (delete-region start-pos (point-max)))))
 
+(defvar conf--delete-slash-blacklisted-commands '(denote-open-or-create))
+
 (defun delete-until-slash-maybe ()
   (interactive)
-  (if (eq 'file (vertico--metadata-get 'category))
+  (if (and (eq 'file (vertico--metadata-get 'category))
+           (not (memq embark--command conf--delete-slash-blacklisted-commands)))
       (delete-until-slash)
     (conf--backward-delete-word)))
 
