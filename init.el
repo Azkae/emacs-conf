@@ -1893,6 +1893,7 @@ is a prefix length override, which is t for manual completion."
   (setq gptel-default-mode 'org-mode)
   (setq gptel-include-tool-results t)
   (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "* ")
+  (setq gptel--set-buffer-locally t)
 
   (add-hook 'gptel-mode-hook
             (lambda () (when (derived-mode-p 'org-mode)
