@@ -3549,6 +3549,13 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
       (apply fn args)))
 (setq magit-process-connection-type nil)
 
+(use-package calc
+  :straight (:type built-in)
+  :bind
+  (:map calc-mode-map
+        ("M-z" . calc-undo)
+        ("M-Z" . calc-redo)))
+
 ;; TODO: test direnv
 
 ;; load graphic settings
