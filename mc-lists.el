@@ -32,6 +32,7 @@
         meow-delete
         meow-expand-1
         meow-expand-2
+        meow-inner-of-thing
         meow-insert
         meow-join
         meow-kill
