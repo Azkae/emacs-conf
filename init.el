@@ -3556,6 +3556,12 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
         ("M-z" . calc-undo)
         ("M-Z" . calc-redo)))
 
+(use-package cus-edit
+  :straight (:type built-in)
+  :bind
+  (:map custom-dirlocals-map
+        ("M-s" . Custom-dirlocals-save)))
+
 ;; TODO: test direnv
 
 ;; load graphic settings
