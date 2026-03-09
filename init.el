@@ -898,6 +898,11 @@ Returns nil if there is no active region."
 
 (use-package dockerfile-mode)
 
+(require 'project)
+(require 'project-local)
+
+(add-hook 'project-find-functions 'conf--project-try-local 90)
+
 (defun conf--xref-find-definitions ()
   (interactive)
   (let ((this-command 'xref-find-definitions))
@@ -3484,13 +3489,6 @@ With universal argument ARG, open in another window."
 (defun conf--denote-dired ()
   (interactive)
   (dired denote-directory))
-
-(require 'project-local)
-
-(use-package project
-  :straight (:type built-in)
-  :config
-  (add-hook 'project-find-functions 'conf--project-try-local 90))
 
 (midnight-mode)
 
