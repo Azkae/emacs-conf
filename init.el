@@ -85,6 +85,9 @@
 (setq mouse-wheel-tilt-scroll t)
 (setq mouse-wheel-flip-direction t)
 
+(use-package project
+  :straight (:type built-in))
+
 ;; Better comint settings
 (use-package comint
   :straight (:type built-in)
