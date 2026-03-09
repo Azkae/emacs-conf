@@ -3561,6 +3561,51 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
   (:map custom-dirlocals-map
         ("M-s" . Custom-dirlocals-save)))
 
+(require 'package-review)
+
+;; (with-eval-after-load 'meow
+;;   (add-to-list 'emulation-mode-map-alists
+;;                `((package-review-mode
+;;                   . ,package-review-mode-map))))
+
+(defun gptel-review-packages ()
+    "Send current region or buffer for code review in a dedicated buffer."
+    (interactive)
+    (let* ((review-buffer (get-buffer-create "*Package review*"))
+           (code-text (buffer-substring-no-properties (point-min) (point-max)))
+           (prompt (concat "Please review this code:\n\n=\n" code-text "\n=")))
+
+      (with-current-buffer review-buffer
+        (erase-buffer)
+        (markdown-mode)
+        (insert "Requesting package review...\n\n"))
+
+      (gptel-request prompt
+                     :buffer review-buffer
+                     :position (with-current-buffer review-buffer (point-max))
+                     :system "You are a code security reviewer, analyze the code to find malware or malicious changes. Respond concisely."
+                     :stream t)
+
+      (pop-to-buffer review-buffer)))
+
+;; (use-package tramp-hlo
+;;   :config
+;;   (tramp-hlo-setup))
+
+;; ;; Work in progress, doesn't work with flymake:
+;; (defun conf--clone-and-narrow-region ()
+;;   (interactive)
+;;   (let* ((buffer-name (generate-new-buffer-name (format "%s:focus" (buffer-name))))
+;;          (buffer-name (read-string "Buffer name: " buffer-name))
+;;          (saved-mark (mark))
+;;          (saved-point (point)))
+;;     (pop-mark)
+;;     (clone-indirect-buffer-other-window buffer-name 'pop-to-buffer)
+;;     (switch-to-buffer buffer-name)
+;;     (narrow-to-region saved-mark saved-point)))
+
+;; (global-set-key (kbd "C-x 4 n") #'conf--clone-and-narrow-region)
+
 ;; TODO: test direnv
 
 ;; load graphic settings
