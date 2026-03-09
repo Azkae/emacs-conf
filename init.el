@@ -929,6 +929,7 @@ Returns nil if there is no active region."
   (eglot-events-buffer-size 0)
   (eglot-code-action-indicator "h")
   :config
+  (fset #'jsonrpc--log-event #'ignore)
 
   ;; (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed")))
   (add-to-list 'eglot-server-programs '(c++-mode . ("clangd" "--completion-style=detailed" "--header-insertion-decorators=0" "--header-insertion=never")))
@@ -939,10 +940,10 @@ Returns nil if there is no active region."
                                                         '(("basedpyright-langserver" "--stdio")
                                                           ("pyright-langserver" "--stdio")))))
   (setq eldoc-echo-area-use-multiline-p nil)
+  (setq eglot-code-action-indications '(margin))
+
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
-
-  (fset #'jsonrpc--log-event #'ignore)
 
   (add-to-list 'eglot-stay-out-of 'company-backends)
   ;; Enable flymake only on save:
