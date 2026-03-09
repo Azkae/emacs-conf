@@ -1317,34 +1317,31 @@ Returns nil if there is no active region."
 ;; Disable completion starting with [ with pyright
 (with-eval-after-load 'corfu
   (el-patch-defun corfu--capf-wrapper (fun &optional prefix)
-  "Wrapper for `completion-at-point' FUN.
-The wrapper determines if the Capf is applicable at the current position
-and performs sanity checking on the returned result.  For non-exclusive
-Capfs, the wrapper checks if the current input can be completed.  PREFIX
-is a prefix length override, which is t for manual completion."
-  (pcase (funcall fun)
-    ((and res `(,beg ,end ,table . ,plist))
-     (and (integer-or-marker-p beg) ;; Valid Capf result
-          (<= beg (point) end)      ;; Sanity checking
-          ;; When auto completing, check the prefix length!
-          (let ((len (or prefix
-                         (el-patch-swap (plist-get plist :company-prefix-length)
-                                          (and (not (eq (char-before) (string-to-char "[")))
-                                               (plist-get plist :company-prefix-length)))
-                         (- (point) beg))))
-            (or (eq len t) (>= len corfu-auto-prefix)))
-          ;; For non-exclusive Capfs, check for valid completion.
-          (or (not (eq 'no (plist-get plist :exclusive)))
-              (let* ((str (buffer-substring-no-properties beg end))
-                     (pt (- (point) beg))
-                     (pred (plist-get plist :predicate))
-                     (md (completion-metadata (substring str 0 pt) table pred)))
-                ;; We use `completion-try-completion' to check if there are
-                ;; completions. The upstream `completion--capf-wrapper' uses
-                ;; `try-completion' which is incorrect since it only checks for
-                ;; prefix completions.
-                (completion-try-completion str table pred pt md)))
-          (cons fun res))))))
+    "Wrapper for `completion-at-point' FUN.
+The wrapper determines if the Capf is applicable at the current
+position, performs sanity checking on the returned result and computes
+the initial completion state.  PREFIX is the minimum prefix length."
+    (pcase (funcall fun)
+      (`(,beg ,end ,table . ,plist)
+       (and (integer-or-marker-p beg) ;; Valid Capf result
+            (<= beg (point) end)      ;; Sanity checking
+            ;; Check minimal prefix length if given.
+            (or (not prefix)
+                (let ((len (or (el-patch-swap
+                                 (plist-get plist :company-prefix-length)
+                                 (and (not (eq (char-before) (string-to-char "[")))
+                                      (plist-get plist :company-prefix-length)))
+                               (- (point) beg))))
+                  (or (eq len t) (>= len prefix))))
+            (let* ((str (buffer-substring-no-properties beg end))
+                   (pt (- (point) beg))
+                   (pred (plist-get plist :predicate))
+                   (state (corfu--compute (cons str pt) table pred)))
+              (cond ((alist-get 'corfu--candidates state)
+                     `(,fun ,beg ,end ,table :corfu--state ,state ,@plist))
+                    ;; Stop with empty result for exclusive Capf.
+                    ((not (eq 'no (plist-get plist :exclusive)))
+                     '(nil)))))))))
 
 (use-package corfu
   :bind
