@@ -3610,4 +3610,6 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
 
 ;; load graphic settings
 (require 'graphics)
+
+;; TODO: use treesit-font-lock-recompute-features instead
 (require 'custom-python-highlighting)
