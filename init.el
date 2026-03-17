@@ -1572,12 +1572,12 @@ the initial completion state.  PREFIX is the minimum prefix length."
               (setq conf--python-current-root root)
               (pyvenv-activate venv-path))
           (let ((process-environment (cl-remove-if
-                                    (lambda (element) (string-prefix-p "VIRTUAL_ENV=" element))
-                                    process-environment)))
-          (let ((venv (string-trim (shell-command-to-string "poetry env info --path"))))
-            (message "Applying venv: %s (poetry)" venv)
-            (setq conf--python-current-root root)
-            (pyvenv-activate venv))))))))
+                                      (lambda (element) (string-prefix-p "VIRTUAL_ENV=" element))
+                                      process-environment)))
+            (when-let ((venv (string-trim (shell-command-to-string "poetry env info --path"))))
+              (message "Applying venv: %s (poetry)" venv)
+              (setq conf--python-current-root root)
+              (pyvenv-activate venv))))))))
 
 (add-hook 'find-file-hook 'conf--python-track-venv)
 
