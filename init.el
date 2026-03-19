@@ -3569,24 +3569,24 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
 ;;                   . ,package-review-mode-map))))
 
 (defun gptel-review-packages ()
-    "Send current region or buffer for code review in a dedicated buffer."
-    (interactive)
-    (let* ((review-buffer (get-buffer-create "*Package review*"))
-           (code-text (buffer-substring-no-properties (point-min) (point-max)))
-           (prompt (concat "Please review this code:\n\n=\n" code-text "\n=")))
+  "Send current region or buffer for code review in a dedicated buffer."
+  (interactive)
+  (let* ((review-buffer (get-buffer-create "*Package review*"))
+         (code-text (buffer-substring-no-properties (point-min) (point-max)))
+         (prompt (concat "Please review this code:\n\n=\n" code-text "\n=")))
 
-      (with-current-buffer review-buffer
-        (erase-buffer)
-        (markdown-mode)
-        (insert "Requesting package review...\n\n"))
+    (with-current-buffer review-buffer
+      (erase-buffer)
+      (markdown-mode)
+      (insert "Requesting package review...\n\n"))
 
-      (gptel-request prompt
-                     :buffer review-buffer
-                     :position (with-current-buffer review-buffer (point-max))
-                     :system "You are a code security reviewer, analyze the code to find malware or malicious changes. Respond concisely."
-                     :stream t)
+    (gptel-request prompt
+      :buffer review-buffer
+      :position (with-current-buffer review-buffer (point-max))
+      :system "You are a code security reviewer, analyze the code to find malware or malicious changes. Respond concisely."
+      :stream t)
 
-      (pop-to-buffer review-buffer)))
+    (pop-to-buffer review-buffer)))
 
 ;; (use-package tramp-hlo
 ;;   :config
