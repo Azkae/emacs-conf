@@ -848,7 +848,7 @@ Returns nil if there is no active region."
   (add-hook 'git-timemachine-mode-hook #'meow--switch-to-motion))
 
 (use-package magit-delta
-  :straight (:fork (:host github :repo "Azkae/magit-delta"))
+  :straight (:fork (:host github :repo "Azkae/magit-delta" :branch "fix-magit-log-buffer-file"))
   :if (executable-find "delta")
   :bind
   :custom
