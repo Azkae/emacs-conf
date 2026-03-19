@@ -2264,7 +2264,7 @@ DATABASE is optional and specifies which database to connect to."
    :name "execute_psql"
    :function #'gptel-psql-execute
    :description "Execute a PostgreSQL SQL command using psql -c and return the results. This can be used to query databases, check table schemas, or run any valid SQL command.
-Do not use this tool to modify the user database. Use it solely to explore database tables and their content. If the user requests a query, write it out as text rather than executing it with this tool."
+NEVER use this tool to modify the user database. Use it solely to explore database tables and their content. If the user requests a query, write it out as text rather than executing it with this tool."
    :args (list
           '(:name "sql_command"
             :type string
@@ -2279,7 +2279,8 @@ Do not use this tool to modify the user database. Use it solely to explore datab
 
   (gptel-make-preset 'psql
     :description "Access to postgres db"
-    :tools '(:append "execute_psql"))
+    :tools '(:append "execute_psql")
+    :system "Use the execute_psql tool to explore the database if necessary and then reply with requested query from the user. Do not execute the query that the user requested, simply reply with the requested query.")
 
   (gptel-make-preset 'emacs
     :description "Access to emacs tools"
