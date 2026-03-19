@@ -2820,9 +2820,6 @@ available in the chat.
 
 (use-package meow
   :config
-  (setq meow--kbd-forward-char "C-%")
-  (global-set-key (kbd meow--kbd-forward-char) 'forward-char)
-
   (setq meow--kbd-delete-char "C-$")
   (global-set-key (kbd meow--kbd-delete-char) 'delete-char)
 
