@@ -1873,7 +1873,13 @@ the initial completion state.  PREFIX is the minimum prefix length."
      gptel-model 'claude-sonnet-4-6
      gptel-backend (gptel-make-anthropic "Claude"
 				     :stream t
-				     :key anthropic-api-key)))
+				     :key anthropic-api-key))
+
+    (gptel-make-anthropic "Claude-thinking"
+      :key anthropic-api-key
+      :stream t
+      :models '(claude-sonnet-4-6 claude-opus-4-6)
+      :request-params '(:thinking (:type "adaptive"))))
 
   (defun conf--gptel-start-rewrite-session ()
     (interactive)
