@@ -2460,7 +2460,30 @@ available in the chat.
                  (+vertico-transform-functions . +vertico-highlight-enabled-mode)))
 
   (add-to-list 'vertico-multiform-commands
-               '(denote-open-or-create (vertico-sort-function . nil))))
+               '(denote-open-or-create (vertico-sort-function . nil)))
+
+  (require 'vertico-sort)
+  (vertico-sort--define (reverse-alpha) 32 (if (equal % "") 0 (/ (aref % 0) 4)) string> string>)
+
+  (defun conf--vertico-sort-by-mtime (files)
+    "Sort FILES by modification time, most recent first."
+    (let ((cache (make-hash-table :test #'equal)))
+      (cl-flet ((mtime (f)
+                  (or (gethash f cache)
+                      (puthash f
+                               (file-attribute-modification-time
+                                (file-attributes f))
+                               cache))))
+        (sort files (lambda (a b) (time-less-p (mtime b) (mtime a)))))))
+
+  (defun conf--vertico-toggle-sort ()
+    (interactive)
+    (setq-local vertico-sort-override-function
+                (and (not vertico-sort-override-function)
+                     #'conf--vertico-sort-by-mtime)
+                vertico--input t))
+
+  (keymap-set vertico-map "M-S" #'conf--vertico-toggle-sort))
 
 (use-package emacs
   :custom
