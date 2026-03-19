@@ -548,6 +548,8 @@ Returns nil if there is no active region."
    '((dot . t) (python . t) (sql . t)))
   (setq org-babel-default-header-args:sql
         '((:engine . "postgresql")))
+  (setq org-babel-default-header-args:python
+        '((:results . "output")))
   (setq org-babel-default-header-args:elisp
         '((:lexical . t)))
   (add-to-list 'org-src-lang-modes '("json" . js-json))
