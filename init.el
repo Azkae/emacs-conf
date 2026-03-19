@@ -3505,7 +3505,8 @@ With universal argument ARG, open in another window."
   (setq agent-shell-anthropic-default-session-mode-id "plan")
   (advice-add 'agent-shell--project-files :override #'conf--project-files-cached-current)
   (setq agent-shell-highlight-blocks t)
-  (setq agent-shell-session-strategy 'prompt))
+  (setq agent-shell-session-strategy 'prompt)
+  (setq markdown-overlays-prettify-tables nil))
 
 (defun conf--agent-shell-send-current-file ()
   (interactive)
