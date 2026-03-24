@@ -2332,6 +2332,10 @@ available in the chat.
   (setq mcp-hub-servers nil)
   (add-to-list 'mcp-hub-servers '("deepwiki" :command "npx"
                                   :args ("mcp-remote" "https://mcp.deepwiki.com/sse")))
+  (add-to-list 'mcp-hub-servers '("posthog" :command "npx"
+                                  :args ("mcp-remote" "https://mcp.posthog.com/mcp")))
+  (add-to-list 'mcp-hub-servers '("webfetch" :command "uvx"
+                                  :args ("mcp-server-fetch")))
   (when-let ((brave-api-key (password-store-get "brave-api-key")))
     (add-to-list 'mcp-hub-servers
                `("brave"
