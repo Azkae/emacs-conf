@@ -1304,10 +1304,10 @@ Returns nil if there is no active region."
 (defun conf--corfu-active-p ()
   (and corfu-mode completion-in-region-mode))
 
-(defun conf--corfu-reset()
-  (interactive)
-  (corfu-quit)
-  (corfu--auto-complete-deferred))
+;; (defun conf--corfu-reset()
+;;   (interactive)
+;;   (corfu-quit)
+;;   (corfu--auto-complete-deferred))
 
 ;; (defun conf--corfu-post-command()
 ;;   "Refresh completion when prefix length is 3 and no candidates are found."
@@ -1371,7 +1371,7 @@ the initial completion state.  PREFIX is the minimum prefix length."
         ("RET" . corfu-insert)
         ("<ret>" . corfu-insert)
         ("C-<return>" . corfu-insert)
-        ("M-RET" . conf--corfu-reset))
+        ("M-RET" . newline))
   :hook
   (corfu-mode . (lambda ()
                   (add-hook 'yas-keymap-disable-hook 'conf--corfu-active-p nil t)
