@@ -1889,6 +1889,20 @@ the initial completion state.  PREFIX is the minimum prefix length."
       (gptel buffer-name nil "* @rewrite ")
       (switch-to-buffer buffer-name)))
 
+  (defun conf--gptel-demote-headings (start end)
+    "Demote lines beginning with '* ' in the region."
+    (interactive "r")
+    (when (eq major-mode 'org-mode)
+      (save-excursion
+        (goto-char start)
+        (while (< (point) end)
+          (beginning-of-line)
+          (when (looking-at "^\\* ")
+            (org-demote-subtree))
+          (forward-line 1)))))
+
+  (add-hook 'gptel-post-response-functions 'conf--gptel-demote-headings)
+
   (global-set-key (kbd "C-c , r") 'gptel-rewrite)
   (global-set-key (kbd "C-c , R") 'conf--gptel-start-rewrite-session)
 
