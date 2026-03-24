@@ -545,7 +545,7 @@ Returns nil if there is no active region."
   (modify-syntax-entry ?= "." org-mode-syntax-table)
   (org-babel-do-load-languages
    'org-babel-load-languages
-   '((dot . t) (python . t) (sql . t)))
+   '((dot . t) (python . t) (sql . t) (shell . t)))
   (setq org-babel-default-header-args:sql
         '((:engine . "postgresql")))
   (setq org-babel-default-header-args:python
