@@ -26,6 +26,7 @@
  ;; If there is more than one, they won't work right.
  '(consult-line-number-wrapped ((t (:inherit consult-line-number-prefix))))
  '(flymake-note-echo-at-eol ((t (:inherit flymake-end-of-line-diagnostics-face :foreground "gray42"))))
+ '(lazy-highlight ((t (:background "#49483E" :distant-foreground "white"))))
  '(org-block ((t (:extend t :foreground "grey82"))))
  '(org-verbatim ((t (:inherit font-lock-constant-face))))
  '(which-func ((t (:foreground "tan1")))))
