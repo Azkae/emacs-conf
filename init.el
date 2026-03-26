@@ -2727,7 +2727,7 @@ available in the chat.
                           (when (minibufferp)
                             (goto-char (minibuffer-prompt-end))
                             (push-mark (point-max) nil t))))
-  (consult-line (thing-at-point 'symbol)))
+  (consult-line (thing-at-point 'symbol t)))
 
 
 (advice-add #'consult-org-heading :before #'consult--set-previous-point)
