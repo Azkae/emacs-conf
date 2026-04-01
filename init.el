@@ -705,11 +705,6 @@ Returns nil if there is no active region."
 (use-package all-the-icons
   :if (display-graphic-p))
 
-(use-package zoom-frm
-  :bind
-  (("C-x C-+" . zoom-in)
-   ("C-x C--" . zoom-out)))
-
 (global-set-key (vector (list 'control mouse-wheel-down-event)) 'zoom-in)
 (global-set-key (vector (list 'control mouse-wheel-up-event)) 'zoom-out)
 
