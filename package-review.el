@@ -128,11 +128,13 @@ Each plist has:
 
 (defvar package-review-mode-map
   (let ((map (make-sparse-keymap)))
-    (define-key map (kbd "q") #'quit-window)
-    (define-key map (kbd "g") #'package-review)
+    (define-key map (kbd "q")   #'quit-window)
+    (define-key map (kbd "g")   #'package-review)
+    (define-key map (kbd "TAB") #'outline-cycle)
+    (define-key map (kbd "<backtab>") #'outline-cycle-buffer)
     map)
   "Key map for `package-review-mode'.
-Inherits all of `diff-mode' bindings (n/p hunks, N/P files, TAB fold, RET jump).")
+Inherits all of `diff-mode' bindings (n/p hunks, N/P files, RET jump).")
 
 (define-derived-mode package-review-mode diff-mode "PkgReview"
   "Major mode for reviewing straight.el package updates.
@@ -140,31 +142,24 @@ Inherits all of `diff-mode' bindings (n/p hunks, N/P files, TAB fold, RET jump).
 Derives from `diff-mode', so all diff navigation is available:
   n / p     — next / previous hunk
   N / P     — next / previous file (package)
-  TAB       — toggle section fold
   RET       — visit file at point
   q         — quit window
-  g         — refresh (re-run `package-review')"
+  g         — refresh (re-run `package-review')
+
+`outline-minor-mode' is enabled so each package is a collapsible section:
+  TAB       — cycle visibility of section at point
+  S-TAB     — cycle global visibility"
   :group 'package-review
+  (setq-local outline-regexp "^\\*+ ")
+  (outline-minor-mode 1)
   ;; diff-mode enables read-only via view-mode; keep it but allow our keys
   (setq buffer-read-only t))
 
 ;;; ── Buffer rendering ──────────────────────────────────────────────────────
 
-(defun package-review--insert-separator (label)
-  "Insert a prominent section separator with LABEL."
-  (let ((width (- (window-width) 2))
-        (text  (format " %s " label)))
-    (insert "\n")
-    (insert (propertize (concat "╔" (make-string (- width 2) ?═) "╗\n")
-                        'face 'font-lock-comment-face))
-    (let* ((pad   (- width 2 (length text)))
-           (left  (/ pad 2))
-           (right (- pad left)))
-      (insert (propertize (concat "║" (make-string left ? ) text
-                                  (make-string right ? ) "║\n")
-                          'face '(bold font-lock-keyword-face))))
-    (insert (propertize (concat "╚" (make-string (- width 2) ?═) "╝\n")
-                        'face 'font-lock-comment-face))))
+(defun package-review--insert-heading (level label)
+  "Insert an outline heading at LEVEL (number of stars) with LABEL."
+  (insert (concat (make-string level ?*) " " label "\n")))
 
 (defun package-review--render-entry (entry)
   "Insert the review section for one changed package ENTRY."
@@ -177,19 +172,17 @@ Derives from `diff-mode', so all diff navigation is available:
          (log        (package-review--git-log repo-dir pinned head))
          (diff       (when package-review-show-diff
                        (package-review--git-diff repo-dir pinned head))))
-    (package-review--insert-separator
-     (format "%s  (%s → %s)" package short-pin short-head))
-    (insert "\n")
+    (package-review--insert-heading
+     1 (format "%s  (%s → %s)" package short-pin short-head))
     ;; Commit log
-    (insert (propertize "Commits:\n" 'face '(bold font-lock-type-face)))
+    (package-review--insert-heading 2 "Commits")
     (if (string-empty-p log)
         (insert "  (no commits found)\n")
       (dolist (line (split-string log "\n" t))
-        (insert "  " (propertize line 'face 'font-lock-string-face) "\n")))
-    (insert "\n")
+        (insert "  " line "\n")))
     ;; Unified diff
     (when package-review-show-diff
-      (insert (propertize "Diff:\n" 'face '(bold font-lock-type-face)))
+      (package-review--insert-heading 2 "Diff")
       (if (or (null diff) (string-empty-p (string-trim diff)))
           (insert "  (no diff in .el files)\n")
         ;; Insert raw diff and let diff-mode handle the rest
@@ -205,17 +198,11 @@ Derives from `diff-mode', so all diff navigation is available:
     (let ((inhibit-read-only t))
       (erase-buffer)
       ;; Header
-      (insert (propertize "Package Review\n" 'face '(bold font-lock-function-name-face)))
-      (insert (propertize (format "Generated: %s\n" (format-time-string "%F %T"))
-                          'face 'font-lock-comment-face))
-      (insert (propertize (format "%d package(s) changed since lockfile.\n"
-                                  (length entries))
-                          'face 'font-lock-doc-face))
+      (insert (format "Package Review — %s — %d package(s) changed\n"
+                      (format-time-string "%F %T") (length entries)))
       ;; Each changed package
       (dolist (entry entries)
-        (package-review--render-entry entry))
-      (insert "\n")
-      (insert (propertize "── End of review ──\n" 'face 'font-lock-comment-face)))
+        (package-review--render-entry entry)))
     (package-review-mode)
     (goto-char (point-min))
     (current-buffer)))
