@@ -1104,8 +1104,7 @@ Returns nil if there is no active region."
   ("M-z" . 'vterm-copy-mode)
   ("M-v" . (lambda () (interactive) (vterm-copy-mode -1) (vterm-yank)))
   ("C-c C-c" . (lambda () (interactive) (vterm-copy-mode -1) (vterm--self-insert)))
-  ("DEL" . (lambda () (interactive) (vterm-copy-mode -1) (vterm-send-backspace)))
-  ("SPC" . 'vterm-copy-mode))
+  ("DEL" . (lambda () (interactive) (vterm-copy-mode -1) (vterm-send-backspace))))
   :config
   (define-key vterm-copy-mode-map [remap self-insert-command] #'(lambda() (interactive) (vterm-copy-mode -1)
                                                                   (vterm--self-insert)))
