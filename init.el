@@ -3611,7 +3611,8 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
   :bind
   (:map calc-mode-map
         ("M-z" . calc-undo)
-        ("M-Z" . calc-redo)))
+        ("M-Z" . calc-redo)
+        ("i"   . calc-algebraic-entry)))
 
 (use-package cus-edit
   :straight (:type built-in)
