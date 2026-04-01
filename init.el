@@ -2264,7 +2264,15 @@ and prepend it with a timestamp. Otherwise, save normally."
         (save-buffer)
         (message "Saved to %s" filepath))))
 
-  ;; Add the keybinding to gptel-mode-map
+  (defun conf--gptel-find-file ()
+    "Run find-file in `conf--gptel-save-directory'."
+    (interactive)
+    (let ((default-directory conf--gptel-save-directory))
+      (call-interactively #'find-file)))
+
+  (global-set-key (kbd "C-c , f") 'conf--gptel-find-file)
+
+;; Add the keybinding to gptel-mode-map
   (with-eval-after-load 'gptel
     (define-key gptel-mode-map (kbd "M-s") #'conf--gptel-save-buffer))
 
