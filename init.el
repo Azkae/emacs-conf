@@ -2507,8 +2507,10 @@ available in the chat.
   (defun conf--vertico-toggle-sort ()
     (interactive)
     (setq-local vertico-sort-override-function
-                (and (not vertico-sort-override-function)
-                     #'conf--vertico-sort-by-mtime)
+                (pcase vertico-sort-override-function
+                  ('conf--vertico-sort-by-mtime (message "Sorting by reverse alpha") 'vertico-sort-reverse-alpha)
+                  ('vertico-sort-reverse-alpha (message "Reverting to default sort") nil)
+                  (_ (message "Sorting by time") 'conf--vertico-sort-by-mtime))
                 vertico--input t))
 
   (keymap-set vertico-map "M-S" #'conf--vertico-toggle-sort))
