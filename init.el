@@ -2499,7 +2499,8 @@ available in the chat.
                   (or (gethash f cache)
                       (puthash f
                                (file-attribute-modification-time
-                                (file-attributes f))
+                                (file-attributes
+                                 (concat vertico--base f)))
                                cache))))
         (sort files (lambda (a b) (time-less-p (mtime b) (mtime a)))))))
 
