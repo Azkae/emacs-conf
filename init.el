@@ -2369,7 +2369,7 @@ available in the chat.
   (require 'gptel-integrations)
   (setq mcp-hub-servers nil)
   (add-to-list 'mcp-hub-servers '("deepwiki" :command "npx"
-                                  :args ("mcp-remote" "https://mcp.deepwiki.com/sse")))
+                                  :args ("mcp-remote" "https://mcp.deepwiki.com/mcp")))
   (add-to-list 'mcp-hub-servers '("posthog" :command "npx"
                                   :args ("mcp-remote" "https://mcp.posthog.com/mcp")))
   (add-to-list 'mcp-hub-servers '("webfetch" :command "uvx"
