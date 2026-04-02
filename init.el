@@ -1903,7 +1903,21 @@ the initial completion state.  PREFIX is the minimum prefix length."
             (org-demote-subtree))
           (forward-line 1)))))
 
+  (defun conf--gptel-convert-to-headings (start end)
+    "Replace */ by actual headings"
+    (interactive "r")
+    (when (eq major-mode 'org-mode)
+      (save-excursion
+        (goto-char start)
+        (while (< (point) end)
+          (beginning-of-line)
+          (when (looking-at "^\\*/ ")
+            (delete-char 2)
+            (insert (make-string (1+ (org-current-level)) ?*)))
+          (forward-line 1)))))
+
   (add-hook 'gptel-post-response-functions 'conf--gptel-demote-headings)
+  (add-hook 'gptel-post-response-functions 'conf--gptel-convert-to-headings)
 
   (global-set-key (kbd "C-c , r") 'gptel-rewrite)
   (global-set-key (kbd "C-c , R") 'conf--gptel-start-rewrite-session)
