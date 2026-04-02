@@ -1288,9 +1288,17 @@ Returns nil if there is no active region."
   :config
   (which-key-mode))
 
+(defun conf--eldoc-box-at-point ()
+  (interactive)
+  (if (and eldoc-box--frame (frame-visible-p eldoc-box--frame))
+      (progn
+        (eldoc-box-quit-frame)
+        (switch-to-buffer-other-window (eldoc-doc-buffer)))
+    (call-interactively 'eldoc-box-help-at-point)))
+
 (use-package eldoc-box
   :bind
-  (("M-§" . eldoc-box-help-at-point))
+  (("M-§" . conf--eldoc-box-at-point))
   :custom
   (eldoc-idle-delay 0.2)
   (add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t))
