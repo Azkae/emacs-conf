@@ -1916,8 +1916,21 @@ the initial completion state.  PREFIX is the minimum prefix length."
             (insert (make-string (1+ (org-current-level)) ?*)))
           (forward-line -1)))))
 
+  (defun conf--gptel-fix-separators (start end)
+    "Replace --- by org separators"
+    (interactive "r")
+    (when (eq major-mode 'org-mode)
+      (save-excursion
+        (goto-char start)
+        (while (< (point) end)
+          (beginning-of-line)
+          (when (looking-at "^---$")
+            (insert "--"))
+          (forward-line 1)))))
+
   (add-hook 'gptel-post-response-functions 'conf--gptel-demote-headings)
   (add-hook 'gptel-post-response-functions 'conf--gptel-convert-to-headings)
+  (add-hook 'gptel-post-response-functions 'conf--gptel-fix-separators)
 
   (global-set-key (kbd "C-c , r") 'gptel-rewrite)
   (global-set-key (kbd "C-c , R") 'conf--gptel-start-rewrite-session)
