@@ -520,6 +520,7 @@ Returns nil if there is no active region."
   (setq org-insert-heading-respect-content t)
   (setq org-log-done 'time)
   (setq org-log-into-drawer t)
+  (setq org-link-file-path-type 'relative)
   ;; (setq org-tags-column -90)
 
   (defun conf--org-table-align-after-yank (&rest _args)
