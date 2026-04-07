@@ -1291,7 +1291,7 @@ Returns nil if there is no active region."
 
 (defun conf--eldoc-box-at-point ()
   (interactive)
-  (if (and eldoc-box--frame (frame-visible-p eldoc-box--frame))
+  (if (and eldoc-box--frame (frame-live-p eldoc-box--frame) (frame-visible-p eldoc-box--frame))
       (progn
         (eldoc-box-quit-frame)
         (switch-to-buffer-other-window (eldoc-doc-buffer)))
