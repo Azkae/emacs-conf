@@ -2339,7 +2339,7 @@ NEVER use this tool to modify the user database. Use it solely to explore databa
 
   (gptel-make-preset 'psql
     :description "Access to postgres db"
-    :tools '(:append "execute_psql")
+    :tools '(:append ("execute_psql"))
     :system "Use the execute_psql tool to explore the database if necessary and then reply with requested query from the user. Do not execute the query that the user requested, simply reply with the requested query.")
 
   (gptel-make-preset 'emacs
