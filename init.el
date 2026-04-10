@@ -87,6 +87,11 @@
 
 (setq save-interprogram-paste-before-kill t)
 
+;; Don't push mark in minibuffer
+(define-advice push-mark (:before-while (&rest _) ignore-minibuffer)
+  "Don't push mark when in the minibuffer."
+  (not (minibufferp)))
+
 (use-package project
   :straight (:type built-in))
 
@@ -2974,6 +2979,22 @@ available in the chat.
         (meow-beacon-change)
       (meow-change)))
 
+  (defun conf--meow-set-mark-command (arg)
+    (interactive "P")
+    (cond
+     ((and (eq last-command 'pop-global-mark)
+	       (not arg))
+      (setq this-command 'pop-global-mark)
+      (pop-global-mark))
+     ((not arg)
+      (meow-left-expand)
+      (meow-right-expand))
+     ((equal arg '(4))
+      (setq this-command 'pop-global-mark)
+      (pop-global-mark))
+     (t
+      (consult-global-mark))))
+
   (defun meow-setup ()
     (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
     (meow-motion-define-key
@@ -2986,7 +3007,7 @@ available in the chat.
      '("C-k" . backward-paragraph)
      '("C-l" . right-word)
      '("<escape>" . ignore)
-     '("C-SPC" . (lambda () (interactive) (meow-left-expand) (meow-right-expand))))
+     '("C-SPC" . conf--meow-set-mark-command))
     (meow-leader-define-key
      '("&" . meow-digit-argument)
      '("é" . meow-digit-argument)
@@ -3101,7 +3122,7 @@ available in the chat.
      '("Y" . meow-change-save)
      '("z" . meow-pop-selection)
      '("<escape>" . ignore)
-     '("C-SPC" . (lambda () (interactive) (meow-left-expand) (meow-right-expand))))
+     '("C-SPC" . conf--meow-set-mark-command))
     (meow-define-keys
         'insert
       '("C-h" . meow-left)
