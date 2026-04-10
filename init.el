@@ -85,6 +85,8 @@
 (setq mouse-wheel-tilt-scroll t)
 (setq mouse-wheel-flip-direction t)
 
+(setq save-interprogram-paste-before-kill t)
+
 (use-package project
   :straight (:type built-in))
 
