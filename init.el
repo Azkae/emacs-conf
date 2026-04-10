@@ -1967,6 +1967,7 @@ the initial completion state.  PREFIX is the minimum prefix length."
   (setq gptel-include-tool-results t)
   (setf (alist-get 'org-mode gptel-prompt-prefix-alist) "* ")
   (setq gptel--set-buffer-locally t)
+  (setq gptel-highlight-methods '(face))
 
   (add-hook 'gptel-mode-hook
             (lambda () (when (derived-mode-p 'org-mode)
