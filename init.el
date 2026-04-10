@@ -2948,7 +2948,6 @@ available in the chat.
   (global-set-key (kbd "C-x C-j") nil)
   (global-set-key (kbd "C-x C-k") nil)
   (global-set-key (kbd "C-c /") nil)
-  ;; (global-set-key (kbd "C-c _") nil)
 
   (setq meow-next-thing-include-syntax '((word "" "") (symbol "" "")))
 
@@ -3129,11 +3128,8 @@ available in the chat.
       '("C-j" . meow-next)
       '("C-k" . meow-prev)
       '("C-l" . meow-right)
-      ;; '("M-h" . meow-left)
       '("M-k" . (lambda () (interactive) (move-up 4)))
-      '("M-j" . (lambda () (interactive) (move-down 4)))
-      ;; '("M-l" . meow-right)
-      ))
+      '("M-j" . (lambda () (interactive) (move-down 4)))))
   (meow-setup)
   (add-hook 'git-commit-setup-hook 'meow-insert-mode)
   (add-hook 'meow-insert-exit-hook 'corfu-quit)
@@ -3689,11 +3685,6 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
         ("M-s" . Custom-dirlocals-save)))
 
 (require 'package-review)
-
-;; (with-eval-after-load 'meow
-;;   (add-to-list 'emulation-mode-map-alists
-;;                `((package-review-mode
-;;                   . ,package-review-mode-map))))
 
 (defun gptel-review-packages ()
   "Send current region or buffer for code review in a dedicated buffer."
