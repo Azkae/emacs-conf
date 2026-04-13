@@ -3716,6 +3716,9 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
 
     (pop-to-buffer review-buffer)))
 
+(when (executable-find "gman")
+  (setq manual-program "gman"))
+
 ;; (use-package tramp-hlo
 ;;   :config
 ;;   (tramp-hlo-setup))
