@@ -87,10 +87,6 @@
 
 (setq save-interprogram-paste-before-kill t)
 
-;; Don't push mark in minibuffer
-(define-advice push-mark (:before-while (&rest _) ignore-minibuffer)
-  "Don't push mark when in the minibuffer."
-  (not (minibufferp)))
 
 (use-package project
   :straight (:type built-in))
