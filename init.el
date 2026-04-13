@@ -1916,8 +1916,9 @@ the initial completion state.  PREFIX is the minimum prefix length."
 
   (defun conf--gptel-start-rewrite-session ()
     (interactive)
-    (let ((buffer-name (generate-new-buffer-name "*gptel-rewrite*")))
-      (gptel buffer-name nil "* @rewrite ")
+    (let ((buffer-name (generate-new-buffer-name "*gptel-rewrite*"))
+          (gptel-default-mode 'markdown-mode))
+      (gptel buffer-name nil "@rewrite ")
       (switch-to-buffer buffer-name)))
 
   (defun conf--gptel-demote-headings (start end)
