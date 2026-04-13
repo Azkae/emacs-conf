@@ -87,6 +87,18 @@
 
 (setq save-interprogram-paste-before-kill t)
 
+(cl-defun remove-from-list (list-var element &key key test)
+  "Remove ELEMENT from the value of LIST-VAR if present.
+
+This can be used as an inverse of `add-to-list'."
+  (unless key (setq key #'identity))
+  (unless test (setq test #'equal))
+  (setf (symbol-value list-var)
+        (cl-remove element
+                   (symbol-value list-var)
+                   :key key
+                   :test test)))
+
 
 (use-package project
   :straight (:type built-in))
