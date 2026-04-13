@@ -3409,22 +3409,6 @@ With universal argument ARG, open in another window."
   :bind
   (("C-c '" . cycle-quotes)))
 
-(use-package aidermacs
-  :if (not (eq system-type 'windows-nt))
-  :bind
-  (:map aidermacs-minor-mode
-   ("C-c /" . insert-project-file-path))
-  :config
-  ;; (setq aidermacs-auto-commits t)
-  ;; (setq aidermacs-show-diff-after-change nil)
-  ;; (setq aidermacs-use-architect-mode t)
-  (setq aidermacs-default-model "sonnet")
-  (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
-    (setenv "ANTHROPIC_API_KEY" anthropic-api-key))
-  ;; (global-set-key (kbd "C-c a") 'aidermacs-transient-menu)
-  (add-to-list 'aidermacs-language-name-map '("tsx" . "tsx-ts"))
-  (add-to-list 'aidermacs-language-name-map '("typescript" . "tsx-ts")))
-
 (defun insert-project-file-path ()
   "Select a file from current project and insert its relative path at point."
   (interactive)
