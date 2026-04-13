@@ -2403,8 +2403,9 @@ available in the chat.
                                   :args ("mcp-remote" "https://mcp.deepwiki.com/mcp")))
   (add-to-list 'mcp-hub-servers '("posthog" :command "npx"
                                   :args ("mcp-remote" "https://mcp.posthog.com/mcp")))
-  (add-to-list 'mcp-hub-servers '("webfetch" :command "uvx"
-                                  :args ("mcp-server-fetch")))
+  (add-to-list 'mcp-hub-servers `("webfetch"
+                                  :command "docker"
+                                  :args ("run" "-i" "--rm" "mcp/fetch")))
   (when-let ((brave-api-key (password-store-get "brave-api-key")))
     (add-to-list 'mcp-hub-servers
                `("brave"
