@@ -7,6 +7,7 @@
         conf--backward-delete-word
         conf--meow-change-and-mark
         conf--meow-insert-wrap
+        conf--meow-set-mark-command
         crux-upcase-region
         cycle-quotes
         duplicate-line-or-region
@@ -54,6 +55,8 @@
         org-beginning-of-line
         org-end-of-line
         org-self-insert-command
+        org-shiftmetaleft
+        org-shiftmetaright
         org-yank
         phi-search
         xref-go-back
