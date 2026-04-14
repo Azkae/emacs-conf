@@ -151,6 +151,7 @@ Derives from `diff-mode', so all diff navigation is available:
   S-TAB     — cycle global visibility"
   :group 'package-review
   (setq-local outline-regexp "^\\*+ ")
+  (setq-local outline-level (lambda () (length (match-string 0))))
   (outline-minor-mode 1)
   ;; diff-mode enables read-only via view-mode; keep it but allow our keys
   (setq buffer-read-only t))
