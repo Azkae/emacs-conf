@@ -1958,9 +1958,19 @@ the initial completion state.  PREFIX is the minimum prefix length."
             (insert "--"))
           (forward-line 1)))))
 
+  (defun conf--gptel-fix-indented-begin-tool (start end)
+    "Add a newline before #+begin_tool when not at beginning of line in region."
+    (interactive "r")
+    (when (eq major-mode 'org-mode)
+      (save-excursion
+        (goto-char start)
+        (while (re-search-forward "^\\(.+\\)\\(#\\+begin_tool\\)" end t)
+          (replace-match "\\1\n\\2")))))
+
   (add-hook 'gptel-post-response-functions 'conf--gptel-demote-headings)
   (add-hook 'gptel-post-response-functions 'conf--gptel-convert-to-headings)
   (add-hook 'gptel-post-response-functions 'conf--gptel-fix-separators)
+  (add-hook 'gptel-post-response-functions 'conf--gptel-fix-indented-begin-tool)
 
   (global-set-key (kbd "C-c , r") 'gptel-rewrite)
   (global-set-key (kbd "C-c , R") 'conf--gptel-start-rewrite-session)
