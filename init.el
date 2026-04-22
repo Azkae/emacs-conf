@@ -1834,6 +1834,7 @@ the initial completion state.  PREFIX is the minimum prefix length."
   :config
   (global-org-modern-mode)
   (setq org-modern-star nil)
+  (setq org-ellipsis "…")
   ;; (setq org-modern-fold-stars '(("▸" . "▾") ("▹" . "▿") ("▸" . "▾") ("▹" . "▿") ("▸" . "▾")))
   )
 
