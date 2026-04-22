@@ -2382,6 +2382,28 @@ NEVER use this tool to modify the user database. Use it solely to explore databa
     :tools '(:append ("execute_psql"))
     :system "Use the execute_psql tool to explore the database if necessary and then reply with requested query from the user. Do not execute the query that the user requested, simply reply with the requested query.")
 
+  (defun conf--gptel-bash-execute (command)
+    "Execute a bash COMMAND and return its output (stdout + stderr)."
+    (with-output-to-string
+      (with-current-buffer standard-output
+        (call-process "bash" nil t nil "-c" command))))
+
+  (gptel-make-tool
+   :name "execute_bash"
+   :function #'conf--gptel-bash-execute
+   :description "Execute an arbitrary bash command and return its combined stdout and stderr output. Use this to run shell commands, scripts, inspect the filesystem, check system state, or perform any task expressible as a bash command."
+   :args (list
+          '(:name "command"
+                  :type string
+                  :description "The bash command to execute, e.g. 'ls -la ~/' or 'git log --oneline -10'"))
+   :category "shell"
+   :confirm t
+   :include t)
+
+  (gptel-make-preset 'sh
+    :description "Access to sh commands"
+    :tools '(:append ("execute_bash")))
+
   (gptel-make-preset 'emacs
     :description "Access to emacs tools"
     :tools '(:append ("elisp_describe_variable" "elisp_describe_face" "elisp_describe_function" "elisp_prefix_completion" "elisp_regexp_completion")))
