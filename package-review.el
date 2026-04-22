@@ -124,12 +124,28 @@ Each plist has:
              package-review-diff-context-lines
              from to))))
 
+;;; ── Faces ─────────────────────────────────────────────────────────────────
+
+(defface package-review-heading-1
+  '((t :inherit outline-1 :weight bold :height 1.2))
+  "Face for level-1 headings (package name)."
+  :group 'package-review)
+
+(defface package-review-heading-2
+  '((t :inherit outline-2 :weight semi-bold))
+  "Face for level-2 headings (Commits, Diff)."
+  :group 'package-review)
+
+(defface package-review-header
+  '((t :inherit font-lock-comment-face :slant italic))
+  "Face for the buffer title line."
+  :group 'package-review)
+
 ;;; ── Major mode ────────────────────────────────────────────────────────────
 
 (defvar package-review-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "q")   #'quit-window)
-    (define-key map (kbd "g")   #'package-review)
     (define-key map (kbd "TAB") #'outline-cycle)
     (define-key map (kbd "<backtab>") #'outline-cycle-buffer)
     map)
@@ -144,7 +160,6 @@ Derives from `diff-mode', so all diff navigation is available:
   N / P     — next / previous file (package)
   RET       — visit file at point
   q         — quit window
-  g         — refresh (re-run `package-review')
 
 `outline-minor-mode' is enabled so each package is a collapsible section:
   TAB       — cycle visibility of section at point
@@ -153,6 +168,12 @@ Derives from `diff-mode', so all diff navigation is available:
   (setq-local outline-regexp "^\\*+ ")
   (setq-local outline-level (lambda () (length (match-string 0))))
   (outline-minor-mode 1)
+  (font-lock-add-keywords
+   nil
+   '(("^Package Review.*$"  0 'package-review-header  t)
+     ("^\\* .*$"            0 'package-review-heading-1 t)
+     ("^\\*\\* .*$"         0 'package-review-heading-2 t))
+   'append)
   ;; diff-mode enables read-only via view-mode; keep it but allow our keys
   (setq buffer-read-only t))
 
