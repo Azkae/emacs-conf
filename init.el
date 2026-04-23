@@ -3655,7 +3655,8 @@ With universal argument ARG, open in another window."
   (advice-add 'agent-shell--project-files :override #'conf--project-files-cached-current)
   (setq agent-shell-highlight-blocks t)
   (setq agent-shell-session-strategy 'prompt)
-  (setq markdown-overlays-prettify-tables t))
+  (setq markdown-overlays-prettify-tables t)
+  (add-to-list 'project-switch-commands '(agent-shell "Agent shell" "a")))
 
 (defun conf--agent-shell-send-current-file ()
   (interactive)
