@@ -3459,13 +3459,7 @@ With universal argument ARG, open in another window."
          (selected (completing-read-multiple "Insert file: " relative-files nil t)))
     (insert (string-join selected " "))))
 
-(defun conf--aidermacs-run-advice (orig-fun &rest args)
-  (let ((default-directory (project-root (project-current))))
-    (apply orig-fun args)))
-
-(advice-add 'aidermacs-run :around #'conf--aidermacs-run-advice)
-
-(add-to-list 'project-switch-commands '(agent-shell "Agent shell" "a"))
+(global-set-key (kbd "C-c /") 'insert-project-file-path)
 
 ;; Maybe we should do the opposite, a whitelist instead of a blacklist
 (defvar conf--use-default-history '(extended-command-history))
