@@ -3738,6 +3738,50 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
 (when (executable-find "gman")
   (setq manual-program "gman"))
 
+(require 'transient)
+
+(defvar my/command-last-project-root nil)
+
+(defun my/command-run (command &optional comint)
+  "Run COMMAND via `compile` in a dedicated *command* buffer."
+  (let* ((compilation-buffer-name-function (lambda (_) "*command*"))
+         (default-directory (or my/command-last-project-root default-directory)))
+    (compile command comint)
+    (select-window (get-buffer-window "*command*"))))
+
+(transient-define-prefix my/alembic-menu ()
+  "Alembic migration commands."
+  ["Alembic"
+   ("r" "revision --autogenerate -m"
+    (lambda ()
+      (interactive)
+      (let ((msg (read-string "Migration message: ")))
+        (if (string-blank-p msg)
+            (user-error "Migration message must not be empty")
+          (my/command-run (format "alembic revision --autogenerate -m %S" msg))))))
+   ("u" "upgrade head"
+    (lambda ()
+      (interactive)
+      (my/command-run "alembic upgrade head")))
+   ("d" "downgrade -1"
+    (lambda ()
+      (interactive)
+      (when (yes-or-no-p "Downgrade the database by 1 revision? ")
+        (my/command-run "alembic downgrade -1"))))])
+
+(transient-define-prefix my/command-menu ()
+  "Main command menu."
+  ["Tools"
+   ("a" "Alembic" my/alembic-menu)])
+
+(defun my/command-menu-in-project-root ()
+  (interactive)
+  (setq my/command-last-project-root (project-root (project-current)))
+  (my/command-menu))
+
+(global-set-key (kbd "C-c p ²") 'my/command-menu-in-project-root)
+(add-to-list 'project-switch-commands '(my/command-menu-in-project-root "Commands" "²"))
+
 ;; (use-package tramp-hlo
 ;;   :config
 ;;   (tramp-hlo-setup))
