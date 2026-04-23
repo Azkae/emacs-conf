@@ -3779,7 +3779,7 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
   (setq my/command-last-project-root (project-root (project-current)))
   (my/command-menu))
 
-(global-set-key (kbd "C-c p ²") 'my/command-menu-in-project-root)
+(global-set-key (kbd "M-²") 'my/command-menu-in-project-root)
 (add-to-list 'project-switch-commands '(my/command-menu-in-project-root "Commands" "²"))
 
 ;; (use-package tramp-hlo
