@@ -3769,10 +3769,40 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
       (when (yes-or-no-p "Downgrade the database by 1 revision? ")
         (my/command-run "alembic downgrade -1"))))])
 
+(transient-define-prefix my/uv-menu ()
+  "uv menu commands"
+  ["uv"
+   ("s" "uv sync"
+    (lambda ()
+      (interactive)
+      (my/command-run (format "uv sync"))))
+   ("p" "uv lock --upgrade-package $1"
+    (lambda ()
+      (interactive)
+      (let ((msg (read-string "Package: ")))
+        (if (string-blank-p package)
+            (user-error "Missing package")
+          (my/command-run (format "uv lock --upgrade-package $S" package))))))])
+
+(transient-define-prefix my/npm-menu ()
+  "npm menu commands"
+  ["npm"
+   ("i" "npm install"
+    (lambda ()
+      (interactive)
+      (my/command-run (format "npm install"))))])
+
 (transient-define-prefix my/command-menu ()
   "Main command menu."
   ["Tools"
-   ("a" "Alembic" my/alembic-menu)])
+   ("a" "alembic" my/alembic-menu)
+   ("u" "uv" my/uv-menu)
+   ("n" "npm" my/npm-menu)]
+  [("&" "run command"
+    (lambda ()
+      (interactive)
+      (let ((default-directory my/command-last-project-root))
+        (project-async-shell-command))))])
 
 (defun my/command-menu-in-project-root ()
   (interactive)
