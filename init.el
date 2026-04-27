@@ -3820,6 +3820,16 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
 (global-set-key (kbd "M-²") 'my/command-menu-in-project-root)
 (add-to-list 'project-switch-commands '(my/command-menu-in-project-root "Commands" "²"))
 
+(use-package proced
+  :straight (:type built-in)
+  :defer t
+  :custom
+  (proced-enable-color-flag t)
+  (proced-tree-flag t)
+  (proced-descent t)
+  (proced-format 'medium) ;; can be changed interactively with `F'
+  (proced-filter 'user))   ;; can be changed interactively with `f'
+
 ;; (use-package tramp-hlo
 ;;   :config
 ;;   (tramp-hlo-setup))
