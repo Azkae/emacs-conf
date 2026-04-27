@@ -3790,7 +3790,15 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
    ("i" "npm install"
     (lambda ()
       (interactive)
-      (my/command-run (format "npm install"))))])
+      (my/command-run (format "npm install"))))
+   ("b" "npm run build"
+    (lambda ()
+      (interactive)
+      (my/command-run (format "npm run build"))))
+   ("t" "npm run test"
+    (lambda ()
+      (interactive)
+      (my/command-run (format "npm run test"))))])
 
 (transient-define-prefix my/command-menu ()
   "Main command menu."
