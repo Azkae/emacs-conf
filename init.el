@@ -3668,17 +3668,67 @@ With universal argument ARG, open in another window."
   (setq markdown-overlays-prettify-tables t)
   (add-to-list 'project-switch-commands '(agent-shell "Agent shell" "a")))
 
+(defun agent-shell-project-next-buffer ()
+  "Switch to the next agent-shell buffer in the current project."
+  (interactive)
+  (let* ((buffers (agent-shell-project-buffers))
+         (current (current-buffer))
+         (tail (member current buffers))
+         (next (if (and tail (cadr tail))
+                   (cadr tail)
+                 (car buffers))))
+    (when next
+      (switch-to-buffer next))))
+
+(defun agent-shell-project-previous-buffer ()
+  "Switch to the previous agent-shell buffer in the current project."
+  (interactive)
+  (let* ((buffers (agent-shell-project-buffers))
+         (current (current-buffer))
+         (idx (seq-position buffers current))
+         (prev (when idx
+                 (nth (mod (1- idx) (length buffers)) buffers))))
+    (when prev
+      (switch-to-buffer prev))))
+
+(define-key agent-shell-mode-map (kbd "M-l") #'agent-shell-project-next-buffer)
+(define-key agent-shell-mode-map (kbd "M-h") #'agent-shell-project-previous-buffer)
+(define-key agent-shell-mode-map (kbd "M-t") #'agent-shell-new-shell)
+
+(setq agent-shell-context-sources '(files region error))
+
 (defun conf--agent-shell-send-current-file ()
   (interactive)
   (when (buffer-file-name)
     (agent-shell--insert-to-shell-buffer
      :text (agent-shell--get-files-context :files (list (buffer-file-name))))))
 
+(defun agent-shell-list-and-select ()
+  "Display all agent-shell buffers with status and select one to switch to."
+  (interactive)
+  (let* ((buffers (agent-shell-buffers))
+         (candidates (mapcar (lambda (buf)
+                               (let* ((status (with-current-buffer buf
+                                                (if (shell-maker-busy) "⏳ busy" "✅ idle")))
+                                      (project (with-current-buffer buf
+                                                 (abbreviate-file-name (or (agent-shell-cwd) "?"))))
+                                      (label (format "%-8s %-40s %s"
+                                                     status (buffer-name buf) project)))
+                                 (cons label buf)))
+                             buffers)))
+    (if (null candidates)
+        (message "No agent-shell buffers found.")
+      (let* ((choice (completing-read "Agent shell: " (mapcar #'car candidates) nil t))
+             (buf (cdr (assoc choice candidates))))
+        (when buf
+          (switch-to-buffer buf))))))
+
 (transient-define-prefix conf--agent-shell-menu ()
   "Transient menu for agent-shell commands."
   ["Agent Shell"
    ["Core"
     ("a" "Start agent shell" agent-shell)
+    ("s" "Select agent shell" agent-shell-list-and-select)
     ("m" "Set session mode" agent-shell-set-session-mode)
     ("v" "Set model" agent-shell-set-session-model)]
    ["Send"
