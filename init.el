@@ -3665,8 +3665,7 @@ With universal argument ARG, open in another window."
   (advice-add 'agent-shell--project-files :override #'conf--project-files-cached-current)
   (setq agent-shell-highlight-blocks t)
   (setq agent-shell-session-strategy 'prompt)
-  (setq markdown-overlays-prettify-tables t)
-  (add-to-list 'project-switch-commands '(agent-shell "Agent shell" "a")))
+  (setq markdown-overlays-prettify-tables t))
 
 (defun agent-shell-project-next-buffer ()
   "Switch to the next agent-shell buffer in the current project."
@@ -3722,6 +3721,9 @@ With universal argument ARG, open in another window."
              (buf (cdr (assoc choice candidates))))
         (when buf
           (switch-to-buffer buf))))))
+
+(add-to-list 'project-switch-commands '(agent-shell-list-and-select "Agent shell select" "a s"))
+(add-to-list 'project-switch-commands '(agent-shell "Agent shell" "a a"))
 
 (transient-define-prefix conf--agent-shell-menu ()
   "Transient menu for agent-shell commands."
