@@ -772,6 +772,16 @@ Returns nil if there is no active region."
   (vc-display-status nil)
   (magit-diff-visit-prefer-worktree t))
 
+(defun my/kill-worktree-buffers (worktree)
+  "Kill all buffers visiting files under WORKTREE directory."
+  (let ((worktree-dir (expand-file-name worktree)))
+    (dolist (buf (buffer-list))
+      (when-let ((buf-file (buffer-file-name buf)))
+        (when (string-prefix-p worktree-dir (expand-file-name buf-file))
+          (kill-buffer buf))))))
+
+(advice-add 'magit-worktree-delete :before #'my/kill-worktree-buffers)
+
 ;; This git is faster got some reason
 (let ((git-path "/Applications/Xcode.app/Contents/Developer/usr/bin/git"))
   (when (file-exists-p git-path)
@@ -780,7 +790,7 @@ Returns nil if there is no active region."
 (defun my/forget-project-after-worktree-delete (worktree)
   "Remove WORKTREE from project.el's known projects after deletion."
   (when (require 'project nil t)
-    (project-forget-project worktree)))
+    (project-forget-project (expand-file-name worktree))))
 
 (advice-add 'magit-worktree-delete :after #'my/forget-project-after-worktree-delete)
 
