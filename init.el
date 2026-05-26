@@ -3702,11 +3702,9 @@ With universal argument ARG, open in another window."
     (agent-shell--insert-to-shell-buffer
      :text (agent-shell--get-files-context :files (list (buffer-file-name))))))
 
-(defun agent-shell-list-and-select ()
-  "Display all agent-shell buffers with status and select one to switch to."
-  (interactive)
-  (let* ((buffers (agent-shell-buffers))
-         (candidates (mapcar (lambda (buf)
+(defun agent-shell--list-and-select-from (buffers)
+  "Select and switch to an agent-shell buffer from BUFFERS."
+  (let* ((candidates (mapcar (lambda (buf)
                                (let* ((status (with-current-buffer buf
                                                 (if (shell-maker-busy) "⏳ busy" "✅ idle")))
                                       (project (with-current-buffer buf
@@ -3722,7 +3720,34 @@ With universal argument ARG, open in another window."
         (when buf
           (switch-to-buffer buf))))))
 
-(add-to-list 'project-switch-commands '(agent-shell-list-and-select "Agent shell select" "a s"))
+(defun agent-shell-list-and-select ()
+  "Select from all agent-shell buffers."
+  (interactive)
+  (agent-shell--list-and-select-from (agent-shell-buffers)))
+
+(defun agent-shell-list-and-select-project ()
+  "Select from agent-shell buffers in the current project, including worktrees."
+  (interactive)
+  (agent-shell--list-and-select-from (agent-shell-repo-buffers)))
+
+(defun agent-shell-repo-buffers ()
+  "Return agent-shell buffers whose CWD is in the same git repo as the current buffer.
+Uses `magit-list-worktrees' to enumerate all worktree paths, then keeps shell
+buffers whose CWD is under any of them.  Falls back to `agent-shell-project-buffers'
+if magit is unavailable or the current directory is not in a git repo."
+  (let* ((default-directory (agent-shell-cwd))
+         (worktrees (ignore-errors (magit-list-worktrees)))
+         (worktree-paths (mapcar #'car worktrees)))
+    (if (null worktree-paths)
+        (agent-shell-project-buffers)
+      (seq-filter (lambda (buf)
+                    (let ((cwd (with-current-buffer buf (agent-shell-cwd))))
+                      (seq-some (lambda (wt)
+                                  (string-prefix-p wt cwd))
+                                worktree-paths)))
+                  (agent-shell-buffers)))))
+
+(add-to-list 'project-switch-commands '(agent-shell-list-and-select-project "Agent shell select" "a s"))
 (add-to-list 'project-switch-commands '(agent-shell "Agent shell" "a a"))
 
 (transient-define-prefix conf--agent-shell-menu ()
