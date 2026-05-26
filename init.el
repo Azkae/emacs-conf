@@ -776,7 +776,7 @@ Returns nil if there is no active region."
   "Kill all buffers visiting files under WORKTREE directory."
   (let ((worktree-dir (expand-file-name worktree)))
     (dolist (buf (buffer-list))
-      (when-let ((buf-file (buffer-file-name buf)))
+      (when-let ((buf-file (with-current-buffer buf default-directory)))
         (when (string-prefix-p worktree-dir (expand-file-name buf-file))
           (kill-buffer buf))))))
 
