@@ -3696,6 +3696,22 @@ With universal argument ARG, open in another window."
 
 (setq agent-shell-context-sources '(files region error))
 
+(defun my/agent-shell-transcript-file-path ()
+  "Like `agent-shell--default-transcript-file-path', but place the
+transcript under the main worktree root when inside a linked worktree."
+  (let* ((default-directory
+          (if (and (fboundp 'magit-inside-worktree-p)
+                   (magit-inside-worktree-p :noerror)
+                   (fboundp 'magit-list-worktrees))
+              (car (car (magit-list-worktrees)))
+            default-directory))
+         (dir      (agent-shell--dot-subdir "transcripts"))
+         (filename (format-time-string "%F-%H-%M-%S.md"))
+         (filepath (expand-file-name filename dir)))
+    filepath))
+
+(setq agent-shell-transcript-file-path-function #'my/agent-shell-transcript-file-path)
+
 (defun conf--agent-shell-send-current-file ()
   (interactive)
   (when (buffer-file-name)
