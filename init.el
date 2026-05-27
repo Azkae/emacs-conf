@@ -774,13 +774,18 @@ Returns nil if there is no active region."
 
 (defun my/kill-worktree-buffers (worktree)
   "Kill all buffers visiting files under WORKTREE directory."
-  (let ((worktree-dir (expand-file-name worktree)))
+  (let ((worktree-dir (file-name-as-directory (expand-file-name worktree))))
     (dolist (buf (buffer-list))
-      (when-let ((buf-file (with-current-buffer buf default-directory)))
-        (when (string-prefix-p worktree-dir (expand-file-name buf-file))
-          (kill-buffer buf))))))
+      (when (string-prefix-p worktree-dir
+                             (expand-file-name
+                              (with-current-buffer buf default-directory)))
+        (kill-buffer buf)))))
 
-(advice-add 'magit-worktree-delete :before #'my/kill-worktree-buffers)
+(define-advice magit-worktree-delete (:around (orig worktree) kill-buffers)
+  "Kill worktree buffers only if deletion is confirmed and succeeds."
+  (let ((result (funcall orig worktree)))
+    (my/kill-worktree-buffers worktree)
+    result))
 
 ;; This git is faster got some reason
 (let ((git-path "/Applications/Xcode.app/Contents/Developer/usr/bin/git"))
