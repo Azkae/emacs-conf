@@ -699,16 +699,6 @@ Returns nil if there is no active region."
   :init
   (setq symbol-overlay-inhibit-map t))
 
-(use-package cmake-mode
-  :if (not (eq system-type 'windows-nt))
-  :defer t
-  :bind
-  (:map cmake-mode-map
-        ;; dump-jump doesn't work on cmake
-        ("M-." . conf--consult-ripgrep))
-  :config
-  (setq cmake-tab-width 4))
-
 (use-package doom-modeline
   :init (doom-modeline-mode 1)
   :custom
@@ -906,15 +896,6 @@ Returns nil if there is no active region."
   (yaml-mode . toggle-truncate-lines))
 
 (use-package swift-mode
-  :defer t)
-
-(use-package cython-mode
-  :defer t)
-
-(use-package glsl-mode
-  :defer t)
-
-(use-package jinja2-mode
   :defer t)
 
 (use-package nhexl-mode)
@@ -1842,10 +1823,6 @@ the initial completion state.  PREFIX is the minimum prefix length."
 
 ;; Attach running process:
 ;;   codelldb-cc :cwd "/path/base_dir" :program "/path/base_dir/program" :request "attach" :pid <pid>
-
-(use-package gdscript-mode
-  :defer t
-  :hook (gdscript-mode . eglot-ensure))
 
 (use-package org-modern
   :config
