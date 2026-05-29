@@ -3910,17 +3910,26 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
       (interactive)
       (my/command-run (format "npm run test"))))])
 
+(transient-define-prefix my/git-menu ()
+  "git menu commands"
+  ["git"
+   ("p" ".git/hooks/pre-commit"
+    (lambda ()
+      (interactive)
+      (my/command-run (format ".git/hooks/pre-commit"))))])
+
 (transient-define-prefix my/command-menu ()
   "Main command menu."
   ["Tools"
    ("a" "alembic" my/alembic-menu)
    ("u" "uv" my/uv-menu)
-   ("n" "npm" my/npm-menu)]
-  [("&" "run command"
+   ("n" "npm" my/npm-menu)
+   ("g" "git" my/git-menu)]
+  [("²" "run command"
     (lambda ()
       (interactive)
       (let ((default-directory my/command-last-project-root))
-        (project-async-shell-command))))])
+        (call-interactively 'project-async-shell-command))))])
 
 (defun my/command-menu-in-project-root ()
   (interactive)
