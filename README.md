@@ -7,7 +7,7 @@ Using [`Straight`](https://github.com/radian-software/straight.el) to declare pa
 
 Install emacs (MacOS):
 ```
-brew install libtool cmake pass pinentry-mac
+brew install libtool cmake pass pinentry-mac coreutils
 
 brew tap d12frosted/emacs-plus
 brew install emacs-plus --with-native-comp
@@ -40,3 +40,4 @@ Make sure to install all versions of Fira Mono (Medium, Regular & Bold)
 TODO:
 - disallow recursive M-o
 - try https://github.com/konrad1977/flyover
+- https://github.com/antonk52/cssmodules-language-server
