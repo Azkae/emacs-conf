@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (defvar conf--project-local-identifier ".project"
   "Filename(s) that identifies a directory as a project.
 You can specify a single filename or a list of names.")
