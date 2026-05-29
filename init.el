@@ -1596,19 +1596,12 @@ the initial completion state.  PREFIX is the minimum prefix length."
     (let ((root (locate-dominating-file default-directory "pyproject.toml")))
       (when (and root (not (string= root conf--python-current-root)))
         (message "checking for root %s" root)
-        (if-let* ((venv-path (expand-file-name ".venv" root))
-                  ((file-directory-p venv-path)))
-            (progn
-              (message "Applying venv: %s (.venv)" venv-path)
-              (setq conf--python-current-root root)
-              (pyvenv-activate venv-path))
-          (let ((process-environment (cl-remove-if
-                                      (lambda (element) (string-prefix-p "VIRTUAL_ENV=" element))
-                                      process-environment)))
-            (when-let ((venv (string-trim (shell-command-to-string "poetry env info --path"))))
-              (message "Applying venv: %s (poetry)" venv)
-              (setq conf--python-current-root root)
-              (pyvenv-activate venv))))))))
+        (when-let* ((venv-path (expand-file-name ".venv" root))
+                    ((file-directory-p venv-path)))
+          (progn
+            (message "Applying venv: %s (.venv)" venv-path)
+            (setq conf--python-current-root root)
+            (pyvenv-activate venv-path)))))))
 
 (add-hook 'find-file-hook 'conf--python-track-venv)
 
