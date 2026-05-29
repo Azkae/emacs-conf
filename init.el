@@ -3926,6 +3926,16 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
   (proced-format 'medium) ;; can be changed interactively with `F'
   (proced-filter 'user))   ;; can be changed interactively with `f'
 
+(setq gnus-select-method '(nntp "news.gmane.io"))
+
+(define-key gnus-summary-mode-map (kbd "M-k") nil)
+(define-key gnus-summary-mode-map (kbd "M-r") nil)
+
+;; (use-package ghostel
+;;   :config
+;;   (setq ghostel-ignore-cursor-change t)
+;;   (setq ghostel-keymap-exceptions '("M-q" "C-q" "C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-v" "M-v" "C-y" "M-y" "M-z" "M-X" "M-O" "M-e" "M-E" "M-l" "M-h")))
+
 ;; (use-package tramp-hlo
 ;;   :config
 ;;   (tramp-hlo-setup))
