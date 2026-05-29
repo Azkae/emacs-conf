@@ -982,7 +982,8 @@ Returns nil if there is no active region."
 
 ;; Fix highlighting of eldoc parameters, fixed in emacs31
 ;; See 04a8faef0948f46b16172855ee337f59819f22a7
-(with-eval-after-load 'eglot
+(when (<= emacs-major-version 30)
+ (with-eval-after-load 'eglot
   (el-patch-defun eglot--sig-info (sig &optional sig-active briefp)
     (eglot--dbind ((SignatureInformation)
                    ((:label siglabel))
@@ -1044,7 +1045,7 @@ Returns nil if there is no active region."
                           (apply #'substring siglabel (mapcar #'1+ parlabel)))
                         'face (and (eq i active-param) 'eldoc-highlight-function-argument))
                        ": " fpardoc)))))
-        (buffer-string)))))
+        (buffer-string))))))
 
 (use-package js
   :straight (:type built-in)
