@@ -61,6 +61,7 @@
         phi-search
         xref-go-back
         yaml-electric-dash-and-dot
+        yaml-electric-backspace
         ))
 
 (setq mc/cmds-to-run-once
