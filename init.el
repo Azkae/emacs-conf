@@ -968,7 +968,7 @@ Returns nil if there is no active region."
   (defun conf--eglot-publishDiagnostics (server method &rest args)
     (when (eq method 'textDocument/publishDiagnostics)
       (let ((uri (plist-get args :uri)))
-        (when-let ((buffer (find-buffer-visiting (eglot-uri-to-path uri))))
+        (when-let* ((buffer (find-buffer-visiting (eglot-uri-to-path uri))))
           (with-current-buffer buffer
             (when (bound-and-true-p sideline-mode)
               (sideline--reset)
@@ -992,7 +992,7 @@ Returns nil if there is no active region."
       (with-temp-buffer
         (insert siglabel)
         ;; Add documentation, indented so we can distinguish multiple signatures
-        (when-let (doc (and (not briefp) sigdoc (eglot--format-markup sigdoc)))
+        (when-let* (doc (and (not briefp) sigdoc (eglot--format-markup sigdoc)))
           (goto-char (point-max))
           (insert "\n" (replace-regexp-in-string "^" "  " doc)))
         ;; Try to highlight function name only
@@ -1890,7 +1890,7 @@ the initial completion state.  PREFIX is the minimum prefix length."
   (global-set-key (kbd "C-c , ,") 'gptel-menu)
   (global-set-key (kbd "C-c , t") 'gptel-tools)
   (global-set-key (kbd "C-c , C") 'gptel--suffix-context-buffer)
-  (when-let ((anthropic-api-key (password-store-get "anthropic-api-key")))
+  (when-let* ((anthropic-api-key (password-store-get "anthropic-api-key")))
     (setq
      gptel-model 'claude-sonnet-4-6
      gptel-backend (gptel-make-anthropic "Claude"
@@ -2447,7 +2447,7 @@ available in the chat.
   (add-to-list 'mcp-hub-servers `("webfetch"
                                   :command "docker"
                                   :args ("run" "-i" "--rm" "mcp/fetch")))
-  (when-let ((brave-api-key (password-store-get "brave-api-key")))
+  (when-let* ((brave-api-key (password-store-get "brave-api-key")))
     (add-to-list 'mcp-hub-servers
                `("brave"
                  :command "docker"
@@ -2840,7 +2840,7 @@ available in the chat.
 
 (defun conf--embark-consult-export-xref (items)
   "Create a grep-like buffer listing ITEMS from xref."
-  (let ((project-path (when-let ((project (project-current)))
+  (let ((project-path (when-let* ((project (project-current)))
                         (project-root project))))
     (embark-consult--export-grep
      :header "Exported xref results:\n\n"
