@@ -1963,10 +1963,27 @@ the initial completion state.  PREFIX is the minimum prefix length."
         (while (re-search-forward "^\\(.+\\)\\(#\\+begin_tool\\)" end t)
           (replace-match "\\1\n\\2")))))
 
+  (defun conf--align-tables-in-region (beg end)
+    "Iterate over all lines in region. If a line starts a table (begins with '|'),
+run `org-table-align` and move past the table, then continue."
+    (interactive "r")
+    (when (eq major-mode 'org-mode)
+      (save-excursion
+        (goto-char beg)
+        (while (< (point) end)
+          (beginning-of-line)
+          (if (looking-at "^|")
+              (progn
+                (org-table-align)
+                ;; Move past the table
+                (goto-char (org-table-end)))
+            (forward-line 1))))))
+
   (add-hook 'gptel-post-response-functions 'conf--gptel-demote-headings)
   (add-hook 'gptel-post-response-functions 'conf--gptel-convert-to-headings)
   (add-hook 'gptel-post-response-functions 'conf--gptel-fix-separators)
   (add-hook 'gptel-post-response-functions 'conf--gptel-fix-indented-begin-tool)
+  (add-hook 'gptel-post-response-functions 'conf--align-tables-in-region)
 
   (global-set-key (kbd "C-c , r") 'gptel-rewrite)
   (global-set-key (kbd "C-c , R") 'conf--gptel-start-rewrite-session)
