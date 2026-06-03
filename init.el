@@ -2456,7 +2456,12 @@ available in the chat.
 5. Do not offer unprompted advice or clarifications.
 6. Never apologize.
 7. Do NOT summarize your answers.
-</tone>"))
+</tone>")
+
+  (defun my/remove-text-properties-in-region (beg end)
+    "Remove all text properties in the region from BEG to END."
+    (interactive "r")
+    (set-text-properties beg end nil)))
 
 (use-package mcp
   :config
