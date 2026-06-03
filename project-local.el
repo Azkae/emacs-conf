@@ -6,11 +6,11 @@ You can specify a single filename or a list of names.")
 (defun conf--project-try-local (dir)
   "Determine if DIR is a non-VC project.
 DIR must include a .project file to be considered a project."
-  (if-let ((root (if (listp conf--project-local-identifier)
-                     (seq-some (lambda (n)
-                                 (locate-dominating-file dir n))
-                               conf--project-local-identifier)
-                   (locate-dominating-file dir conf--project-local-identifier))))
+  (if-let* ((root (if (listp conf--project-local-identifier)
+                      (seq-some (lambda (n)
+                                  (locate-dominating-file dir n))
+                                conf--project-local-identifier)
+                    (locate-dominating-file dir conf--project-local-identifier))))
       (cons 'local root)))
 
 (cl-defmethod project-root ((project (head local)))

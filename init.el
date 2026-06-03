@@ -1784,7 +1784,7 @@ the initial completion state.  PREFIX is the minimum prefix length."
 
   (defun conf--dape-read-pid ()
     "Read pid of active processes if possible."
-    (if-let ((pids (list-system-processes)))
+    (if-let* ((pids (list-system-processes)))
         (let ((collection
                (mapcar (lambda (pid)
                          (let ((args (alist-get 'args (process-attributes pid))))
@@ -1968,13 +1968,13 @@ the initial completion state.  PREFIX is the minimum prefix length."
         (while (re-search-forward "^\\(.+\\)\\(#\\+begin_tool\\)" end t)
           (replace-match "\\1\n\\2")))))
 
-  (defun conf--align-tables-in-region (beg end)
+  (defun conf--align-tables-in-region (start end)
     "Iterate over all lines in region. If a line starts a table (begins with '|'),
 run `org-table-align` and move past the table, then continue."
     (interactive "r")
     (when (eq major-mode 'org-mode)
       (save-excursion
-        (goto-char beg)
+        (goto-char start)
         (while (< (point) end)
           (beginning-of-line)
           (if (looking-at "^|")
@@ -3382,7 +3382,7 @@ With universal argument ARG, open in another window."
 (defun conf--consult-compile-error-in-compilation ()
   "Run consult-compile-error in the compilation buffer."
   (interactive)
-  (if-let ((comp-buffer (get-buffer "*compilation*")))
+  (if-let* ((comp-buffer (get-buffer "*compilation*")))
       (with-current-buffer comp-buffer
         (consult-compile-error))
     (message "No compilation buffer found")))
