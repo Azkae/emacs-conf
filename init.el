@@ -956,8 +956,12 @@ Returns nil if there is no active region."
   (add-to-list 'eglot-server-programs `(python-mode . ,(eglot-alternatives
                                                         '(("basedpyright-langserver" "--stdio")
                                                           ("pyright-langserver" "--stdio")))))
+
+  (add-to-list 'eglot-ignored-server-capabilities :semanticTokensProvider)
+
   (setq eldoc-echo-area-use-multiline-p nil)
   (setq eglot-code-action-indications '(margin))
+  (setq eglot-documentation-renderer 'gfm-view-mode)
 
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
