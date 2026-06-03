@@ -571,7 +571,8 @@ Returns nil if there is no active region."
   (add-to-list 'org-src-lang-modes '("json" . js-json))
   (add-to-list 'org-src-lang-modes '("tsx" . tsx-ts))
   (add-to-list 'org-src-lang-modes '("jsx" . tsx-ts))
-  (add-to-list 'org-src-lang-modes '("typescript" . tsx-ts)))
+  (add-to-list 'org-src-lang-modes '("typescript" . tsx-ts))
+  (add-to-list 'org-src-lang-modes '("hcl" . terraform)))
 
 (use-package org-agenda
   :straight (:type built-in)
