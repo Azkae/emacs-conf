@@ -3671,7 +3671,13 @@ With universal argument ARG, open in another window."
   (advice-add 'agent-shell--project-files :override #'conf--project-files-cached-current)
   (setq agent-shell-highlight-blocks t)
   (setq agent-shell-session-strategy 'prompt)
-  (setq markdown-overlays-prettify-tables t))
+  (setq markdown-overlays-prettify-tables t)
+
+  (add-to-list 'agent-shell-markdown-language-mapping '("json" . "js-json"))
+  (add-to-list 'agent-shell-markdown-language-mapping '("tsx" . "tsx-ts"))
+  (add-to-list 'agent-shell-markdown-language-mapping '("jsx" . "tsx-ts"))
+  (add-to-list 'agent-shell-markdown-language-mapping '("typescript" . "tsx-ts"))
+  (add-to-list 'agent-shell-markdown-language-mapping '("hcl" . "terraform")))
 
 (defun agent-shell-project-next-buffer ()
   "Switch to the next agent-shell buffer in the current project."
