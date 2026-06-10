@@ -1127,7 +1127,7 @@ Returns nil if there is no active region."
   )
 
 (defface conf--vterm-face
-  '((t :family "Menlo" :height 120))
+  '((t :family "Menlo" :height 130))
   "The basic fixed-pitch face."
   :group 'basic-faces)
 
@@ -1135,6 +1135,7 @@ Returns nil if there is no active region."
           (lambda ()
             (set
              (make-local-variable 'buffer-face-mode-face) 'conf--vterm-face)
+            (setq-local nobreak-char-display nil)
             (buffer-face-mode t)))
 
 (defun conf--vterm-save-cd()
