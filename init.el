@@ -1393,8 +1393,7 @@ the initial completion state.  PREFIX is the minimum prefix length."
         ("<tab>" . corfu-expand)
         ("RET" . corfu-insert)
         ("<ret>" . corfu-insert)
-        ("C-<return>" . corfu-insert)
-        ("M-RET" . newline))
+        ("C-<return>" . corfu-insert))
   :hook
   (corfu-mode . (lambda ()
                   (add-hook 'yas-keymap-disable-hook 'conf--corfu-active-p nil t)
