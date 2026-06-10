@@ -3756,27 +3756,31 @@ transcript under the main worktree root when inside a linked worktree."
 (defun agent-shell-list-and-select-project ()
   "Select from agent-shell buffers in the current project, including worktrees."
   (interactive)
-  (agent-shell--list-and-select-from (agent-shell-repo-buffers)))
+  (let ((default-directory (project-root (project-current))))
+    (agent-shell--list-and-select-from (agent-shell-repo-buffers))))
+
+(defun agent-shell-in-project ()
+  (interactive)
+  (let* ((default-directory (project-root (project-current)))
+         (buffers (agent-shell-repo-buffers)))
+    (if buffers
+        (switch-to-buffer (car buffers))
+      (call-interactively 'agent-shell))))
 
 (defun agent-shell-repo-buffers ()
-  "Return agent-shell buffers whose CWD is in the same git repo as the current buffer.
-Uses `magit-list-worktrees' to enumerate all worktree paths, then keeps shell
-buffers whose CWD is under any of them.  Falls back to `agent-shell-project-buffers'
-if magit is unavailable or the current directory is not in a git repo."
-  (let* ((default-directory (agent-shell-cwd))
-         (worktrees (ignore-errors (magit-list-worktrees)))
-         (worktree-paths (mapcar #'car worktrees)))
-    (if (null worktree-paths)
-        (agent-shell-project-buffers)
-      (seq-filter (lambda (buf)
-                    (let ((cwd (with-current-buffer buf (agent-shell-cwd))))
-                      (seq-some (lambda (wt)
-                                  (string-prefix-p wt cwd))
-                                worktree-paths)))
-                  (agent-shell-buffers)))))
+  "Return agent-shell buffers whose CWD is in the same git repo as the current buffer."
+  (let ((worktree-paths (mapcar #'car (magit-list-worktrees)))
+        (buffers (agent-shell-buffers)))
+    (seq-filter (lambda (buf)
+                  (seq-some (lambda (wt)
+                              (string-prefix-p
+                               (expand-file-name wt)
+                               (buffer-local-value 'default-directory buf)))
+                            worktree-paths))
+                buffers)))
 
 (add-to-list 'project-switch-commands '(agent-shell-list-and-select-project "Agent shell select" "a s"))
-(add-to-list 'project-switch-commands '(agent-shell "Agent shell" "a a"))
+(add-to-list 'project-switch-commands '(agent-shell-in-project "Agent shell" "a a"))
 
 (transient-define-prefix conf--agent-shell-menu ()
   "Transient menu for agent-shell commands."
