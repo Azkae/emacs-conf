@@ -1969,20 +1969,20 @@ the initial completion state.  PREFIX is the minimum prefix length."
           (replace-match "\\1\n\\2")))))
 
   (defun conf--align-tables-in-region (start end)
-    "Iterate over all lines in region. If a line starts a table (begins with '|'),
-run `org-table-align` and move past the table, then continue."
     (interactive "r")
     (when (eq major-mode 'org-mode)
       (save-excursion
-        (goto-char start)
-        (while (< (point) end)
-          (beginning-of-line)
-          (if (looking-at "^|")
-              (progn
-                (org-table-align)
-                ;; Move past the table
-                (goto-char (org-table-end)))
-            (forward-line 1))))))
+        (let ((end-marker (copy-marker end)))  ; marker moves with insertions
+          (goto-char start)
+          (while (< (point) end-marker)
+            (beginning-of-line)
+            (when (looking-at "^|")
+              (while (looking-at "^|")
+                (forward-line 1))
+              (forward-line -1)
+              (org-table-align))
+            (forward-line 1))
+          (set-marker end-marker nil)))))
 
   (add-hook 'gptel-post-response-functions 'conf--gptel-demote-headings)
   (add-hook 'gptel-post-response-functions 'conf--gptel-convert-to-headings)
