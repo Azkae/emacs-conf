@@ -2483,7 +2483,8 @@ available in the chat.
 
 
 (use-package gptel-agent
-  :config (gptel-agent-update))
+  :config (gptel-agent-update)
+  (require 'gptel-agent-tools-introspection))
 
 (use-package sideline
   :custom
