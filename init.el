@@ -2312,6 +2312,12 @@ Respond with a a complete Verb file and nothing else.")
                (looking-at "^[ \t]*#\\+begin_tool\\b"))
          (org-fold-hide-block-toggle t)))))
 
+  (defun setup-gptel-note ()
+    (interactive)
+    (gptel-mode 1)
+    (org-show-all '(headings blocks))
+    (gptel-collapse-tool-blocks))
+
   (defun conf--gptel-add-auto-local-var ()
     "Ensure that this file opens with `gptel-mode' enabled."
     (save-excursion
@@ -2324,7 +2330,7 @@ Respond with a a complete Verb file and nothing else.")
              'eval nil 'delete))
         ;; Always add our eval
         (add-file-local-variable-prop-line
-         'eval '(and (fboundp 'gptel-mode) (gptel-mode 1))))))
+         'eval '(and (fboundp 'setup-gptel-note) (setup-gptel-note))))))
 
   (add-hook 'gptel-save-state-hook #'conf--gptel-add-auto-local-var)
 
