@@ -18,8 +18,8 @@
     (conf--setup-font)
     (add-to-list 'default-frame-alist '(cursor-color . "white"))
     (set-face-attribute 'default nil :height 140)
-    (set-fontset-font t 'symbol "Menlo" nil 'prepend)
-    (set-fontset-font t 'symbol "Monaspace Neon Frozen" nil 'prepend)))
+    (set-fontset-font t 'symbol "Monaspace Neon Frozen" nil 'prepend)
+    (set-fontset-font t 'symbol "Menlo" nil 'prepend)))
 
 (add-hook 'after-make-frame-functions 'conf--setup-font-for-frame)
 
