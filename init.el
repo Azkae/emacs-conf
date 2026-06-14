@@ -1274,13 +1274,37 @@ Returns nil if there is no active region."
   (add-to-list 'typescript-ts-mode--sexp-nodes "class_body")
   (add-to-list 'typescript-ts-mode--sexp-nodes "formal_parameters")
   (add-to-list 'typescript-ts-mode--sexp-nodes "statement_block")
-  (add-to-list 'typescript-ts-mode--sexp-nodes "object"))
+  (add-to-list 'typescript-ts-mode--sexp-nodes "object")
+
+  (defun my/point-on-jsx-angle-bracket-p ()
+    "Return non-nil if point is on a JSX < or just after a JSX >."
+    (and (bound-and-true-p treesit-primary-parser)
+         (eq (treesit-language-at (point)) 'tsx)
+         (let* ((ch-after  (char-after (point)))
+                (ch-before (char-before (point)))
+                (pos (cond ((eql ch-after  ?<) (point))
+                           ((eql ch-before ?>) (1- (point)))
+                           (t nil))))
+           (when pos
+             (treesit-node-top-level
+              (treesit-node-at pos 'tsx)
+              (rx bos "jsx")
+              t)))))
+
+  (defun my/show-paren--disable-in-jsx (orig-fn)
+    "Disable `show-paren-mode' highlighting when point is in a JSX block."
+    (and (funcall orig-fn)
+         (not (my/point-on-jsx-angle-bracket-p))))
+
+  (advice-add 'show-paren--enabled-p :around #'my/show-paren--disable-in-jsx))
 
 (with-eval-after-load 'tsx-ts-mode
   (modify-syntax-entry ?` "\"" tsx-ts-mode-syntax-table))
 
 (use-package rainbow-delimiters
-  :hook (prog-mode . rainbow-delimiters-mode))
+  :hook
+  (prog-mode . rainbow-delimiters-mode)
+  ((typescript-ts-mode tsx-ts-mode) . (lambda () (rainbow-delimiters-mode -1))))
 
 (use-package markdown-mode
   :bind
