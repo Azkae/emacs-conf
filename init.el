@@ -3705,8 +3705,9 @@ With universal argument ARG, open in another window."
 
   (add-to-list 'agent-shell-markdown-language-mapping '("json" . "js-json"))
   (add-to-list 'agent-shell-markdown-language-mapping '("tsx" . "tsx-ts"))
+  (add-to-list 'agent-shell-markdown-language-mapping '("ts" . "typescript-ts"))
   (add-to-list 'agent-shell-markdown-language-mapping '("jsx" . "tsx-ts"))
-  (add-to-list 'agent-shell-markdown-language-mapping '("typescript" . "tsx-ts"))
+  (add-to-list 'agent-shell-markdown-language-mapping '("typescript" . "typescript-ts"))
   (add-to-list 'agent-shell-markdown-language-mapping '("hcl" . "terraform")))
 
 (defun agent-shell-project-next-buffer ()
