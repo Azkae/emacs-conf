@@ -2502,6 +2502,11 @@ available in the chat.
     (interactive "r")
     (set-text-properties beg end nil)))
 
+  (defun my/remove-overlay-in-region (beg end)
+    "Remove all overlays in the region from BEG to END."
+    (interactive "r")
+    (remove-overlays beg end))
+
 (use-package mcp
   :config
   (require 'gptel-integrations)
