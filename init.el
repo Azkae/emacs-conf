@@ -1938,7 +1938,7 @@ the initial completion state.  PREFIX is the minimum prefix length."
     (gptel-make-anthropic "Claude-thinking"
       :key anthropic-api-key
       :stream t
-      :models '(claude-sonnet-4-6 claude-opus-4-6)
+      :models '(claude-sonnet-4-6 claude-opus-4-8)
       :request-params '(:thinking (:type "adaptive")))
 
     (gptel-make-openai "llama-server"
