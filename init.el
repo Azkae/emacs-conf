@@ -4012,6 +4012,17 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
 ;;   :config
 ;;   (setq ghostel-ignore-cursor-change t)
 ;;   (setq ghostel-keymap-exceptions '("M-q" "C-q" "C-c" "C-x" "C-u" "C-g" "C-h" "C-l" "M-x" "M-o" "C-v" "M-v" "C-y" "M-y" "M-z" "M-X" "M-O" "M-e" "M-E" "M-l" "M-h")))
+;; setup compile regexp for pyright
+(require 'compile)
+
+(add-to-list 'compilation-error-regexp-alist-alist
+  '(pyright
+    "^[[:space:]]*\\([^
+:]+\\):\\([0-9]+\\):\\([0-9]+\\) - \\(?:\\(warning\\)\\|\\(?:error\\|information\\)\\): "
+    1 2 3 (4)))
+
+(add-to-list 'compilation-error-regexp-alist 'pyright)
+
 
 ;; (use-package tramp-hlo
 ;;   :config
