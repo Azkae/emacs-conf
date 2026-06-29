@@ -252,6 +252,9 @@ This can be used as an inverse of `add-to-list'."
 (global-set-key (kbd "M-q M-k")    'windmove-up)
 (global-set-key (kbd "M-q M-l") 'windmove-right)
 
+(global-set-key (kbd "M-q n")  'next-error)
+(global-set-key (kbd "M-q p")  'previous-error)
+
 (with-eval-after-load 'info
   (define-key Info-mode-map (kbd "M-,") 'Info-history-back)
   (define-key Info-mode-map (kbd "C-M-,") 'Info-history-forward)
@@ -486,7 +489,13 @@ Returns nil if there is no active region."
   :custom
   (flymake-indicator-type 'fringes)
   ;; (flymake-no-changes-timeout nil)
-  )
+  (put 'flymake-goto-next-error 'repeat-map 'flymake-goto-error-repeat-map)
+  (put 'flymake-goto-prev-error 'repeat-map 'flymake-goto-error-repeat-map)
+  (defvar flymake-goto-error-repeat-map
+    (let ((map (make-sparse-keymap)))
+      (define-key map "n" #'flymake-goto-next-error)
+      (define-key map "p" #'flymake-goto-prev-error)
+      map)))
 
 (defun conf--org-open-link-maybe()
   (interactive)
