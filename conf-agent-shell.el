@@ -126,23 +126,80 @@ transcript under the main worktree root when inside a linked worktree."
     (agent-shell--insert-to-shell-buffer
      :text (agent-shell--get-files-context :files (list (buffer-file-name))))))
 
-(defun agent-shell--list-and-select-from (buffers)
-  "Select and switch to an agent-shell buffer from BUFFERS."
-  (let* ((candidates (mapcar (lambda (buf)
-                               (let* ((status (with-current-buffer buf
-                                                (if (shell-maker-busy) "⏳ busy" "✅ idle")))
-                                      (project (with-current-buffer buf
-                                                 (abbreviate-file-name (or (agent-shell-cwd) "?"))))
-                                      (label (format "%-8s %-40s %s"
-                                                     status (buffer-name buf) project)))
-                                 (cons label buf)))
-                             buffers)))
+(defun agent-shell--annotate-buffer (name)
+  "Annotate agent-shell buffer NAME with status and project for completion."
+  (when-let* ((buf (get-buffer name)))
+    (with-current-buffer buf
+      (format "  %-8s %s"
+              (if (shell-maker-busy) "⏳ busy" "✅ idle")
+              (abbreviate-file-name (or (agent-shell-cwd) "?"))))))
+
+(cl-defun agent-shell--embark-with-target-buffer (&rest rest &key run target &allow-other-keys)
+  "Run action RUN with `current-buffer' bound to the buffer named TARGET.
+
+Follows the same pattern as `embark--cd', but switches to the target
+buffer instead of its associated directory."
+  (if-let* ((buf (get-buffer target)))
+      (with-current-buffer buf
+        (apply run :target target rest))
+    (apply run :target target rest)))
+
+(defvar agent-shell-embark-buffer-map nil
+  "Keymap for Embark actions on `agent-shell-buffer' category targets.")
+
+(with-eval-after-load 'embark
+  (setq agent-shell-embark-buffer-map
+        (let ((map (make-sparse-keymap)))
+          (set-keymap-parent map embark-buffer-map)
+          ;; Reuse `agent-shell-rename-buffer' as-is (simple, single-prompt
+          ;; interface, operates on `current-buffer').  The hooks below make
+          ;; it run with `current-buffer' bound to the selected candidate
+          ;; and prevent Embark from hijacking its `read-string' prompt.
+          (define-key map "r" #'agent-shell-rename-buffer)
+          map))
+  (add-to-list 'embark-keymap-alist '(agent-shell-buffer . agent-shell-embark-buffer-map))
+  (add-to-list 'embark-around-action-hooks
+               '(agent-shell-rename-buffer agent-shell--embark-with-target-buffer))
+  (add-to-list 'embark-target-injection-hooks
+               '(agent-shell-rename-buffer embark--ignore-target)))
+
+(defun agent-shell--list-and-select-from (buffers &optional allow-new)
+  "Select and switch to an agent-shell buffer from BUFFERS.
+
+Candidates are buffer names under a custom `agent-shell-buffer' category,
+so `embark-act' offers `agent-shell-embark-buffer-map' (buffer actions,
+plus `agent-shell-rename-buffer' bound to \"r\") on the selection.
+Using a category distinct from the plain `buffer' one also means our own
+`annotation-function' is used directly, without needing `marginalia-cycle'.
+
+When ALLOW-NEW is non-nil, append a \"New agent shell\" entry as the
+last completion candidate.  Picking it forces a new shell, equivalent
+to \\<agent-shell-mode-map>\\`C-u M-x agent-shell'."
+  (let* ((new-label "➕ New agent shell")
+         (names (mapcar #'buffer-name buffers))
+         (candidates (if allow-new (append names (list new-label)) names)))
     (if (null candidates)
-        (message "No agent-shell buffers found.")
-      (let* ((choice (completing-read "Agent shell: " (mapcar #'car candidates) nil t))
-             (buf (cdr (assoc choice candidates))))
-        (when buf
-          (switch-to-buffer buf))))))
+        (if allow-new
+            (agent-shell-new-shell)
+          (message "No agent-shell buffers found."))
+      (let* ((vertico-sort-function nil) ; keep "New agent shell" last
+             (table (lambda (str pred action)
+                     (if (eq action 'metadata)
+                         '(metadata (category . agent-shell-buffer)
+                                    (annotation-function . agent-shell--annotate-buffer))
+                       (complete-with-action action candidates str pred))))
+             (choice (completing-read "Agent shell: " table nil t))
+             (buf (unless (equal choice new-label) (get-buffer choice)))
+             ;; Capture context (region/files/error/line) from the
+             ;; *current* (source) buffer before switching away, mirroring
+             ;; what `agent-shell--dwim' does for the default entry point.
+             (text (when buf (agent-shell--context :shell-buffer buf))))
+        (cond
+         ((equal choice new-label) (agent-shell-new-shell))
+         (buf
+          (agent-shell--display-buffer buf)
+          (when text
+            (agent-shell--insert-to-shell-buffer :text text :shell-buffer buf))))))))
 
 (defun agent-shell-list-and-select ()
   "Select from all agent-shell buffers."
@@ -155,12 +212,28 @@ transcript under the main worktree root when inside a linked worktree."
   (let ((default-directory (project-root (project-current))))
     (agent-shell--list-and-select-from (agent-shell-repo-buffers))))
 
+(defun agent-shell-project-select-or-new ()
+  "Select an agent-shell buffer in the current project, or start a new one.
+
+Lists all agent-shell buffers in the current project (including
+worktrees), with an extra \"New agent shell\" option as the last
+completion candidate.  Picking it forces a new shell, equivalent to
+`C-u M-x agent-shell'."
+  (interactive)
+  (let ((default-directory (project-root (project-current))))
+    (agent-shell--list-and-select-from (agent-shell-repo-buffers) t)))
+
 (defun agent-shell-in-project ()
   (interactive)
   (let* ((default-directory (project-root (project-current)))
-         (buffers (agent-shell-repo-buffers)))
-    (if buffers
-        (switch-to-buffer (car buffers))
+         (buffers (agent-shell-repo-buffers))
+         (buf (car buffers))
+         (text (when buf (agent-shell--context :shell-buffer buf))))
+    (if buf
+        (progn
+          (agent-shell--display-buffer buf)
+          (when text
+            (agent-shell--insert-to-shell-buffer :text text :shell-buffer buf)))
       (call-interactively 'agent-shell))))
 
 (defun agent-shell-repo-buffers ()
@@ -176,18 +249,17 @@ transcript under the main worktree root when inside a linked worktree."
                 buffers)))
 
 (add-to-list 'project-switch-commands '(agent-shell-list-and-select-project "Agent shell select" "a s"))
-(add-to-list 'project-switch-commands '(agent-shell-in-project "Agent shell" "a a"))
+(add-to-list 'project-switch-commands '(agent-shell-project-select-or-new "Agent shell" "a a"))
 
 (transient-define-prefix conf--agent-shell-menu ()
   "Transient menu for agent-shell commands."
   ["Agent Shell"
    ["Core"
-    ("a" "Start agent shell" agent-shell)
+    ("a" "Start agent shell" agent-shell-project-select-or-new)
     ("s" "Select agent shell" agent-shell-list-and-select)
     ("m" "Set session mode" agent-shell-set-session-mode)
     ("v" "Set model" agent-shell-set-session-model)]
    ["Send"
-    ("r" "Send region" agent-shell-send-region)
     ("f" "Send file" agent-shell-send-file)
     ("F" "Send current file" conf--agent-shell-send-current-file)
     ("c" "Prompt compose" agent-shell-prompt-compose)]
