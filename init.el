@@ -1935,7 +1935,7 @@ the initial completion state.  PREFIX is the minimum prefix length."
   (global-set-key (kbd "C-c , C") 'gptel--suffix-context-buffer)
   (when-let* ((anthropic-api-key (password-store-get "anthropic-api-key")))
     (setq
-     gptel-model 'claude-sonnet-4-6
+     gptel-model 'claude-sonnet-5
      gptel-backend (gptel-make-anthropic "Claude"
 				     :stream t
 				     :key anthropic-api-key))
@@ -1943,7 +1943,7 @@ the initial completion state.  PREFIX is the minimum prefix length."
     (gptel-make-anthropic "Claude-thinking"
       :key anthropic-api-key
       :stream t
-      :models '(claude-sonnet-4-6 claude-opus-4-8)
+      :models '(claude-sonnet-5 claude-opus-4-8)
       :request-params '(:thinking (:type "adaptive")))
 
     (gptel-make-openai "llama-server"
