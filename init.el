@@ -4028,6 +4028,8 @@ by a factor of 10, as the default pty size is a pitiful 1024 bytes."
 
 (add-to-list 'compilation-error-regexp-alist 'pyright)
 
+(use-package dotenv-mode)
+
 
 ;; (use-package tramp-hlo
 ;;   :config
