@@ -802,6 +802,7 @@ Returns nil if there is no active region."
 (advice-add 'magit-worktree-delete :after #'my/forget-project-after-worktree-delete)
 
 (setq smerge-command-prefix "\C-cv")
+(setq smerge-refine-shadow-cursor nil)
 
 (use-package request)
 
