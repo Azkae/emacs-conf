@@ -22,6 +22,9 @@
   (vc-display-status nil)
   (magit-diff-visit-prefer-worktree t))
 
+(add-hook 'git-commit-mode-hook
+          (lambda () (setq-local electric-pair-preserve-balance nil)))
+
 (defun my/kill-worktree-buffers (worktree)
   "Kill all buffers visiting files under WORKTREE directory."
   (let ((worktree-dir (file-name-as-directory (expand-file-name worktree))))
