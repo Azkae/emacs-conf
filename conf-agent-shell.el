@@ -151,17 +151,18 @@ buffer instead of its associated directory."
   (setq agent-shell-embark-buffer-map
         (let ((map (make-sparse-keymap)))
           (set-keymap-parent map embark-buffer-map)
-          ;; Reuse `agent-shell-rename-buffer' as-is (simple, single-prompt
-          ;; interface, operates on `current-buffer').  The hooks below make
-          ;; it run with `current-buffer' bound to the selected candidate
-          ;; and prevent Embark from hijacking its `read-string' prompt.
           (define-key map "r" #'agent-shell-rename-buffer)
           map))
   (add-to-list 'embark-keymap-alist '(agent-shell-buffer . agent-shell-embark-buffer-map))
   (add-to-list 'embark-around-action-hooks
                '(agent-shell-rename-buffer agent-shell--embark-with-target-buffer))
   (add-to-list 'embark-target-injection-hooks
-               '(agent-shell-rename-buffer embark--ignore-target)))
+               '(agent-shell-rename-buffer embark--ignore-target))
+
+  ;; ;; or use C-u to not quit
+  ;; (setf (alist-get 'agent-shell-rename-buffer embark-quit-after-action) nil)
+
+  (add-to-list 'embark-post-action-hooks '(agent-shell-rename-buffer embark--restart)))
 
 (defun agent-shell--list-and-select-from (buffers &optional allow-new)
   "Select and switch to an agent-shell buffer from BUFFERS.
