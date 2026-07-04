@@ -1567,6 +1567,8 @@ the initial completion state.  PREFIX is the minimum prefix length."
   (fancy-compilation-override-colors nil))
 (define-key compilation-mode-map (kbd "M-p") nil)
 
+(add-to-list 'compilation-transform-file-match-alist '("\\`<string>\\'" nil))
+
 (conf--disable-keys diff-mode-map '("M-p" "M-h" "M-j" "M-k" "M-l"))
 
 (with-eval-after-load 'compile
