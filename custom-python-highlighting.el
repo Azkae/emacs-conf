@@ -26,11 +26,20 @@
       name: (identifier) @font-lock-function-name-face)
      (class_definition
       name: (identifier) @font-lock-type-face)
+     (parameters (identifier) @font-lock-variable-name-face)
      (el-patch-remove
-       (parameters (identifier) @font-lock-variable-name-face)
-       (parameters (typed_parameter (identifier) @font-lock-variable-name-face))
-       (parameters (default_parameter name: (identifier) @font-lock-variable-name-face)))
-     )
+       (parameters (typed_parameter (identifier) @font-lock-variable-name-face)))
+
+     (parameters (default_parameter name: (identifier) @font-lock-variable-name-face))
+     (parameters (typed_default_parameter name: (identifier) @font-lock-variable-name-face))
+     (lambda_parameters (identifier) @font-lock-variable-name-face)
+     (for_in_clause
+      left: (identifier) @font-lock-variable-name-face)
+     ((import_from_statement
+       name: ((dotted_name (identifier) @font-lock-type-face)))
+      (:match "\\`[A-Z][A-Za-z0-9]+\\'" @font-lock-type-face))
+     (import_from_statement
+      name: ((dotted_name (identifier) @font-lock-variable-name-face))))
 
    :feature 'builtin
    :language 'python
@@ -53,13 +62,24 @@
 
    :feature 'function
    :language 'python
-   '((call function: (identifier) @font-lock-function-call-face)
+   '(((call function: (identifier) @font-lock-type-face)
+      (:match "\\`[A-Z][A-Za-z0-9]+\\'" @font-lock-type-face))
+     (call function: (identifier) @font-lock-function-call-face)
+     (call arguments: (argument_list (keyword_argument
+                                      name: (identifier) @font-lock-property-name-face)))
      (call function: (attribute
                       attribute: (identifier) @font-lock-function-call-face)))
 
    :feature 'constant
    :language 'python
-   '([(true) (false) (none)] @font-lock-constant-face)
+   '([(true) (false) (none)] @font-lock-constant-face
+     ((assignment  (identifier) @font-lock-constant-face)
+      (:match "\\`[A-Z][A-Z0-9_]+\\'" @font-lock-constant-face))
+     ((call arguments: (argument_list (identifier) @font-lock-constant-face))
+      (:match "\\`[A-Z][A-Z0-9_]+\\'" @font-lock-constant-face))
+     ((attribute
+       attribute: (identifier) @font-lock-constant-face)
+      (:match "\\`[A-Z][A-Z0-9_]+\\'" @font-lock-constant-face)))
 
    :feature 'assignment
    :language 'python
@@ -87,8 +107,6 @@
 
    :feature 'type
    :language 'python
-   ;; Override built-in faces when dict/list are used for type hints.
-   :override t
    `(((identifier) @font-lock-type-face
       (:match ,(rx-to-string
                 `(seq bol (or ,@python--treesit-exceptions)
@@ -133,7 +151,9 @@
      ((call function: (identifier) @func-name
             (argument_list :anchor (_)
                            (binary_operator) @python--treesit-fontify-union-types-strict))
-      (:match "^is\\(?:instance\\|subclass\\)$" @func-name)))
+      (:match "^is\\(?:instance\\|subclass\\)$" @func-name))
+     ((identifier) @font-lock-type-face
+      (:match "\\`[A-Z][A-Za-z0-9]+\\'" @font-lock-type-face)))
 
    :feature 'escape-sequence
    :language 'python
@@ -169,6 +189,6 @@
    :feature 'variable
    :language 'python
    '((identifier) @python--treesit-fontify-variable))
-    "Tree-sitter font-lock settings.")
+  "Tree-sitter font-lock settings.")
 
 (provide 'custom-python-highlighting)
