@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (use-package cmake-mode
   :if (not (eq system-type 'windows-nt))
   :defer t
@@ -8,4 +10,4 @@
   :config
   (setq cmake-tab-width 4))
 
-(provide 'extra-cpp)
+(provide 'conf-cpp)
