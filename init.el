@@ -254,6 +254,8 @@ This can be used as an inverse of `add-to-list'."
 
 (global-set-key (kbd "M-q n")  'next-error)
 (global-set-key (kbd "M-q p")  'previous-error)
+(global-set-key (kbd "M-q M-n")  'next-error)
+(global-set-key (kbd "M-q M-p")  'previous-error)
 
 (with-eval-after-load 'info
   (define-key Info-mode-map (kbd "M-,") 'Info-history-back)
