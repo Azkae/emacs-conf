@@ -20,7 +20,8 @@
     (set-face-attribute 'default nil :height 140)
     (set-fontset-font t 'symbol "Menlo" nil 'prepend)
     (set-fontset-font t 'symbol "Monaspace Neon Frozen" nil 'prepend)
-    (add-to-list 'face-font-rescale-alist '("Monaspace Neon Frozen" . 0.9) t)))
+    (add-to-list 'face-font-rescale-alist '("Monaspace Neon Frozen" . 0.9) t)
+    (add-to-list 'face-font-rescale-alist '("Apple Color Emoji" . 0.75) t)))
 
 (add-hook 'after-make-frame-functions 'conf--setup-font-for-frame)
 
