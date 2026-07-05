@@ -126,13 +126,51 @@ transcript under the main worktree root when inside a linked worktree."
     (agent-shell--insert-to-shell-buffer
      :text (agent-shell--get-files-context :files (list (buffer-file-name))))))
 
+(defvar agent-shell--status-colors
+  '((busy . "orange")
+    (blocked . "red")
+    (ready . "green"))
+  "Alist mapping `agent-shell-status' symbols to a display color.
+
+See `agent-shell-status' for the meaning of each status.")
+
+(defun agent-shell--status-propertized (status)
+  "Return STATUS (a symbol) as a colorized, left-justified 8-char string."
+  (let ((color (alist-get status agent-shell--status-colors)))
+    (format "%-8s"
+            (propertize (symbol-name status)
+                        'face (if color (list :foreground color) 'default)))))
+
 (defun agent-shell--annotate-buffer (name)
   "Annotate agent-shell buffer NAME with status and project for completion."
   (when-let* ((buf (get-buffer name)))
     (with-current-buffer buf
-      (format "  %-8s %s"
-              (if (shell-maker-busy) "⏳ busy" "✅ idle")
-              (abbreviate-file-name (or (agent-shell-cwd) "?"))))))
+      (format "  %s %s %s"
+              (agent-shell--status-propertized (agent-shell-status))
+              (propertize (abbreviate-file-name (or (agent-shell-cwd) "?"))
+                          'face '(:foreground "cyan"))
+              (propertize (let ((title (string-trim
+                                        (or (map-nested-elt agent-shell--state
+                                                            '(:session :title))
+                                            ""))))
+                            (if (> (length title) 50)
+                                (concat (substring title 0 47) "...")
+                              title))
+                          'face '(:foreground "gray70"))))))
+
+(defun agent-shell--make-annotate-function (candidates)
+  "Return an annotate function aligning annotations across CANDIDATES.
+
+Since annotations are appended right after each candidate's text, and
+candidates (buffer names) can have different lengths, this pads each
+candidate with enough spaces to reach the width of the longest one
+before delegating to `agent-shell--annotate-buffer', so that the
+status/path/title columns all start at the same position."
+  (let ((width (if candidates (apply #'max (mapcar #'length candidates)) 0)))
+    (lambda (name)
+      (when-let* ((annotation (agent-shell--annotate-buffer name)))
+        (concat (make-string (max 0 (- width (length name))) ?\s)
+                annotation)))))
 
 (cl-defun agent-shell--embark-with-target-buffer (&rest rest &key run target &allow-other-keys)
   "Run action RUN with `current-buffer' bound to the buffer named TARGET.
@@ -179,35 +217,33 @@ candidates, the corresponding buffer is shown, just like `consult-buffer'.
 When ALLOW-NEW is non-nil, append a \"New agent shell\" entry as the
 last completion candidate.  Picking it forces a new shell, equivalent
 to \\<agent-shell-mode-map>\\`C-u M-x agent-shell'."
-  (if (derived-mode-p 'agent-shell-mode)
-      (quit-restore-window nil 'bury)
-    (let* ((new-label "➕ New agent shell")
-           (names (mapcar #'buffer-name buffers))
-           (candidates (if allow-new (append names (list new-label)) names)))
-      (if (null candidates)
-          (if allow-new
-              (agent-shell-new-shell)
-            (message "No agent-shell buffers found."))
-        (let* ((choice (consult--read
-                        candidates
-                        :prompt "Agent shell: "
-                        :category 'agent-shell-buffer
-                        :annotate #'agent-shell--annotate-buffer
-                        :require-match t
-                        :sort nil                       ; keep "New agent shell" last
-                        :state (consult--buffer-preview) ; live preview, no custom action on RET
-                        :history 'agent-shell--buffer-history))
-               (buf (unless (equal choice new-label) (get-buffer choice)))
-               ;; Capture context (region/files/error/line) from the
-               ;; *current* (source) buffer before switching away, mirroring
-               ;; what `agent-shell--dwim' does for the default entry point.
-               (text (when buf (agent-shell--context :shell-buffer buf))))
-          (cond
-           ((equal choice new-label) (agent-shell-new-shell))
-           (buf
-            (agent-shell--display-buffer buf)
-            (when text
-              (agent-shell--insert-to-shell-buffer :text text :shell-buffer buf)))))))))
+  (let* ((new-label "➕ New agent shell")
+         (names (mapcar #'buffer-name buffers))
+         (candidates (if allow-new (append names (list new-label)) names)))
+    (if (null candidates)
+        (if allow-new
+            (agent-shell-new-shell)
+          (message "No agent-shell buffers found."))
+      (let* ((choice (consult--read
+                      candidates
+                      :prompt "Agent shell: "
+                      :category 'agent-shell-buffer
+                      :annotate (agent-shell--make-annotate-function names)
+                      :require-match t
+                      :sort nil                       ; keep "New agent shell" last
+                      :state (consult--buffer-preview) ; live preview, no custom action on RET
+                      :history 'agent-shell--buffer-history))
+             (buf (unless (equal choice new-label) (get-buffer choice)))
+             ;; Capture context (region/files/error/line) from the
+             ;; *current* (source) buffer before switching away, mirroring
+             ;; what `agent-shell--dwim' does for the default entry point.
+             (text (when buf (agent-shell--context :shell-buffer buf))))
+        (cond
+         ((equal choice new-label) (agent-shell-new-shell))
+         (buf
+          (agent-shell--display-buffer buf)
+          (when text
+            (agent-shell--insert-to-shell-buffer :text text :shell-buffer buf))))))))
 
 (defun agent-shell-list-and-select ()
   "Select from all agent-shell buffers."
@@ -256,14 +292,15 @@ completion candidate.  Picking it forces a new shell, equivalent to
                             worktree-paths))
                 buffers)))
 
-(add-to-list 'project-switch-commands '(agent-shell-list-and-select-project "Agent shell select" "a s"))
-(add-to-list 'project-switch-commands '(agent-shell-project-select-or-new "Agent shell" "a a"))
+(add-to-list 'project-switch-commands '(agent-shell "Agent shell" "a a"))
+(add-to-list 'project-switch-commands '(agent-shell-project-select-or-new "Agent shell select" "a p"))
 
 (transient-define-prefix conf--agent-shell-menu ()
   "Transient menu for agent-shell commands."
   ["Agent Shell"
    ["Core"
-    ("a" "Start agent shell" agent-shell-project-select-or-new)
+    ("a" "Start agent shell" agent-shell)
+    ("p" "Select project shell" agent-shell-project-select-or-new)
     ("s" "Select agent shell" agent-shell-list-and-select)
     ("m" "Set session mode" agent-shell-set-session-mode)
     ("v" "Set model" agent-shell-set-session-model)]
