@@ -38,7 +38,9 @@
               ("C-h" . left-char)
               ("C-l" . right-char)
               ("C-p" . previous-history-element)
-              ("C-n" . next-history-element))
+              ("C-n" . next-history-element)
+              ("M-k" . (lambda() (interactive) (scroll-other-window-down 5)))
+              ("M-j" . (lambda() (interactive) (scroll-other-window 5))))
   :init
   (vertico-mode)
   (add-hook 'minibuffer-setup-hook #'vertico-repeat-save)
