@@ -651,12 +651,13 @@ available in the chat.
   :config
   (with-eval-after-load 'gptel (macher-install)))
 
-
 (use-package gptel-quick
   :straight (gptel-quick :type git :host github :repo "karthink/gptel-quick")
   :config
   (keymap-set embark-general-map "q" #'gptel-quick)
   (add-to-list 'embark-post-action-hooks '(gptel-quick embark--unmark-target)))
 
+(require 'gptel-inline)
+(global-set-key (kbd "C-c , e") 'gptel-inline)
 
 (provide 'conf-gptel)
