@@ -131,6 +131,9 @@
   (setq gptel--set-buffer-locally t)
   (setq gptel-highlight-methods '(face))
 
+  ;; tmp: disable showing reasoning since sonnet 5 return empty reasoning blocks
+  (setq gptel-include-reasoning nil)
+
   (add-hook 'gptel-mode-hook
             (lambda () (when (derived-mode-p 'org-mode)
                          (setq-local require-final-newline nil))))
