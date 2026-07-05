@@ -303,7 +303,8 @@ completion candidate.  Picking it forces a new shell, equivalent to
     ("p" "Select project shell" agent-shell-project-select-or-new)
     ("s" "Select agent shell" agent-shell-list-and-select)
     ("m" "Set session mode" agent-shell-set-session-mode)
-    ("v" "Set model" agent-shell-set-session-model)]
+    ("v" "Set model" agent-shell-set-session-model)
+    ("r" "Rename" agent-shell-rename-buffer)]
    ["Send"
     ("f" "Send file" agent-shell-send-file)
     ("F" "Send current file" conf--agent-shell-send-current-file)
