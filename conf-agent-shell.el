@@ -173,34 +173,41 @@ plus `agent-shell-rename-buffer' bound to \"r\") on the selection.
 Using a category distinct from the plain `buffer' one also means our own
 `annotation-function' is used directly, without needing `marginalia-cycle'.
 
+Selection supports Consult-style buffer preview: as you move through
+candidates, the corresponding buffer is shown, just like `consult-buffer'.
+
 When ALLOW-NEW is non-nil, append a \"New agent shell\" entry as the
 last completion candidate.  Picking it forces a new shell, equivalent
 to \\<agent-shell-mode-map>\\`C-u M-x agent-shell'."
-  (let* ((new-label "➕ New agent shell")
-         (names (mapcar #'buffer-name buffers))
-         (candidates (if allow-new (append names (list new-label)) names)))
-    (if (null candidates)
-        (if allow-new
-            (agent-shell-new-shell)
-          (message "No agent-shell buffers found."))
-      (let* ((vertico-sort-function nil) ; keep "New agent shell" last
-             (table (lambda (str pred action)
-                     (if (eq action 'metadata)
-                         '(metadata (category . agent-shell-buffer)
-                                    (annotation-function . agent-shell--annotate-buffer))
-                       (complete-with-action action candidates str pred))))
-             (choice (completing-read "Agent shell: " table nil t))
-             (buf (unless (equal choice new-label) (get-buffer choice)))
-             ;; Capture context (region/files/error/line) from the
-             ;; *current* (source) buffer before switching away, mirroring
-             ;; what `agent-shell--dwim' does for the default entry point.
-             (text (when buf (agent-shell--context :shell-buffer buf))))
-        (cond
-         ((equal choice new-label) (agent-shell-new-shell))
-         (buf
-          (agent-shell--display-buffer buf)
-          (when text
-            (agent-shell--insert-to-shell-buffer :text text :shell-buffer buf))))))))
+  (if (derived-mode-p 'agent-shell-mode)
+      (quit-restore-window nil 'bury)
+    (let* ((new-label "➕ New agent shell")
+           (names (mapcar #'buffer-name buffers))
+           (candidates (if allow-new (append names (list new-label)) names)))
+      (if (null candidates)
+          (if allow-new
+              (agent-shell-new-shell)
+            (message "No agent-shell buffers found."))
+        (let* ((choice (consult--read
+                        candidates
+                        :prompt "Agent shell: "
+                        :category 'agent-shell-buffer
+                        :annotate #'agent-shell--annotate-buffer
+                        :require-match t
+                        :sort nil                       ; keep "New agent shell" last
+                        :state (consult--buffer-preview) ; live preview, no custom action on RET
+                        :history 'agent-shell--buffer-history))
+               (buf (unless (equal choice new-label) (get-buffer choice)))
+               ;; Capture context (region/files/error/line) from the
+               ;; *current* (source) buffer before switching away, mirroring
+               ;; what `agent-shell--dwim' does for the default entry point.
+               (text (when buf (agent-shell--context :shell-buffer buf))))
+          (cond
+           ((equal choice new-label) (agent-shell-new-shell))
+           (buf
+            (agent-shell--display-buffer buf)
+            (when text
+              (agent-shell--insert-to-shell-buffer :text text :shell-buffer buf)))))))))
 
 (defun agent-shell-list-and-select ()
   "Select from all agent-shell buffers."
@@ -211,7 +218,7 @@ to \\<agent-shell-mode-map>\\`C-u M-x agent-shell'."
   "Select from agent-shell buffers in the current project, including worktrees."
   (interactive)
   (let ((default-directory (project-root (project-current))))
-    (agent-shell--list-and-select-from (agent-shell-repo-buffers))))
+    (agent-shell--list-and-select-from (agent-shell-project-buffers))))
 
 (defun agent-shell-project-select-or-new ()
   "Select an agent-shell buffer in the current project, or start a new one.
