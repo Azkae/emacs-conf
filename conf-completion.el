@@ -385,7 +385,7 @@
 (advice-add #'consult-outline :before #'consult--set-previous-point)
 (advice-add #'consult-line :before #'consult--set-previous-point)
 (advice-add #'vertico--update :around #'vertico--update-selected-candidate-maybe)
-(advice-add #'vertico--recompute :after #'vertico--set-updated-selection)
+(advice-add #'vertico--compute :after #'vertico--set-updated-selection)
 
 (setq consult-line-start-from-top t)
 
