@@ -407,7 +407,7 @@ Returns nil if there is no active region."
    '((tramp-direct-async-process . t))))
 
 (add-hook 'text-mode-hook 'visual-line-mode)
-(setopt treesit-enabled-modes t)
+(setopt treesit-enabled-modes '(python-ts-mode))
 
 
 (defun toggle-delete-other-windows ()
