@@ -57,12 +57,11 @@
       name: (identifier) @font-lock-function-name-face)
      (class_definition
       name: (identifier) @font-lock-type-face)
-     (parameters (identifier) @font-lock-variable-name-face)
      (el-patch-remove
-       (parameters (typed_parameter (identifier) @font-lock-variable-name-face)))
-
-     (parameters (default_parameter name: (identifier) @font-lock-variable-name-face))
-     (parameters (typed_default_parameter name: (identifier) @font-lock-variable-name-face))
+       (parameters (identifier) @font-lock-variable-name-face)
+       (parameters (typed_parameter (identifier) @font-lock-variable-name-face))
+       (parameters (default_parameter name: (identifier) @font-lock-variable-name-face))
+       (parameters (typed_default_parameter name: (identifier) @font-lock-variable-name-face)))
      (lambda_parameters (identifier) @font-lock-variable-name-face)
      (for_in_clause
       left: (identifier) @font-lock-variable-name-face)
