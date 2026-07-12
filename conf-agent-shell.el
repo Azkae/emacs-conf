@@ -154,8 +154,8 @@ See `agent-shell-status' for the meaning of each status.")
                                         (or (map-nested-elt agent-shell--state
                                                             '(:session :title))
                                             ""))))
-                            (if (> (length title) 50)
-                                (concat (substring title 0 47) "...")
+                            (if (> (length title) 80)
+                                (concat (substring title 0 77) "...")
                               title))
                           'face '(:foreground "gray70"))))))
 
