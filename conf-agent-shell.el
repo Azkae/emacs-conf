@@ -67,6 +67,7 @@
   (setq agent-shell-highlight-blocks t)
   (setq agent-shell-session-strategy 'prompt)
   (setq markdown-overlays-prettify-tables t)
+  (setq agent-shell-preferred-agent-config '(preselect . claude-code))
 
   (add-to-list 'agent-shell-markdown-language-mapping '("json" . "js-json"))
   (add-to-list 'agent-shell-markdown-language-mapping '("tsx" . "tsx-ts"))
