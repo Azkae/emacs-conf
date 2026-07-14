@@ -135,6 +135,12 @@ transcript under the main worktree root when inside a linked worktree."
 
 See `agent-shell-status' for the meaning of each status.")
 
+(defun agent-shell-rename-buffer (name)
+  "Rename the current agent-shell buffer to NAME."
+  (interactive
+   (list (read-string "Rename buffer: " (buffer-name))))
+  (rename-buffer name t))
+
 (defun agent-shell--status-propertized (status)
   "Return STATUS (a symbol) as a colorized, left-justified 8-char string."
   (let ((color (alist-get status agent-shell--status-colors)))
