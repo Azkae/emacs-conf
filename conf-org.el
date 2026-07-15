@@ -124,15 +124,6 @@
         (setq archived-count (1+ archived-count))))
     (message "Archived %d DONE items" archived-count)))
 
-(defun org-archive-all-done-confirm ()
-  "Archive all DONE items with confirmation."
-  (interactive)
-  (let ((done-count (length (org-map-entries t "TODO=\"DONE\""))))
-    (when (and (> done-count 0)
-               (y-or-n-p (format "Archive %d DONE items? " done-count)))
-      (org-archive-all-done))))
-
-
 (use-package denote
   :ensure t
   :hook (dired-mode . denote-dired-mode)
@@ -145,7 +136,7 @@
    ("C-c n f" . denote-open-or-create))
   :config
   (setq denote-directory (expand-file-name "~/Dropbox/denotes/"))
-  (setq denote-known-keywords '("carbon" "emacs" "personal" "temporary"))
+  (setq denote-known-keywords '("work" "emacs" "personal" "temporary"))
 
   (setq denote-prompts-with-history-as-completion
         (remove 'denote-title-prompt denote-prompts-with-history-as-completion))
