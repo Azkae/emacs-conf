@@ -659,4 +659,11 @@ available in the chat.
 (require 'gptel-inline)
 (global-set-key (kbd "C-c , e") 'gptel-inline)
 
+(defun conf--gptel-inline-buf (buf)
+  "*gptel-inline*")
+
+(setq gptel-inline-find-chat-buffer-functions '(gptel-inline-previous-buffer
+                                                gptel-inline-same-buffer
+                                                conf--gptel-inline-buf))
+
 (provide 'conf-gptel)
