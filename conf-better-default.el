@@ -101,7 +101,13 @@ This can be used as an inverse of `add-to-list'."
 (global-unset-key (kbd "M-t"))
 (global-unset-key (kbd "C-o"))
 
-(global-set-key (kbd "C-M-b") 'scroll-other-window-down)
+(defun conf--scroll-other-window ()
+  (interactive)
+  (scroll-other-window 4))
+
+(defun conf--scroll-other-window-down ()
+  (interactive)
+  (scroll-other-window-down 4))
 
 (define-key key-translation-map (kbd "M-g") (kbd "C-g"))
 ; (define-key crm-local-completion-map (kbd "M-v") nil)
