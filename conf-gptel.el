@@ -107,7 +107,6 @@
   (add-hook 'gptel-post-response-functions 'conf--gptel-demote-headings)
   (add-hook 'gptel-post-response-functions 'conf--gptel-convert-to-headings)
   (add-hook 'gptel-post-response-functions 'conf--gptel-fix-separators)
-  (add-hook 'gptel-post-response-functions 'conf--gptel-fix-indented-begin-tool)
   (add-hook 'gptel-post-response-functions 'conf--align-tables-in-region)
 
   (global-set-key (kbd "C-c , r") 'gptel-rewrite)
