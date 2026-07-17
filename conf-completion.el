@@ -275,16 +275,16 @@
   (setq xref-show-definitions-function 'consult-xref)
 
   (add-to-list 'consult-preview-excluded-files "\\.gpg\\'")
-  (require 'consult-compile))
+  (require 'consult-compile)
 
-(consult-customize
- consult-ripgrep consult-git-grep consult-grep
- consult-bookmark consult-recent-file consult-xref
- consult-source-bookmark consult-source-file-register
- consult-source-recent-file consult-source-project-recent-file
- conf--consult-ripgrep conf--select-directory-and-ripgrep
- project-switch-project conf--find-in-open-buffers consult-line-multi
- :preview-key '(:debounce 0.1 any)) ;; Option 1: Delay preview
+  (consult-customize
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult-source-bookmark consult-source-file-register
+   consult-source-recent-file consult-source-project-recent-file
+   conf--consult-ripgrep conf--select-directory-and-ripgrep
+   project-switch-project conf--find-in-open-buffers consult-line-multi
+   :preview-key '(:debounce 0.1 any)))
 
 ;; (consult-customize
 ;;  find-file
