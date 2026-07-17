@@ -6,6 +6,7 @@
 (setq conf--font-name "Fira Mono")
 
 (defun conf--setup-font ()
+  (interactive)
   (if (find-font (font-spec :name conf--font-name))
       (progn
         (message "Using %s" conf--font-name)
