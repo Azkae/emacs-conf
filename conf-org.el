@@ -106,7 +106,7 @@
 
 (setq org-archive-location "archive-%s::")
 
-(defun org-archive-all-done ()
+(defun conf--org-archive-done-todos ()
   "Archive all DONE items in the current buffer."
   (interactive)
   (let ((done-positions '())
