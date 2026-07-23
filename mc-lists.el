@@ -4,6 +4,7 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+        beginning-of-buffer
         conf--backward-delete-word
         conf--meow-change-and-mark
         conf--meow-insert-wrap
