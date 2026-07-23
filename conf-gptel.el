@@ -77,7 +77,8 @@
           (beginning-of-line)
           (when (looking-at "^---$")
             (insert "--"))
-          (forward-line 1)))))
+          (end-of-line)
+          (forward-char)))))
 
   (defun conf--gptel-fix-indented-begin-tool (start end)
     "Add a newline before #+begin_tool when not at beginning of line in region."
