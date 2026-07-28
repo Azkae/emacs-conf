@@ -97,7 +97,7 @@
           (goto-char start)
           (while (< (point) end-marker)
             (beginning-of-line)
-            (when (looking-at "^|")
+            (when (and (looking-at "^|") (not (eobp)))
               (while (looking-at "^|")
                 (forward-line 1))
               (forward-line -1)
