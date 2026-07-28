@@ -183,4 +183,7 @@ With universal argument ARG, open in another window."
 (with-eval-after-load 'compile
   (fancy-compilation-mode))
 
+(with-eval-after-load 'compile
+  (add-to-list 'compilation-transform-file-match-alist '("[\t ][\t ]" nil)))
+
 (provide 'conf-compile)
