@@ -9,6 +9,8 @@
         conf--meow-change-and-mark
         conf--meow-insert-wrap
         conf--meow-set-mark-command
+        conf--org-meta-return-split
+        conf--org-open-link-maybe
         crux-upcase-region
         cycle-quotes
         duplicate-line-or-region
