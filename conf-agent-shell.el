@@ -102,6 +102,7 @@
 (define-key agent-shell-mode-map (kbd "M-l") #'agent-shell-project-next-buffer)
 (define-key agent-shell-mode-map (kbd "M-h") #'agent-shell-project-previous-buffer)
 (define-key agent-shell-mode-map (kbd "M-t") #'agent-shell-new-shell)
+(define-key agent-shell-mode-map (kbd "C-d") nil)
 
 (setq agent-shell-context-sources '(files region error))
 
