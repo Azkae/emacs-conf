@@ -287,8 +287,9 @@ Returns nil if there is no active region."
         "\\*Native-compile-Log\\*"
         "\\*help\\*"
         "\\*Ediff.*\\*"
-        "*Shell Command Output*"
-        "*diff-hl-show-hunk-diff-buffer*"))
+        "\\*Shell Command Output\\*"
+        "\\*diff-hl-show-hunk-diff-buffer\\*"
+        "acp-client-stderr(.*)-.*"))
 
 (defun is-buffer-valid (buffer-name)
   (not (cl-loop for boring-buffer in boring-buffers
