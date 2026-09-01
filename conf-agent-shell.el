@@ -59,6 +59,21 @@
 (use-package acp)
 
 (use-package agent-shell
+  :bind
+  (:map agent-shell-mode-map
+   ("TAB"       . nil)
+   ("<backtab>" . nil)
+   ("C-M-n"     . agent-shell-next-item)
+   ("C-M-p"     . agent-shell-previous-item)
+   ("C-c RET"   . agent-shell-submit)
+   ("RET"       . newline)
+   :map agent-shell-viewport-view-mode-map
+   ("TAB"       . nil)
+   ("<backtab>" . nil)
+   ("C-M-n"     . agent-shell-next-item)
+   ("C-M-p"     . agent-shell-previous-item)
+   :map agent-shell-ui-fragment-map
+   ("TAB"       . agent-shell-ui-toggle-fragment))
   :config
   (with-eval-after-load 'shell-maker
     (define-key agent-shell-mode-map (kbd "C-M-h") nil))
