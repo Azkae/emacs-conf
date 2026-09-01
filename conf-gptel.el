@@ -657,7 +657,10 @@ available in the chat.
   (keymap-set embark-general-map "q" #'gptel-quick)
   (add-to-list 'embark-post-action-hooks '(gptel-quick embark--unmark-target)))
 
-(require 'gptel-inline)
+(use-package gptel-inline
+  :straight (:host github :repo "karthink/gptel-inline")
+  :after gptel)
+
 (global-set-key (kbd "C-c , e") 'gptel-inline)
 
 (defun conf--gptel-inline-buf (buf)
