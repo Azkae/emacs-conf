@@ -90,7 +90,6 @@ This can be used as an inverse of `add-to-list'."
 (global-set-key (kbd "M-à") 'shrink-window-horizontally)
 (global-set-key (kbd "M-)") 'enlarge-window-horizontally)
 
-(global-set-key (kbd "C-c b") 'pop-tag-mark)
 (global-set-key (kbd "C-q") 'kill-current-buffer)
 (global-set-key [C-backspace] 'delete-backward-char)
 
