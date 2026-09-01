@@ -241,8 +241,9 @@ When ALLOW-NEW is non-nil, append a \"New agent shell\" entry as the
 last completion candidate.  Picking it forces a new shell, equivalent
 to \\<agent-shell-mode-map>\\`C-u M-x agent-shell'."
   (let* ((new-label "➕ New agent shell")
+         (new-worktree-label "➕ New agent shell (create worktree)")
          (names (mapcar #'buffer-name buffers))
-         (candidates (if allow-new (append names (list new-label)) names)))
+         (candidates (if allow-new (append names (list new-label new-worktree-label)) names)))
     (if (null candidates)
         (if allow-new
             (agent-shell-new-shell)
@@ -263,6 +264,7 @@ to \\<agent-shell-mode-map>\\`C-u M-x agent-shell'."
              (text (when buf (agent-shell--context :shell-buffer buf))))
         (cond
          ((equal choice new-label) (agent-shell-new-shell))
+         ((equal choice new-worktree-label) (agent-shell-new-worktree-shell))
          (buf
           (agent-shell--display-buffer buf)
           (when text
