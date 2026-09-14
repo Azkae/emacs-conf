@@ -187,6 +187,8 @@ This can be used as an inverse of `add-to-list'."
 ;; Should move this to meow-motion map? -- this would only be used on motion map
 (global-set-key (kbd "M-j")   (lambda () (interactive) (move-down 4)))
 (global-set-key (kbd "M-k") (lambda () (interactive) (move-up 4)))
+(global-set-key (kbd "M-J") 'conf--scroll-other-window)
+(global-set-key (kbd "M-K") 'conf--scroll-other-window-down)
 (setq mouse-wheel-scroll-amount '(1 ((shift) . 1) ((control) . nil)))
 (pixel-scroll-precision-mode)
 
