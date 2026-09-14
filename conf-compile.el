@@ -117,6 +117,10 @@ With universal argument ARG, open in another window."
     (lambda ()
       (interactive)
       (my/command-run (format "npm install"))))
+   ("c" "npx tsc --noEmit"
+    (lambda ()
+      (interactive)
+      (my/command-run (format "npx tsc --noEmit"))))
    ("b" "npm run build"
     (lambda ()
       (interactive)
