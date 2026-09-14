@@ -19,6 +19,7 @@
 (savehist-mode 1)
 (add-to-list 'savehist-additional-variables 'compile-command)
 
+(setq auto-revert-interval 2)
 (global-auto-revert-mode)
 (setq inhibit-startup-message t)
 (setq c-toggle-auto-newline t)
