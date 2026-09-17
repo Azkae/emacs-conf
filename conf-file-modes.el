@@ -27,7 +27,27 @@
 
 (use-package dockerfile-mode)
 
-(use-package dotenv-mode)
+(use-package dotenv-mode
+  :hook
+  (dotenv-mode . my/env-toggle-secrets)
+  :config
+  (defvar-local my/env-hidden nil)
+
+  (defun my/env-toggle-secrets ()
+    "Toggle masking of values in *_KEY=VALUE lines in the current buffer."
+    (interactive)
+    (if my/env-hidden
+        (progn (remove-overlays (point-min) (point-max) 'env-secret t)
+               (setq my/env-hidden nil))
+      (save-excursion
+        (goto-char (point-min))
+        (while (re-search-forward "^[[:alnum:]_]*_KEY=\\(.*\\)$" nil t)
+          (let ((ov (make-overlay (match-beginning 1) (match-end 1))))
+            (overlay-put ov 'env-secret t)
+            (overlay-put ov 'display (make-string (min 8 (- (match-end 1) (match-beginning 1))) ?•)))))
+      (setq my/env-hidden t)))
+
+  (define-key dotenv-mode-map (kbd "C-c C-s") #'my/env-toggle-secrets))
 
 (use-package kotlin-mode
   :defer t
