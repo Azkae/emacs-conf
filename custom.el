@@ -30,5 +30,6 @@
  '(flymake-note-echo-at-eol ((t (:inherit flymake-end-of-line-diagnostics-face :foreground "gray42"))))
  '(lazy-highlight ((t (:background "#49483E" :distant-foreground "white"))))
  '(org-block ((t (:extend t :foreground "grey82"))))
+ '(org-level-2 ((t (:inherit outline-2 :extend nil :slant normal))))
  '(org-verbatim ((t (:inherit font-lock-constant-face))))
  '(which-func ((t (:foreground "tan1")))))
