@@ -418,6 +418,27 @@
 (setf (alist-get 'consult-xref embark-exporters-alist)
       #'conf--embark-consult-export-xref)
 
+(defun my/embark-consult-export-location (lines)
+  "Export LINES (`consult-location' candidates), splitting by buffer type.
+Candidates from file-backed buffers go to a grep/wgrep buffer;
+candidates from buffers with no file go to an occur buffer."
+  (let (file-backed non-file-backed)
+    (dolist (line lines)
+      (pcase-let ((`(,loc . ,_num) (consult--get-location line)))
+        (if (buffer-file-name (marker-buffer loc))
+            (push line file-backed)
+          (push line non-file-backed))))
+    (setq file-backed (nreverse file-backed)
+          non-file-backed (nreverse non-file-backed))
+    (when file-backed
+      (embark-consult-export-location-grep file-backed))
+    (when non-file-backed
+      (embark-consult-export-location-occur non-file-backed))))
+
+(with-eval-after-load 'embark-consult
+  (setf (alist-get 'consult-location embark-exporters-alist)
+        #'my/embark-consult-export-location))
+
 (define-key embark-file-map "g" #'magit)
 (add-to-list 'embark-pre-action-hooks '(magit embark--universal-argument))
 (add-to-list 'embark-around-action-hooks '(magit embark--cd))
