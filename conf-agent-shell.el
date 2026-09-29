@@ -343,4 +343,14 @@ completion candidate.  Picking it forces a new shell, equivalent to
 
 (global-set-key (kbd "C-c a") 'conf--agent-shell-menu)
 
+;; tmp: fix completion of command with :
+(defun my/agent-shell-allow-colon-in-commands (orig char-class trigger)
+  (funcall orig (if (and (eq trigger ?/) (equal char-class "[:alnum:]_-"))
+                    "[:alnum:]_:-"
+                  char-class)
+           trigger))
+
+(advice-add 'agent-shell--completion-bounds :around
+            #'my/agent-shell-allow-colon-in-commands)
+
 (provide 'conf-agent-shell)
