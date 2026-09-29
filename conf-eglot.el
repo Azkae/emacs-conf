@@ -62,19 +62,7 @@
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
 
-  (add-to-list 'eglot-stay-out-of 'company-backends)
-  ;; Enable flymake only on save:
-  ;; This allows to trigger flymake only when the sever published diagnostics
-  (defun conf--eglot-publishDiagnostics (server method &rest args)
-    (when (eq method 'textDocument/publishDiagnostics)
-      (let ((uri (plist-get args :uri)))
-        (when-let* ((buffer (find-buffer-visiting (eglot-uri-to-path uri))))
-          (with-current-buffer buffer
-            (when (bound-and-true-p sideline-mode)
-              (sideline--reset)
-              (sideline-render-this)))))))
-
-  (advice-add 'eglot-handle-notification :after #'conf--eglot-publishDiagnostics))
+  (add-to-list 'eglot-stay-out-of 'company-backends))
 
 
 (defun conf--toggle-flymake-error-color ()
