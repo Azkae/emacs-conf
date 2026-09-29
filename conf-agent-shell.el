@@ -82,6 +82,10 @@
   (setq agent-shell-highlight-blocks t)
   (setq agent-shell-session-strategy 'prompt)
   (setq markdown-overlays-prettify-tables t)
+  ;; (setq agent-shell-persistent-prompt-enabled t)
+  (setq agent-shell-show-cost-indicator t)
+  (setq agent-shell-busy-submit-default-function 'agent-shell-busy-submit-steer)
+  (setq agent-shell-busy-submit-override-function 'agent-shell-busy-submit-queue)
   (setq agent-shell-preferred-agent-config '(preselect . claude-code))
 
   (add-to-list 'agent-shell-markdown-language-mapping '("json" . "js-json"))
