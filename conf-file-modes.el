@@ -166,6 +166,10 @@
   (add-to-list 'markdown-code-lang-modes '("ts" . typescript-ts-mode))
   (add-to-list 'markdown-code-lang-modes '("jsx" . tsx-ts-mode))
   (add-to-list 'markdown-code-lang-modes '("html" . mhtml-mode))
-  (add-to-list 'markdown-code-lang-modes '("json" . js-json-mode)))
+  (add-to-list 'markdown-code-lang-modes '("json" . js-json-mode))
+  (add-to-list 'markdown-code-lang-modes '("go" . go-mode))
+  (add-to-list 'markdown-code-lang-modes '("proto" . protobuf-mode)))
+
+(use-package protobuf-mode)
 
 (provide 'conf-file-modes)
