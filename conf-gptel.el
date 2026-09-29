@@ -35,6 +35,17 @@
       :key "ignored"
       :models '(gemma-4-E4B-it)))
 
+  (when-let* ((openrouter-api-key (password-store-get "openrouter-api-key")))
+    (setq
+     gptel-model 'anthropic/claude-opus-5.5
+     gptel-backend (gptel-make-openai "OpenRouter"               ;Any name you want
+                     :host "openrouter.ai"
+                     :endpoint "/api/v1/chat/completions"
+                     :stream t
+                     :key openrouter-api-key
+                     :models '(anthropic/claude-opus-5.5
+                               anthropic/claude-fable-5.1)))
+
   (defun conf--gptel-start-rewrite-session ()
     (interactive)
     (let ((buffer-name (generate-new-buffer-name "*gptel-rewrite*"))
