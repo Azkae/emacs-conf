@@ -43,6 +43,16 @@
                                                         '(("basedpyright-langserver" "--stdio")
                                                           ("pyright-langserver" "--stdio")))))
 
+  (when (executable-find "cssmodules-language-server")
+    (add-to-list 'eglot-server-programs
+                 '(((js-mode :language-id "javascript")
+                    (js-ts-mode :language-id "javascript")
+                    (tsx-ts-mode :language-id "typescriptreact")
+                    (typescript-ts-mode :language-id "typescript")
+                    (typescript-mode :language-id "typescript"))
+                   . ("rass" "--" "typescript-language-server" "--stdio"
+                      "--" "cssmodules-language-server"))))
+
   (add-to-list 'eglot-ignored-server-capabilities :semanticTokensProvider)
 
   (setq eldoc-echo-area-use-multiline-p nil)
