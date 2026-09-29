@@ -181,4 +181,19 @@
   ;; (set-face-attribute 'org-modern-bracket-line nil :family "Menlo")
   )
 
+(defun my/org-show-entries-and-children (&optional level)
+  "Fold buffer, then for each LEVEL heading show its body text
+and its child headlines (children's bodies stay folded).
+LEVEL defaults to 1; use a numeric prefix for deeper levels."
+  (interactive "p")
+  (let ((level (or level 1)))
+    (org-overview)
+    (org-map-entries
+     (lambda ()
+       (if (fboundp 'org-fold-show-entry)
+           (progn (org-fold-show-entry) (org-fold-show-children))
+         (org-show-entry) (org-show-children)))
+     (format "LEVEL=%d" level)
+     'file)))
+
 (provide 'conf-org)
