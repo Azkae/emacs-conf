@@ -37,14 +37,15 @@
 
   (when-let* ((openrouter-api-key (password-store-get "openrouter-api-key")))
     (setq
-     gptel-model 'anthropic/claude-opus-5.5
+     gptel-model 'mistralai/mistral-large-4-0
      gptel-backend (gptel-make-openai "OpenRouter"               ;Any name you want
                      :host "openrouter.ai"
                      :endpoint "/api/v1/chat/completions"
                      :stream t
                      :key openrouter-api-key
                      :models '(anthropic/claude-opus-5.5
-                               anthropic/claude-fable-5.1)))
+                               anthropic/claude-fable-5.1
+                               mistralai/mistral-large-4-0)))
 
   (defun conf--gptel-start-rewrite-session ()
     (interactive)
