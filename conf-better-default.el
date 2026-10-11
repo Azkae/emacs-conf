@@ -35,6 +35,11 @@
 (setq auto-window-vscroll nil)
 (setq redisplay-skip-fontification-on-input t)
 (global-so-long-mode 1)
+(setq fast-but-imprecise-scrolling t)
+
+(when (eq system-type 'windows-nt)
+  (setq w32-get-true-file-attributes nil
+        w32-pipe-buffer-size (* 128 1024)))
 
 ;; treat camelCase as multiple words for cursor movement
 (global-subword-mode)
@@ -509,6 +514,9 @@ Returns nil if there is no active region."
 
 (add-hook 'c-mode-hook '--cc-style-setup)
 (add-hook 'c++-mode-hook '--cc-style-setup)
+
+(with-eval-after-load 'csharp-mode
+  (define-key csharp-mode-map (kbd "C-M-h") nil))
 
 (defun --set-tab-width()
   (setq tab-width 4)
