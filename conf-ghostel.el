@@ -68,6 +68,8 @@
       (define-key meow-ghostel-normal-mode-map (vector 'remap (car c)) (cdr c)))
     (add-hook 'ghostel-mode-hook #'meow-ghostel-setup))
 
+  (meow-ghostel-enable)
+
   ;; (defun conf--meow-ghostel-insert-enter ()
   ;;   "Enable vterm default binding in insert and set cursor."
   ;;   (ghostel-semi-char-mode)
