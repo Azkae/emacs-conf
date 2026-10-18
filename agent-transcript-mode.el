@@ -33,7 +33,9 @@
 ;; Everything else that looks like a heading is content: agent prose has
 ;; its own headings (indented two levels by the transcript writer) and
 ;; tool output embeds whole files, comments and headings of its own.  So
-;; sections are split on those five forms only, never on bare "^#+ ".
+;; sections are split on those five forms only, never on bare "^#+ ",
+;; and never inside a fenced code block, where a quoted transcript can
+;; carry section headers of its own.
 
 ;;; Code:
 
@@ -95,6 +97,34 @@ one, so `agent-transcript-next-turn' can find it."
     (overlay-put ov 'agent-transcript-header header)
     (overlay-put ov 'evaporate t)))
 
+(defun agent-transcript--code-block-ranges ()
+  "Return the (START . END) range of every fenced code block, in order.
+A transcript that quotes transcript syntax — a pasted sample, a tool
+call that cat'd another transcript — holds lines that look exactly like
+section headers.  The writer's header indentation does not reach inside
+fences, so the headers have to be skipped here instead.
+
+Fences close on a run of the same character at least as long as the
+opener, per CommonMark, which is what the transcript writer relies on to
+wrap tool output that itself contains backticks.  An unclosed fence is
+ignored rather than run to the end of the buffer as CommonMark would
+have it: pasted messages do carry stray opening fences, and letting one
+swallow the rest of the transcript would hide the whole conversation."
+  (save-excursion
+    (goto-char (point-min))
+    (let ((ranges nil))
+      (while (re-search-forward "^[ \t]*\\(```+\\|~~~+\\)" nil t)
+        (let ((start (match-beginning 0))
+              (opener-end (line-end-position))
+              (closer (format "^[ \t]*%s\\{%d,\\}[ \t]*$"
+                              (regexp-quote (substring (match-string 1) 0 1))
+                              (length (match-string 1)))))
+          (forward-line 1)
+          (if (re-search-forward closer nil t)
+              (push (cons start (min (point-max) (1+ (line-end-position)))) ranges)
+            (goto-char opener-end))))
+      (nreverse ranges))))
+
 (defconst agent-transcript--separator "\n\n"
   "Text shown between two consecutive blocks of the conversation.
 Every gap is normalised to this, so the view does not inherit the
@@ -117,14 +147,22 @@ bare separator, which is what merges it into the block above."
     (let ((hide-start (point-min))
           (last-label nil)
           (last-end (point-min))
+          (fences (agent-transcript--code-block-ranges))
           (plan nil))
       (while (re-search-forward agent-transcript--section-regexp nil t)
         (let ((header-start (match-beginning 0))
               (header-end (line-end-position))
               (label (and (match-string 1)
                           (agent-transcript--label (match-string 1)))))
-          (if (null label)
-              (unless hide-start (setq hide-start header-start))
+          ;; Matches arrive in buffer order, so the fence list only ever
+          ;; needs to move forward.
+          (while (and fences (<= (cdar fences) header-start))
+            (pop fences))
+          (cond
+           ((and fences (<= (caar fences) header-start))) ; quoted, not a section
+           ((null label)
+            (unless hide-start (setq hide-start header-start)))
+           (t
             ;; Swallow the blank lines the previous block trails, so the
             ;; separator below is the only thing standing between them.
             (push (list 'hide
@@ -155,7 +193,7 @@ bare separator, which is what merges it into the block above."
                     plan)
               (setq last-end header-end))
             (setq hide-start nil
-                  last-label label))))
+                  last-label label)))))
       (when hide-start
         (push (list 'hide hide-start (point-max) nil) plan))
       (and last-label (nreverse plan)))))
