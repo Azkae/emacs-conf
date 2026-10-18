@@ -86,7 +86,6 @@
      '("-" . meow-digit-argument)
      '("è" . meow-digit-argument)
      '("/" . meow-keypad-describe-key)
-     '("?" . meow-cheatsheet)
      '("o" . other-window)
      )
     (meow-normal-define-key
