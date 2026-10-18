@@ -270,7 +270,7 @@ to \\<agent-shell-mode-map>\\`C-u M-x agent-shell'."
              ;; what `agent-shell--dwim' does for the default entry point.
              (text (when buf (agent-shell--context :shell-buffer buf))))
         (cond
-         ((equal choice new-label) (agent-shell-new-shell))
+         ((equal choice new-label) (my/agent-shell-start))
          ((equal choice new-worktree-label) (agent-shell-new-worktree-shell))
          (buf
           (agent-shell--display-buffer buf)
@@ -310,7 +310,7 @@ completion candidate.  Picking it forces a new shell, equivalent to
           (agent-shell--display-buffer buf)
           (when text
             (agent-shell--insert-to-shell-buffer :text text :shell-buffer buf)))
-      (call-interactively 'agent-shell))))
+      (my/agent-shell-start))))
 
 (defun agent-shell-repo-buffers ()
   "Return agent-shell buffers whose CWD is in the same git repo as the current buffer."
@@ -418,6 +418,12 @@ a string or symbol."
     (dolist (b (buffer-list))
       (unless (eq b target)
         (bury-buffer-internal b)))))
+
+(cl-defun my/agent-shell-start ()
+  (agent-shell--start
+   :config (agent-shell-select-config :prompt "Start new agent: ")
+   :session-strategy 'new
+   :new-session t))
 
 ;;;###autoload
 (cl-defun my/agent-shell-make (&key prompt name (agent "claude") directory)
