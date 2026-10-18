@@ -91,6 +91,8 @@
   (setq agent-shell-preferred-agent-config '(preselect . claude-code))
   (setopt agent-shell-opencode-default-model-id "openrouter/mistralai/mistral-large-4-0")
 
+  (setq agent-shell-openai-default-config-options '(("reasoning_effort" . "high")))
+
   (add-to-list 'agent-shell-markdown-language-mapping '("json" . "js-json"))
   (add-to-list 'agent-shell-markdown-language-mapping '("tsx" . "tsx-ts"))
   (add-to-list 'agent-shell-markdown-language-mapping '("ts" . "typescript-ts"))
