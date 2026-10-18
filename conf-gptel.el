@@ -15,25 +15,13 @@
   (global-set-key (kbd "C-c , ,") 'gptel-menu)
   (global-set-key (kbd "C-c , t") 'gptel-tools)
   (global-set-key (kbd "C-c , C") 'gptel--suffix-context-buffer)
-  (when-let* ((anthropic-api-key (password-store-get "anthropic-api-key")))
-    (setq
-     gptel-model 'claude-sonnet-5
-     gptel-backend (gptel-make-anthropic "Claude"
-				     :stream t
-				     :key anthropic-api-key))
 
-    (gptel-make-anthropic "Claude-thinking"
-      :key anthropic-api-key
-      :stream t
-      :models '(claude-sonnet-5 claude-opus-4-8)
-      :request-params '(:thinking (:type "adaptive")))
-
-    (gptel-make-openai "llama-server"
-      :host "localhost:8123"
-      :protocol "http"
-      :stream t
-      :key "ignored"
-      :models '(gemma-4-E4B-it)))
+  ;; (gptel-make-openai "llama-server"
+  ;;   :host "localhost:8123"
+  ;;   :protocol "http"
+  ;;   :stream t
+  ;;   :key "ignored"
+  ;;   :models '(gemma-4-E4B-it))
 
   (when-let* ((openrouter-api-key (password-store-get "openrouter-api-key")))
     (setq
