@@ -356,4 +356,122 @@ completion candidate.  Picking it forces a new shell, equivalent to
 (advice-add 'agent-shell--completion-bounds :around
             #'my/agent-shell-allow-colon-in-commands)
 
+(defconst my/agent-shell--agent-type-aliases
+  '(("claude" . claude-code)
+    ("claude-code" . claude-code)
+    ("codex" . codex)
+    ("opencode" . opencode)
+    ("gemini" . gemini-cli)
+    ("gemini-cli" . gemini-cli)
+    ("copilot" . copilot)
+    ("cursor" . cursor)
+    ("goose" . goose)
+    ("grok" . grok-build)
+    ("grok-build" . grok-build)
+    ("mistral" . mistral-vibe)
+    ("mistral-vibe" . mistral-vibe)
+    ("qwen" . qwen-code)
+    ("qwen-code" . qwen-code)
+    ("antigravity" . antigravity)
+    ("auggie" . auggie)
+    ("cline" . cline)
+    ("codebuddy" . codebuddy)
+    ("droid" . droid)
+    ("hermes" . hermes)
+    ("junie" . junie)
+    ("kimi" . kimi)
+    ("kiro" . kiro)
+    ("le-chat" . mistral-vibe)
+    ("omp" . omp)
+    ("openclaw" . openclaw)
+    ("pi" . pi)
+    ("qoder" . qoder))
+  "Alist mapping common agent type strings to identifier symbols.
+
+Used by `agent-shell-make' to resolve an agent type string like
+\"claude\" or \"codex\" to the corresponding agent identifier symbol.")
+
+(defun my/agent-shell--agent-identifier (agent)
+  "Resolve AGENT type to an identifier symbol.
+
+AGENT can be:
+- A string with a common alias (e.g., \"claude\", \"codex\", \"opencode\")
+- A string with a full identifier name (e.g., \"claude-code\", \"gemini-cli\")
+- A symbol identifier directly (e.g., \\='claude-code, \\='codex)
+
+Returns the identifier symbol, or signals an error if AGENT is not
+a string or symbol."
+  (cond
+   ((null agent)
+    (error "Agent type cannot be nil"))
+   ((symbolp agent) agent)
+   ((stringp agent)
+    (or (cdr (assoc-string agent my/agent-shell--agent-type-aliases))
+        ;; Fall back to using the string as a symbol directly.
+        (intern agent)))
+   (t (error "Invalid agent type: %S (expected string or symbol)" agent))))
+
+(defun my/raise-buffer (buffer)
+  "Make BUFFER the most recent in `buffer-list' without displaying it."
+  (interactive "bBuffer to raise: ")
+  (let ((target (get-buffer buffer)))
+    (dolist (b (buffer-list))
+      (unless (eq b target)
+        (bury-buffer-internal b)))))
+
+;;;###autoload
+(cl-defun my/agent-shell-make (&key prompt name (agent "claude") directory)
+  "Create a new agent shell programmatically, without displaying it.
+
+PROMPT is an instruction prompt string to send to the agent
+immediately after the shell is ready.  When nil or empty, no
+prompt is sent and the shell simply starts.
+
+NAME is the name for the shell buffer, formatted as \"Agent @ NAME\"
+\(e.g., \"Agent @ refactor-auth\").  When nil or empty, a default
+name is generated from the agent name and project.
+
+AGENT is the agent type as a string (e.g., \"claude\", \"codex\",
+\"opencode\")
+
+DIRECTORY is the working directory path for the shell.  When nil,
+uses `agent-shell-cwd' (typically the project root)."
+  ;; Resolve agent type to a configuration.
+  (let* ((identifier (my/agent-shell--agent-identifier agent))
+         (config (agent-shell--resolve-config-designator identifier))
+         (default-directory (if directory
+                                (expand-file-name directory)
+                              (agent-shell-cwd))))
+    (unless config
+      (error "Unknown agent type: %s (identifier: %s)" agent identifier))
+    (unless (file-directory-p default-directory)
+      (error "Directory does not exist: %s" default-directory))
+    ;; Start the shell in the background.
+    (let ((shell-buffer (agent-shell--start
+                         :config config
+                         :session-strategy 'new
+                         :new-session t
+                         :no-focus t)))
+      (when (and name (not (string-empty-p (string-trim name))))
+        (shell-maker-set-buffer-name shell-buffer
+                                     (format "Agent @ %s" (string-trim name))))
+      (when (and prompt (not (string-empty-p (string-trim prompt))))
+        (agent-shell--insert-to-shell-buffer
+         :text prompt
+         :submit t
+         :shell-buffer shell-buffer
+         :no-focus t))
+      (my/raise-buffer shell-buffer)
+      shell-buffer)))
+
+;; (use-package agent-recall
+;;   :config
+;;   (setq agent-recall-search-paths '("~/work"))
+;;   (setq agent-recall-search-function 'consult-ripgrep)
+;;   (add-hook 'agent-shell-mode-hook #'agent-recall-track-sessions))
+
+
+;; ;; Transcripts open as a plain User/Agent conversation.
+;; (require 'agent-transcript-mode)
+
 (provide 'conf-agent-shell)
