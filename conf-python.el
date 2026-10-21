@@ -3,7 +3,7 @@
 (defvar conf--python-current-root nil)
 (defun conf--python-track-venv()
   (interactive)
-  (when (not (file-remote-p buffer-file-name))
+  (when (not (file-remote-p default-directory))
     (let ((root (locate-dominating-file default-directory "pyproject.toml")))
       (when (and root (not (string= root conf--python-current-root)))
         (message "checking for root %s" root)
