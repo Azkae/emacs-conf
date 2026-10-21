@@ -130,6 +130,26 @@
 
 (setq agent-shell-context-sources '(files region error))
 
+(defun my/agent-shell-transcript-file-path-global ()
+  "Generate a transcript file path under `user-emacs-directory'.
+
+For example:
+
+ ~/.emacs.d/agent-shell/transcripts/<repo-name>/<time>.md
+
+Linked worktrees use the main repo's name.  Outside a git repo,
+the current directory's name is used instead."
+  (let* ((repo (or (my/git-repo-name)
+                   (file-name-nondirectory
+                    (directory-file-name default-directory))))
+         (dir (expand-file-name
+               (concat "agent-shell/transcripts/" repo)
+               user-emacs-directory))
+         (filename (format-time-string "%F-%H-%M-%S.md")))
+    (make-directory dir t)
+    (expand-file-name filename dir)))
+
+
 (defun my/agent-shell-transcript-file-path ()
   "Like `agent-shell--default-transcript-file-path', but place the
 transcript under the main worktree root when inside a linked worktree."
@@ -273,11 +293,33 @@ to \\<agent-shell-mode-map>\\`C-u M-x agent-shell'."
              (text (when buf (agent-shell--context :shell-buffer buf))))
         (cond
          ((equal choice new-label) (my/agent-shell-start))
-         ((equal choice new-worktree-label) (agent-shell-new-worktree-shell))
+         ((equal choice new-worktree-label) (my/agent-shell-new-worktree-shell))
          (buf
           (agent-shell--display-buffer buf)
           (when text
             (agent-shell--insert-to-shell-buffer :text text :shell-buffer buf))))))))
+
+(defun my/agent-shell-new-worktree-shell ()
+  (interactive)
+  (unless (agent-shell-worktree--git-repo-root)
+    (user-error "Not in a git repository"))
+  (let* ((worktrees-dir (agent-shell--dot-subdir "worktrees"))
+         (worktree-name (agent-shell-worktree--generate-name))
+         (default-path (file-name-concat worktrees-dir worktree-name))
+         (worktree-path (expand-file-name (read-directory-name
+                                           "Worktree directory: "
+                                           default-path))))
+    (when (file-exists-p worktree-path)
+      (user-error "Directory already exists: %s" worktree-path))
+    (make-directory (file-name-directory worktree-path) t)
+    ;; Create the worktree
+    (let ((output (shell-command-to-string
+                   (format "git worktree add %s 2>&1"
+                           (shell-quote-argument worktree-path)))))
+      (unless (file-exists-p worktree-path)
+        (user-error "Failed to create worktree: %s" output))
+      (let ((default-directory worktree-path))
+        (my/agent-shell-start)))))
 
 (defun agent-shell-list-and-select ()
   "Select from all agent-shell buffers."
@@ -326,8 +368,23 @@ completion candidate.  Picking it forces a new shell, equivalent to
                             worktree-paths))
                 buffers)))
 
-(add-to-list 'project-switch-commands '(agent-shell "Agent shell" "a a"))
-(add-to-list 'project-switch-commands '(agent-shell-project-select-or-new "Agent shell select" "a p"))
+(defun my/project-cmd (cmd)
+  "Return a named command wrapping CMD with project root as default-directory."
+  (let ((fn (make-symbol (format "my/project--%s" cmd))))
+    (fset fn (lambda ()
+               (interactive)
+               (let ((default-directory (project-root (project-current t))))
+                 (call-interactively cmd))))
+    fn))
+
+(add-to-list 'project-switch-commands (list (my/project-cmd 'agent-shell)
+                                            "Agent shell" "a a"))
+(add-to-list 'project-switch-commands (list (my/project-cmd 'agent-shell-project-select-or-new)
+                                            "Agent shell select" "a p"))
+(add-to-list 'project-switch-commands (list (my/project-cmd 'my/agent-shell-start)
+                                            "Agent shell new" "a n"))
+(add-to-list 'project-switch-commands (list (my/project-cmd 'my/agent-shell-new-worktree-shell)
+                                            "Agent shell new (in worktree)" "a N"))
 
 (transient-define-prefix conf--agent-shell-menu ()
   "Transient menu for agent-shell commands."
@@ -338,7 +395,9 @@ completion candidate.  Picking it forces a new shell, equivalent to
     ("s" "Select agent shell" agent-shell-list-and-select)
     ("m" "Set session mode" agent-shell-set-session-mode)
     ("v" "Set model" agent-shell-set-session-model)
-    ("r" "Rename" agent-shell-rename-buffer)]
+    ("r" "Rename" agent-shell-rename-buffer)
+    ("n" "New shell" my/agent-shell-start)
+    ("N" "New shell (in worktree)" my/agent-shell-new-worktree-shell)]
    ["Send"
     ("f" "Send file" agent-shell-send-file)
     ("F" "Send current file" conf--agent-shell-send-current-file)
@@ -422,6 +481,7 @@ a string or symbol."
         (bury-buffer-internal b)))))
 
 (cl-defun my/agent-shell-start ()
+  (interactive)
   (agent-shell--start
    :config (agent-shell-select-config :prompt "Start new agent: ")
    :session-strategy 'new
@@ -479,7 +539,7 @@ uses `agent-shell-cwd' (typically the project root)."
 ;;   (add-hook 'agent-shell-mode-hook #'agent-recall-track-sessions))
 
 
-;; ;; Transcripts open as a plain User/Agent conversation.
-;; (require 'agent-transcript-mode)
+;; Transcripts open as a plain User/Agent conversation.
+(require 'agent-transcript-mode)
 
 (provide 'conf-agent-shell)
