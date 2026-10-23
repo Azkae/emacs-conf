@@ -12,10 +12,14 @@
 ;;   ## Question (2026-10-11 00:21:04)      ; older transcripts
 ;;   ### Tool Call [completed]: ...
 ;;
-;; This mode displays them as the conversation they record: no
-;; frontmatter, no timestamps, no thoughts and no tool calls, and a run
-;; of agent messages broken up by thoughts and tool calls reads as one
-;; "# Agent" block.
+;; This mode displays them as the conversation they record: the
+;; frontmatter stays, but the title, the timestamps, the thoughts and
+;; the tool calls go, and a run of agent messages broken up by
+;; thoughts and tool calls reads as one "# Agent" block.
+;;
+;;   ---
+;;   agent: "OpenCode"
+;;   ---
 ;;
 ;;   # User
 ;;
@@ -49,7 +53,8 @@
   "Alist of transcript section name to the heading shown in its place.
 
 A section whose name is absent is hidden entirely, as is everything
-before the first labelled section and every tool call.  Consecutive
+between the frontmatter and the first labelled section (the title),
+and every tool call.  Consecutive
 sections sharing a label are merged under a single heading, so adding
 \(\"Question\" . \"# User\") would both reveal question sections and fold
 them into the surrounding user message."
@@ -130,6 +135,26 @@ swallow the rest of the transcript would hide the whole conversation."
 Every gap is normalised to this, so the view does not inherit the
 transcript's own ragged spacing.")
 
+(defun agent-transcript--frontmatter-end ()
+  "Return the end of the YAML frontmatter block at the top of the buffer.
+Transcripts open with a \"---\"-delimited block written by
+`agent-shell--make-transcript-frontmatter'.  Return the position
+after its closing \"---\" line and any blank lines that follow it,
+so the block stays visible and the hidden run starts at the title.
+Return `point-min' when the buffer does not open with frontmatter,
+including when the opening \"---\" is never closed."
+  (save-excursion
+    (goto-char (point-min))
+    (if (looking-at-p "---[ \t]*\n")
+        (progn
+          (forward-line 1)
+          (if (re-search-forward "^---[ \t]*\n" nil t)
+              (progn
+                (skip-chars-forward "\n")
+                (point))
+            (point-min)))
+      (point-min))))
+
 (defun agent-transcript--plan ()
   "Return the overlays to build for this buffer, in buffer order.
 Each element is a (hide START END) or (show START END TEXT) form, the
@@ -141,14 +166,19 @@ where the current hidden run began, nil inside a visible one;
 LAST-LABEL, the heading last displayed; and LAST-END, the end of the
 last region spoken for, which keeps the gap-trimming below from reaching
 back into it.  A section repeating LAST-LABEL has its header shown as a
-bare separator, which is what merges it into the block above."
+bare separator, which is what merges it into the block above.
+
+The frontmatter is never hidden: the first hidden run starts after it
+\(see `agent-transcript--frontmatter-end'), so only the title between
+it and the first labelled section goes."
   (save-excursion
     (goto-char (point-min))
-    (let ((hide-start (point-min))
-          (last-label nil)
-          (last-end (point-min))
-          (fences (agent-transcript--code-block-ranges))
-          (plan nil))
+    (let* ((frontmatter-end (agent-transcript--frontmatter-end))
+           (hide-start frontmatter-end)
+           (last-label nil)
+           (last-end (point-min))
+           (fences (agent-transcript--code-block-ranges))
+           (plan nil))
       (while (re-search-forward agent-transcript--section-regexp nil t)
         (let ((header-start (match-beginning 0))
               (header-end (line-end-position))
@@ -172,7 +202,7 @@ bare separator, which is what merges it into the block above."
                                    (goto-char (or hide-start header-start))
                                    (skip-chars-backward "\n")
                                    (point)))
-                          (point-min))
+                          frontmatter-end)
                         header-start nil)
                   plan)
             (if (equal label last-label)
@@ -261,9 +291,10 @@ Single-letter keys are safe here: the mode makes the buffer read-only.")
 (define-minor-mode agent-transcript-mode
   "Toggle agent transcript view: the User/Agent conversation alone.
 
-Hides the frontmatter, the title, thoughts and tool calls, and merges
-each run of agent messages into one block.  The buffer becomes
-read-only; turning the mode off restores it and the raw file view."
+Keeps the frontmatter, but hides the title, thoughts and tool calls,
+and merges each run of agent messages into one block.  The buffer
+becomes read-only; turning the mode off restores it and the raw file
+view."
   :lighter " 🤖"
   :keymap agent-transcript-mode-map
   (if agent-transcript-mode

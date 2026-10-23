@@ -52,23 +52,59 @@ the initial completion state.  PREFIX is the minimum prefix length."
                     ((not (eq 'no (plist-get plist :exclusive)))
                      '(nil)))))))))
 
+(defvar-local conf--corfu-engaged nil
+  "Non-nil when user has engaged with Corfu (TAB or navigation).")
+
+(defun conf--corfu-expand ()
+  "Expand common prefix, mark as engaged."
+  (interactive)
+  (setq conf--corfu-engaged t)
+  (corfu-expand))
+
+(defun conf--corfu-next ()
+  "Go to next candidate, mark as engaged."
+  (interactive)
+  (setq conf--corfu-engaged t)
+  (corfu-next))
+
+(defun conf--corfu-previous ()
+  "Go to previous candidate, mark as engaged."
+  (interactive)
+  (setq conf--corfu-engaged t)
+  (corfu-previous))
+
+(defun conf--corfu-ret ()
+  "Insert candidate if engaged, otherwise quit Corfu and newline."
+  (interactive)
+  (if conf--corfu-engaged
+      (progn
+        (setq conf--corfu-engaged nil)
+        (corfu-insert))
+    (when completion-in-region-mode (corfu-quit))
+    (newline)))
+
+;; Reset engagement flag on every new completion session
+(add-hook 'completion-in-region-mode-hook
+          (lambda () (setq conf--corfu-engaged nil)))
+
 (use-package corfu
   :bind
   (("M-RET" . completion-at-point))
   (:map corfu-map
         ("C-a" . nil)
         ("C-e" . nil)
-        ("C-j" . corfu-next)
-        ("C-k" . corfu-previous)
-        ("M-j" . corfu-next)
-        ("M-k" . corfu-previous)
+        ("C-j" . conf--corfu-next)
+        ("C-k" . conf--corfu-previous)
+        ("M-j" . conf--corfu-next)
+        ("M-k" . conf--corfu-previous)
         ("<remap> <move-beginning-of-line>" . nil)
         ("<remap> <move-end-of-line>" . nil)
         ("C-s" . corfu-insert-separator)
-        ("TAB" . corfu-expand)
-        ("<tab>" . corfu-expand)
-        ("RET" . corfu-insert)
-        ("<ret>" . corfu-insert)
+        ("TAB" . conf--corfu-expand)
+        ("<tab>" . conf--corfu-expand)
+        ("RET" . conf--corfu-ret)
+        ("<ret>" . conf--corfu-ret)
+        ;; C-RET remains an unconditional accept (escape hatch)
         ("C-<return>" . corfu-insert))
   :hook
   (corfu-mode . (lambda ()
