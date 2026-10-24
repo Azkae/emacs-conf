@@ -62,7 +62,13 @@
   ;; Disable auto indent after '}' on cpp mode, may break a few things..
   ;; (remove-hook 'post-self-insert-hook 'eglot--post-self-insert-hook t)
 
-  (add-to-list 'eglot-stay-out-of 'company-backends))
+  (add-to-list 'eglot-stay-out-of 'company-backends)
+  (add-to-list 'project-vc-ignores ".venv/")
+  (add-to-list 'project-vc-ignores "./.agent-shell/")
+
+  ;; On macOS the limit is around 7169
+  ;; (shell-command-to-string "ulimit -n")
+  (setq eglot-max-file-watches 5000))
 
 
 (defun conf--toggle-flymake-error-color ()

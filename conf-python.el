@@ -1,21 +1,5 @@
 ;;; -*- lexical-binding: t; -*-
 
-(defvar conf--python-current-root nil)
-(defun conf--python-track-venv()
-  (interactive)
-  (when (not (file-remote-p default-directory))
-    (let ((root (locate-dominating-file default-directory "pyproject.toml")))
-      (when (and root (not (string= root conf--python-current-root)))
-        (message "checking for root %s" root)
-        (when-let* ((venv-path (expand-file-name ".venv" root))
-                    ((file-directory-p venv-path)))
-          (progn
-            (message "Applying venv: %s (.venv)" venv-path)
-            (setq conf--python-current-root root)
-            (pyvenv-activate venv-path)))))))
-
-(add-hook 'find-file-hook 'conf--python-track-venv)
-
 (use-package python
   :straight (:type built-in)
   :bind
@@ -220,7 +204,5 @@
    :language 'python
    '((identifier) @python--treesit-fontify-variable))
   "Tree-sitter font-lock settings.")
-
-(use-package pyvenv)
 
 (provide 'conf-python)
