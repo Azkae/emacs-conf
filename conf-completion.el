@@ -267,7 +267,8 @@
    )
   :custom
   (consult-async-input-debounce 0.1)
-  (consult-async-input-throttle 0.3)
+  (consult-async-input-throttle 0.2)
+  (consult-async-refresh-delay 0.1)
   (consult-line-start-from-top 't)
   (consult-narrow-key "<")
   :config
