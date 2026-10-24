@@ -337,7 +337,6 @@ directory, then starts a new agent-shell that resumes the session."
     (define-key map (kbd "g") #'agent-transcript-refresh)
     (define-key map (kbd "q") #'agent-transcript-mode)
     (define-key map (kbd "C-c C-a") #'agent-transcript-mode)
-    (define-key map (kbd "R") #'agent-transcript-resume-session)
     map)
   "Keymap for `agent-transcript-mode'.
 Single-letter keys are safe here: the mode makes the buffer read-only.")

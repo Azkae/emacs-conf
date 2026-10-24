@@ -160,6 +160,54 @@ transcript under the main worktree root when inside a linked worktree."
 
 (setq agent-shell-transcript-file-path-function #'my/agent-shell-transcript-file-path-global)
 
+(defun conf--agent-shell-update-transcript-title (title)
+  "Update the transcript file's frontmatter with TITLE.
+Adds or replaces the `title' key in the YAML frontmatter of the
+current agent-shell buffer's transcript file."
+  (when-let* ((filepath agent-shell--transcript-file)
+              ((file-exists-p filepath))
+              (title (string-trim title))
+              ((not (string-empty-p title))))
+    (with-temp-buffer
+      (insert-file-contents filepath)
+      (goto-char (point-min))
+      (if (looking-at-p "\\`---\n")
+          (let ((end (save-excursion
+                       (forward-line 1)
+                       (re-search-forward "^---$" nil t)
+                       (point))))
+            ;; Check if title key already exists in frontmatter
+            (goto-char (point-min))
+            (forward-line 1)
+            (if (re-search-forward "^title:\\s-*\".*\"\\s-*$" end t)
+                ;; Replace existing title line
+                (progn
+                  (beginning-of-line)
+                  (delete-region (point) (line-end-position))
+                  (insert (format "title: %s" (json-encode-string title))))
+              ;; Add title key after the opening ---
+              (goto-char (point-min))
+              (forward-line 1)
+              (insert (format "title: %s\n" (json-encode-string title))))
+            (write-region (point-min) (point-max) filepath nil 'no-message))
+        (message "Transcript %s has no frontmatter; skipping title update"
+                 (abbreviate-file-name filepath))))))
+
+(defun conf--agent-shell-on-session-title-changed (event)
+  "Handle `session-title-changed' EVENT by updating the transcript title."
+  (when-let* ((data (map-elt event :data))
+              (title (map-elt data :title)))
+    (conf--agent-shell-update-transcript-title title)))
+
+(defun conf--agent-shell-subscribe-title-changed ()
+  "Subscribe to `session-title-changed' to update transcript frontmatter."
+  (agent-shell-subscribe-to
+   :shell-buffer (current-buffer)
+   :event 'session-title-changed
+   :on-event #'conf--agent-shell-on-session-title-changed))
+
+(add-hook 'agent-shell-mode-hook #'conf--agent-shell-subscribe-title-changed)
+
 (defun conf--agent-shell-send-current-file ()
   (interactive)
   (when (buffer-file-name)
@@ -398,7 +446,8 @@ completion candidate.  Picking it forces a new shell, equivalent to
     ("c" "Prompt compose" agent-shell-prompt-compose)]
    ["Other"
     ("!" "Insert shell command output" agent-shell-insert-shell-command-output)
-    ("t" "Transcripts" conf/agent-shell-transcripts)]])
+    ("t" "Transcripts" conf/agent-shell-transcripts)
+    ("R" "Resume from transcript" agent-transcript-resume-session)]])
 
 (global-set-key (kbd "C-c a") 'conf--agent-shell-menu)
 
@@ -545,7 +594,7 @@ uses `agent-shell-cwd' (typically the project root)."
 
 (defvar conf--agent-shell--transcript-cache nil
   "Cache of parsed transcript metadata, keyed by file path.
-Each value is a plist with :started, :workdir, :agent, :mtime.")
+Each value is a plist with :started, :workdir, :agent, :title, :mtime.")
 
 (defun conf--agent-shell--parse-frontmatter (file)
   "Parse YAML frontmatter from transcript FILE.
@@ -593,13 +642,14 @@ frontmatter (older transcripts)."
           (let ((meta (list :mtime mtime
                             :started (cdr (assoc "started" fm))
                             :workdir (cdr (assoc "working_directory" fm))
-                            :agent (cdr (assoc "agent" fm)))))
+                            :agent (cdr (assoc "agent" fm))
+                            :title (cdr (assoc "title" fm)))))
             (puthash file meta conf--agent-shell--transcript-cache)
             meta))))))
 
 (defun conf--agent-shell--transcript-candidates ()
   "Build consult candidates for agent-shell transcripts.
-Each candidate is a propertized string \"<relative-time>  <workdir>\"
+Each candidate is a propertized string \"<relative-time>  <title>  <workdir>\"
 with a `conf--agent-shell-file' text property holding the full path.
 Sorted by modification time, most recent first."
   (when (file-directory-p conf--agent-shell-transcript-dir)
@@ -618,9 +668,15 @@ Sorted by modification time, most recent first."
                     (workdir (plist-get meta :workdir)))
           (let* ((rel-time (conf--agent-shell--relative-time started))
                  (short-dir (abbreviate-file-name workdir))
-                 (cand (format "%-16s  %s"
-                               (propertize rel-time 'face '(:foreground "cyan"))
-                               (propertize short-dir 'face '(:foreground "gray70")))))
+                 (title (plist-get meta :title))
+                 (cand (if (and title (not (string-empty-p title)))
+                           (format "%-16s  %-30s  %s"
+                                   (propertize rel-time 'face '(:foreground "cyan"))
+                                   (propertize title 'face '(:foreground "yellow"))
+                                   (propertize short-dir 'face '(:foreground "gray70")))
+                         (format "%-16s  %s"
+                                 (propertize rel-time 'face '(:foreground "cyan"))
+                                 (propertize short-dir 'face '(:foreground "gray70"))))))
             (put-text-property 0 (length cand) 'conf--agent-shell-file file cand)
             (push cand candidates))))
       (nreverse candidates))))
