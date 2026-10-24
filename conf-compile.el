@@ -174,10 +174,20 @@ With universal argument ARG, open in another window."
                 (read-only-mode +1)))))
 
 
-(use-package fancy-compilation
-  :commands (fancy-compilation-mode)
-  :custom
-  (fancy-compilation-override-colors nil))
+;; (use-package fancy-compilation
+;;   :commands (fancy-compilation-mode)
+;;   :custom
+;;   (fancy-compilation-override-colors nil))
+
+(use-package ghostel-shell-command
+  :hook (after-init . ghostel-shell-command-global-mode))
+
+(use-package ghostel-compile
+  :hook (after-init . ghostel-compile-global-mode))
+
+(use-package ghostel-eshell
+  :hook (eshell-load . ghostel-eshell-visual-command-mode))
+
 (define-key compilation-mode-map (kbd "M-p") nil)
 
 (add-to-list 'compilation-transform-file-match-alist '("\\`<string>\\'" nil))
