@@ -135,15 +135,9 @@
 
 For example:
 
- ~/.emacs.d/agent-shell/transcripts/<repo-name>/<time>.md
-
-Linked worktrees use the main repo's name.  Outside a git repo,
-the current directory's name is used instead."
-  (let* ((repo (or (my/git-repo-name)
-                   (file-name-nondirectory
-                    (directory-file-name default-directory))))
-         (dir (expand-file-name
-               (concat "agent-shell/transcripts/" repo)
+ ~/.emacs.d/agent-shell/transcripts/<time>.md"
+  (let* ((dir (expand-file-name
+               (concat "agent-shell/transcripts/")
                user-emacs-directory))
          (filename (format-time-string "%F-%H-%M-%S.md")))
     (make-directory dir t)
@@ -164,7 +158,7 @@ transcript under the main worktree root when inside a linked worktree."
          (filepath (expand-file-name filename dir)))
     filepath))
 
-(setq agent-shell-transcript-file-path-function #'my/agent-shell-transcript-file-path)
+(setq agent-shell-transcript-file-path-function #'my/agent-shell-transcript-file-path-global)
 
 (defun conf--agent-shell-send-current-file ()
   (interactive)
@@ -403,7 +397,8 @@ completion candidate.  Picking it forces a new shell, equivalent to
     ("F" "Send current file" conf--agent-shell-send-current-file)
     ("c" "Prompt compose" agent-shell-prompt-compose)]
    ["Other"
-    ("!" "Insert shell command output" agent-shell-insert-shell-command-output)]])
+    ("!" "Insert shell command output" agent-shell-insert-shell-command-output)
+    ("t" "Transcripts" conf/agent-shell-transcripts)]])
 
 (global-set-key (kbd "C-c a") 'conf--agent-shell-menu)
 
@@ -541,5 +536,123 @@ uses `agent-shell-cwd' (typically the project root)."
 
 ;; Transcripts open as a plain User/Agent conversation.
 (require 'agent-transcript-mode)
+
+;;; Consult: list agent-shell transcripts
+
+(defvar conf--agent-shell-transcript-dir
+  (expand-file-name "agent-shell/transcripts/" user-emacs-directory)
+  "Directory containing agent-shell transcript files.")
+
+(defvar conf--agent-shell--transcript-cache nil
+  "Cache of parsed transcript metadata, keyed by file path.
+Each value is a plist with :started, :workdir, :agent, :mtime.")
+
+(defun conf--agent-shell--parse-frontmatter (file)
+  "Parse YAML frontmatter from transcript FILE.
+Returns an alist of (key . value) pairs, or nil if FILE has no
+frontmatter (older transcripts)."
+  (when (file-exists-p file)
+    (with-temp-buffer
+      (insert-file-contents file nil 0 2048) ; read first 2KB
+      (goto-char (point-min))
+      (when (looking-at-p "\\`---\n")
+        (let (fields)
+          (forward-line 1)
+          (while (not (or (eobp) (looking-at-p "^---$")))
+            (when (looking-at "^\\([^:]+\\):\\s-*\"\\([^\"]*\\)\"\\s-*$")
+              (push (cons (match-string 1) (match-string 2)) fields))
+            (forward-line 1))
+          (when fields
+            (nreverse fields)))))))
+
+(defun conf--agent-shell--relative-time (iso-time)
+  "Format ISO-TIME string as a relative age like \"5 minutes ago\"."
+  (let* ((time (date-to-time iso-time))
+         (elapsed (max 0 (float-time (time-since time))))
+         (mins (/ elapsed 60))
+         (hours (/ elapsed 3600))
+         (days (/ elapsed 86400)))
+    (cond
+     ((< mins 1) "just now")
+     ((< mins 60) (format "%d minute%s ago"
+                         (round mins) (if (= 1 (round mins)) "" "s")))
+     ((< hours 24) (format "%d hour%s ago"
+                          (round hours) (if (= 1 (round hours)) "" "s")))
+     (t (format "%d day%s ago"
+                (round days) (if (= 1 (round days)) "" "s"))))))
+
+(defun conf--agent-shell--transcript-metadata (file)
+  "Return cached metadata plist for transcript FILE, parsing if needed."
+  (unless conf--agent-shell--transcript-cache
+    (setq conf--agent-shell--transcript-cache (make-hash-table :test 'equal)))
+  (let ((mtime (file-attribute-modification-time (file-attributes file))))
+    (let ((cached (gethash file conf--agent-shell--transcript-cache)))
+      (if (and cached (time-equal-p (plist-get cached :mtime) mtime))
+          cached
+        (when-let* ((fm (conf--agent-shell--parse-frontmatter file)))
+          (let ((meta (list :mtime mtime
+                            :started (cdr (assoc "started" fm))
+                            :workdir (cdr (assoc "working_directory" fm))
+                            :agent (cdr (assoc "agent" fm)))))
+            (puthash file meta conf--agent-shell--transcript-cache)
+            meta))))))
+
+(defun conf--agent-shell--transcript-candidates ()
+  "Build consult candidates for agent-shell transcripts.
+Each candidate is a propertized string \"<relative-time>  <workdir>\"
+with a `conf--agent-shell-file' text property holding the full path.
+Sorted by modification time, most recent first."
+  (when (file-directory-p conf--agent-shell-transcript-dir)
+    (let ((files (directory-files conf--agent-shell-transcript-dir
+                                  t "\\.md\\'" nil))
+          candidates)
+      ;; Sort by mtime, most recent first
+      (setq files (sort files
+                        (lambda (a b)
+                          (time-less-p
+                           (file-attribute-modification-time (file-attributes b))
+                           (file-attribute-modification-time (file-attributes a))))))
+      (dolist (file files)
+        (when-let* ((meta (conf--agent-shell--transcript-metadata file))
+                    (started (plist-get meta :started))
+                    (workdir (plist-get meta :workdir)))
+          (let* ((rel-time (conf--agent-shell--relative-time started))
+                 (short-dir (abbreviate-file-name workdir))
+                 (cand (format "%-16s  %s"
+                               (propertize rel-time 'face '(:foreground "cyan"))
+                               (propertize short-dir 'face '(:foreground "gray70")))))
+            (put-text-property 0 (length cand) 'conf--agent-shell-file file cand)
+            (push cand candidates))))
+      (nreverse candidates))))
+
+(defun conf--agent-shell--transcript-lookup (selected candidates &rest _)
+  "Look up SELECTED in CANDIDATES, return the transcript file path."
+  (when-let* ((found (member selected candidates)))
+    (get-text-property 0 'conf--agent-shell-file (car found))))
+
+;;;###autoload
+(defun conf/agent-shell-transcripts ()
+  "List agent-shell transcripts with `consult'.
+Shows relative time and working directory for each transcript.
+Only transcripts with YAML frontmatter are listed."
+  (interactive)
+  (let ((candidates (conf--agent-shell--transcript-candidates)))
+    (if (null candidates)
+        (user-error "No agent-shell transcripts with frontmatter found")
+      (let ((file (consult--read
+                   candidates
+                   :prompt "Agent shell transcript: "
+                   :category 'conf-agent-shell-transcript
+                   :require-match t
+                   :sort nil
+                   :state (consult--file-preview)
+                   :preview-key '(:debounce 0.1 any)
+                   :lookup #'conf--agent-shell--transcript-lookup
+                   :history 'conf--agent-shell-transcript-history)))
+        (when file
+          (find-file file))))))
+
+(defvar conf--agent-shell-transcript-history nil
+  "History for `conf/agent-shell-transcripts'.")
 
 (provide 'conf-agent-shell)

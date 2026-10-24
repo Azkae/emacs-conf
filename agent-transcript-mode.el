@@ -276,6 +276,60 @@ A negative COUNT moves backwards."
                             (overlays-at (point)))))
     (goto-char (overlay-end ov))))
 
+(defun agent-transcript--parse-frontmatter ()
+  "Parse YAML frontmatter from the current buffer.
+Returns an alist of (key . value) pairs, or nil if the buffer has no
+frontmatter."
+  (save-excursion
+    (goto-char (point-min))
+    (when (looking-at-p "\\`---[ \t]*\n")
+      (let (fields)
+        (forward-line 1)
+        (while (not (or (eobp) (looking-at-p "^---[ \t]*$")))
+          (when (looking-at "^\\([^:]+\\):[ \t]*\"\\([^\"]*\\)\"[ \t]*$")
+            (push (cons (match-string 1) (match-string 2)) fields))
+          (forward-line 1))
+        (when fields
+          (nreverse fields))))))
+
+(defun agent-transcript--find-agent-config (agent-name)
+  "Find an agent-shell config matching AGENT-NAME (display name).
+Searches `:mode-line-name' and `:buffer-name' fields of all resolved
+agent configs.  Returns the config alist, or nil if not found."
+  (when (and agent-name (fboundp 'agent-shell--resolved-agent-configs))
+    (seq-find (lambda (config)
+                (or (equal (map-elt config :mode-line-name) agent-name)
+                    (equal (map-elt config :buffer-name) agent-name)))
+              (agent-shell--resolved-agent-configs))))
+
+(defun agent-transcript-resume-session ()
+  "Resume the agent-shell session recorded in this transcript.
+Reads the frontmatter for the agent name, session ID and working
+directory, then starts a new agent-shell that resumes the session."
+  (interactive)
+  (unless (fboundp 'agent-shell--start)
+    (user-error "agent-shell is not loaded"))
+  (let ((fm (agent-transcript--parse-frontmatter)))
+    (unless fm
+      (user-error "No frontmatter found in this transcript"))
+    (let* ((agent-name (cdr (assoc "agent" fm)))
+           (session-id (cdr (assoc "session_id" fm)))
+           (workdir (cdr (assoc "working_directory" fm))))
+      (unless session-id
+        (user-error "No session_id in frontmatter"))
+      (unless workdir
+        (user-error "No working_directory in frontmatter"))
+      (unless (file-directory-p workdir)
+        (user-error "Working directory no longer exists: %s" workdir))
+      (let ((config (agent-transcript--find-agent-config agent-name)))
+        (unless config
+          (user-error "No agent-shell config found for agent: %s" agent-name))
+        (agent-shell--start
+         :config config
+         :session-id session-id
+         :new-session t
+         :cwd workdir)))))
+
 (defvar agent-transcript-mode-map
   (let ((map (make-sparse-keymap)))
     (define-key map (kbd "n") #'agent-transcript-next-turn)
@@ -283,6 +337,7 @@ A negative COUNT moves backwards."
     (define-key map (kbd "g") #'agent-transcript-refresh)
     (define-key map (kbd "q") #'agent-transcript-mode)
     (define-key map (kbd "C-c C-a") #'agent-transcript-mode)
+    (define-key map (kbd "R") #'agent-transcript-resume-session)
     map)
   "Keymap for `agent-transcript-mode'.
 Single-letter keys are safe here: the mode makes the buffer read-only.")
