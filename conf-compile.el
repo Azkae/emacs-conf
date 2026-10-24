@@ -178,24 +178,14 @@ With universal argument ARG, open in another window."
 ;;   :commands (fancy-compilation-mode)
 ;;   :custom
 ;;   (fancy-compilation-override-colors nil))
-
-(use-package ghostel-shell-command
-  :hook (after-init . ghostel-shell-command-global-mode))
-
-(use-package ghostel-compile
-  :hook (after-init . ghostel-compile-global-mode))
-
-(use-package ghostel-eshell
-  :hook (eshell-load . ghostel-eshell-visual-command-mode))
+;; (with-eval-after-load 'compile
+;;   (fancy-compilation-mode))
 
 (define-key compilation-mode-map (kbd "M-p") nil)
 
 (add-to-list 'compilation-transform-file-match-alist '("\\`<string>\\'" nil))
 
 (conf--disable-keys diff-mode-map '("M-p" "M-h" "M-j" "M-k" "M-l"))
-
-(with-eval-after-load 'compile
-  (fancy-compilation-mode))
 
 (with-eval-after-load 'compile
   (add-to-list 'compilation-transform-file-match-alist '("[\t ][\t ]" nil)))

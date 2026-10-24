@@ -1,6 +1,11 @@
 ;; -*- lexical-binding: t; -*-
 
 (use-package ghostel
+  :hook
+  (after-init . ghostel-shell-command-global-mode)
+  (after-init . ghostel-compile-global-mode)
+  (eshell-load . ghostel-eshell-visual-command-mode)
+
   :bind
   (:map ghostel-semi-char-mode-map
   ;; ("M-z" . 'ghostel-copy-mode)
