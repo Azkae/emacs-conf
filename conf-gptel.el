@@ -457,8 +457,8 @@ Respond with a a complete Verb file and nothing else.")
 
   (add-hook 'gptel-save-state-hook #'conf--gptel-add-auto-local-var)
 
-  (defvar conf--gptel-save-directory "~/Dropbox/gptel-chats/"
-  "Directory where gptel conversations are saved.")
+  (defvar conf--gptel-save-directory "~/Dropbox/notes/gptel-chats/"
+    "Directory where gptel conversations are saved.")
 
   (defun conf--gptel-save-buffer ()
     "Save the current gptel buffer with proper integration.

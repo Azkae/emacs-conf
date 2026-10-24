@@ -95,9 +95,9 @@
    ;; ("L"          . nil)
    )
   :config
-  (setq org-directory "~/Dropbox/denotes/")
-  (setq org-agenda-files (list org-directory "~/Dropbox/todo.org" "~/Dropbox/archive-todo.org"))
-  (setq org-default-notes-file "~/Dropbox/todo.org")
+  (setq org-directory "~/Dropbox/notes/denotes/")
+  (setq org-agenda-files (list org-directory "~/Dropbox/notes/todo.org" "~/Dropbox/notes/archive-todo.org"))
+  (setq org-default-notes-file "~/Dropbox/notes/todo.org")
 
   (setq org-capture-templates
         '(("t" "Tasks" entry
@@ -135,7 +135,7 @@
    ("C-c n d" . denote-dired)
    ("C-c n f" . denote-open-or-create))
   :config
-  (setq denote-directory (expand-file-name "~/Dropbox/denotes/"))
+  (setq denote-directory (expand-file-name "~/Dropbox/notes/denotes/"))
   (setq denote-known-keywords '("work" "emacs" "personal" "temporary"))
 
   (setq denote-prompts-with-history-as-completion
