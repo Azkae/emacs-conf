@@ -48,13 +48,6 @@
           table
           :exclusive 'no)))
 
-(defun conf--aidermacs-keywords-completion-at-point ()
-  (let ((bounds (bounds-of-thing-at-point 'symbol))
-        (keywords '("/add" "/drop" "/reset" "/paste")))
-    (when bounds
-      (list (car bounds) (cdr bounds) keywords
-            :exclusive 'no))))
-
 (use-package shell-maker)
 (use-package acp)
 
@@ -443,7 +436,7 @@ completion candidate.  Picking it forces a new shell, equivalent to
    ["Send"
     ("f" "Send file" agent-shell-send-file)
     ("F" "Send current file" conf--agent-shell-send-current-file)
-    ("c" "Prompt compose" agent-shell-prompt-compose)]
+    ("c" "Resume from transcript" agent-transcript-resume-session)]
    ["Other"
     ("!" "Insert shell command output" agent-shell-insert-shell-command-output)
     ("t" "Transcripts" conf/agent-shell-transcripts)
