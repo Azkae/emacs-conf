@@ -56,10 +56,12 @@ the initial completion state.  PREFIX is the minimum prefix length."
   "Non-nil when user has engaged with Corfu (TAB or navigation).")
 
 (defun conf--corfu-expand ()
-  "Expand common prefix, mark as engaged."
+  "Select first candidate, mark as engaged.
+Does not call `corfu-expand' to avoid exiting on exact match."
   (interactive)
   (setq conf--corfu-engaged t)
-  (corfu-expand))
+  (when (and completion-in-region-mode (< corfu--index 0))
+    (corfu-next)))
 
 (defun conf--corfu-next ()
   "Go to next candidate, mark as engaged."
@@ -83,13 +85,26 @@ the initial completion state.  PREFIX is the minimum prefix length."
     (when completion-in-region-mode (corfu-quit))
     (newline)))
 
+(defun conf--corfu-insert-first ()
+  "Select first candidate if none selected, then insert it."
+  (interactive)
+  (setq conf--corfu-engaged t)
+  (when (eq corfu--index -1)
+    (conf--corfu-expand))
+  (corfu-insert))
+
+(defun conf--completion-at-point ()
+  (interactive)
+  (setq conf--corfu-engaged t)
+  (completion-at-point))
+
 ;; Reset engagement flag on every new completion session
 (add-hook 'completion-in-region-mode-hook
           (lambda () (setq conf--corfu-engaged nil)))
 
 (use-package corfu
   :bind
-  (("M-RET" . completion-at-point))
+  (("M-RET" . conf--completion-at-point))
   (:map corfu-map
         ("C-a" . nil)
         ("C-e" . nil)
@@ -104,8 +119,7 @@ the initial completion state.  PREFIX is the minimum prefix length."
         ("<tab>" . conf--corfu-expand)
         ("RET" . conf--corfu-ret)
         ("<ret>" . conf--corfu-ret)
-        ;; C-RET remains an unconditional accept (escape hatch)
-        ("C-<return>" . corfu-insert))
+        ("M-<RET>" . conf--corfu-insert-first))
   :hook
   (corfu-mode . (lambda ()
                   (add-hook 'yas-keymap-disable-hook 'conf--corfu-active-p nil t)
@@ -119,6 +133,8 @@ the initial completion state.  PREFIX is the minimum prefix length."
   (corfu-preview-current nil)
   (corfu-popupinfo-delay '(0.5 . 0.0))
   (corfu-on-exact-match nil)
+  ;; No candidate preselected by default; TAB selects the first one
+  (corfu-preselect 'prompt)
   :init
   (global-corfu-mode)
   (corfu-popupinfo-mode)
@@ -169,8 +185,7 @@ the initial completion state.  PREFIX is the minimum prefix length."
                 (list
                  (cape-capf-prefix-length (cape-capf-super
                                            'conf--project-files-capf
-                                           #'cape-dabbrev
-                                           'conf--aidermacs-keywords-completion-at-point)
+                                           #'cape-dabbrev)
                                           3)
                  (cape-capf-prefix-length #'cape-dabbrev 3)
                  'comint-completion-at-point t)))
