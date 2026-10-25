@@ -33,7 +33,7 @@
                      :key openrouter-api-key
                      :models '(anthropic/claude-opus-5.5
                                anthropic/claude-fable-5.1
-                               mistralai/mistral-large-4-0)))
+                               mistralai/mistral-large-4-0))))
 
   (defun conf--gptel-start-rewrite-session ()
     (interactive)
