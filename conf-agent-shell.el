@@ -54,12 +54,14 @@
 (use-package agent-shell
   :bind
   (:map agent-shell-mode-map
-   ("TAB"       . nil)
-   ("<backtab>" . nil)
-   ("C-M-n"     . agent-shell-next-item)
-   ("C-M-p"     . agent-shell-previous-item)
-   ("C-c RET"   . agent-shell-submit)
-   ("RET"       . newline)
+   ("TAB"        . nil)
+   ("<backtab>"  . nil)
+   ("C-M-n"      . agent-shell-next-item)
+   ("C-M-p"      . agent-shell-previous-item)
+   ("C-c RET"    . agent-shell-submit)
+   ("RET"        . newline)
+   ("M-RET"      . nil)
+   ("M-<return>" . nil)
    :map agent-shell-viewport-view-mode-map
    ("TAB"       . nil)
    ("<backtab>" . nil)
