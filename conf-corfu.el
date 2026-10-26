@@ -60,6 +60,7 @@ the initial completion state.  PREFIX is the minimum prefix length."
 Does not call `corfu-expand' to avoid exiting on exact match."
   (interactive)
   (setq conf--corfu-engaged t)
+  (setq corfu-preselect 'valid)
   (when (and completion-in-region-mode (< corfu--index 0))
     (corfu-next)))
 
@@ -67,28 +68,36 @@ Does not call `corfu-expand' to avoid exiting on exact match."
   "Go to next candidate, mark as engaged."
   (interactive)
   (setq conf--corfu-engaged t)
+  (setq corfu-preselect 'valid)
   (corfu-next))
 
 (defun conf--corfu-previous ()
   "Go to previous candidate, mark as engaged."
   (interactive)
   (setq conf--corfu-engaged t)
+  (setq corfu-preselect 'valid)
   (corfu-previous))
 
 (defun conf--corfu-ret ()
-  "Insert candidate if engaged, otherwise quit Corfu and newline."
+  "Insert candidate if engaged, otherwise quit Corfu and re-send the key.
+Re-sending the key runs whatever it's bound to in the current context:
+`newline' in regular buffers, `exit-minibuffer' in the minibuffer,
+`comint-send-input' in comint, etc."
   (interactive)
   (if conf--corfu-engaged
       (progn
-        (setq conf--corfu-engaged nil)
         (corfu-insert))
     (when completion-in-region-mode (corfu-quit))
-    (newline)))
+    ;; Re-send the same key so the default binding runs
+    (setq unread-command-events
+          (append (listify-key-sequence (this-command-keys))
+                  unread-command-events))))
 
 (defun conf--corfu-insert-first ()
   "Select first candidate if none selected, then insert it."
   (interactive)
   (setq conf--corfu-engaged t)
+  (setq corfu-preselect 'valid)
   (when (eq corfu--index -1)
     (conf--corfu-expand))
   (corfu-insert))
@@ -96,11 +105,19 @@ Does not call `corfu-expand' to avoid exiting on exact match."
 (defun conf--completion-at-point ()
   (interactive)
   (setq conf--corfu-engaged t)
+  (setq corfu-preselect 'valid)
   (completion-at-point))
+
+
+(advice-add 'corfu-quit :after (lambda (&rest _)
+                                 (setq conf--corfu-engaged nil)
+                                 (setq corfu-preselect 'prompt)))
 
 ;; Reset engagement flag on every new completion session
 (add-hook 'completion-in-region-mode-hook
-          (lambda () (setq conf--corfu-engaged nil)))
+          (lambda ()
+            (setq conf--corfu-engaged nil)
+            (setq corfu-preselect 'prompt)))
 
 (use-package corfu
   :bind
@@ -135,6 +152,7 @@ Does not call `corfu-expand' to avoid exiting on exact match."
   (corfu-on-exact-match nil)
   ;; No candidate preselected by default; TAB selects the first one
   (corfu-preselect 'prompt)
+  (corfu-quit-no-match nil)
   :init
   (global-corfu-mode)
   (corfu-popupinfo-mode)
