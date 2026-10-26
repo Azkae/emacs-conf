@@ -302,10 +302,18 @@ agent configs.  Returns the config alist, or nil if not found."
                     (equal (map-elt config :buffer-name) agent-name)))
               (agent-shell--resolved-agent-configs))))
 
+(defun agent-transcript--find-session-buffer (session-id)
+  "Return the agent-shell buffer with SESSION-ID, or nil if not found."
+  (when (and session-id (fboundp 'agent-shell-buffers))
+    (seq-find (lambda (buf)
+                (equal (agent-shell-session-id :shell-buffer buf) session-id))
+              (agent-shell-buffers))))
+
 (defun agent-transcript-resume-session ()
   "Resume the agent-shell session recorded in this transcript.
 Reads the frontmatter for the agent name, session ID and working
-directory, then starts a new agent-shell that resumes the session."
+directory.  If a shell buffer with the same session ID already exists,
+switch to it; otherwise start a new agent-shell that resumes the session."
   (interactive)
   (unless (fboundp 'agent-shell--start)
     (user-error "agent-shell is not loaded"))
@@ -317,6 +325,10 @@ directory, then starts a new agent-shell that resumes the session."
            (workdir (cdr (assoc "working_directory" fm))))
       (unless session-id
         (user-error "No session_id in frontmatter"))
+      ;; If a shell with this session ID is already running, switch to it
+      (when-let* ((existing (agent-transcript--find-session-buffer session-id)))
+        (agent-shell--display-buffer existing)
+        (user-error "Session already running in buffer: %s" (buffer-name existing)))
       (unless workdir
         (user-error "No working_directory in frontmatter"))
       (unless (file-directory-p workdir)
