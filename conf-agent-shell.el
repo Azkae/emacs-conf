@@ -83,6 +83,7 @@
   (setq agent-shell-busy-submit-override-function 'agent-shell-busy-submit-queue)
   (setq agent-shell-preferred-agent-config '(preselect . claude-code))
   (setopt agent-shell-opencode-default-model-id "openrouter/mistralai/mistral-large-4-0")
+  (setopt agent-shell-header-style 'text)
 
   (setq agent-shell-openai-default-config-options '(("reasoning_effort" . "high")))
 
