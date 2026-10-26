@@ -339,14 +339,12 @@ to \\<agent-shell-mode-map>\\`C-u M-x agent-shell'."
 
 (defun my/agent-shell-new-worktree-shell ()
   (interactive)
-  (unless (agent-shell-worktree--git-repo-root)
-    (user-error "Not in a git repository"))
   (let* ((worktrees-dir (agent-shell--dot-subdir "worktrees"))
          (worktree-name (agent-shell-worktree--generate-name))
          (default-path (file-name-concat worktrees-dir worktree-name))
-         (worktree-path (expand-file-name (read-directory-name
-                                           "Worktree directory: "
-                                           default-path))))
+         (worktree-path (file-name-as-directory (expand-file-name (read-directory-name
+                                                                   "Worktree directory: "
+                                                                   default-path)))))
     (when (file-exists-p worktree-path)
       (user-error "Directory already exists: %s" worktree-path))
     (make-directory (file-name-directory worktree-path) t)
