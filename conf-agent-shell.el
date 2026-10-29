@@ -344,9 +344,9 @@ to \\<agent-shell-mode-map>\\`C-u M-x agent-shell'."
   (let* ((worktrees-dir (agent-shell--dot-subdir "worktrees"))
          (worktree-name (agent-shell-worktree--generate-name))
          (default-path (file-name-concat worktrees-dir worktree-name))
-         (worktree-path (file-name-as-directory (expand-file-name (read-directory-name
-                                                                   "Worktree directory: "
-                                                                   default-path)))))
+         (worktree-path (expand-file-name (read-directory-name
+                                           "Worktree directory: "
+                                           default-path))))
     (when (file-exists-p worktree-path)
       (user-error "Directory already exists: %s" worktree-path))
     (make-directory (file-name-directory worktree-path) t)
@@ -356,7 +356,8 @@ to \\<agent-shell-mode-map>\\`C-u M-x agent-shell'."
                            (shell-quote-argument worktree-path)))))
       (unless (file-exists-p worktree-path)
         (user-error "Failed to create worktree: %s" output))
-      (let ((default-directory worktree-path))
+      (project-remember-project (project-current nil worktree-path))
+      (let ((default-directory (file-name-as-directory worktree-path)))
         (my/agent-shell-start)))))
 
 (defun agent-shell-list-and-select ()

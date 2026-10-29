@@ -332,7 +332,13 @@ switch to it; otherwise start a new agent-shell that resumes the session."
       (unless workdir
         (user-error "No working_directory in frontmatter"))
       (unless (file-directory-p workdir)
-        (user-error "Working directory no longer exists: %s" workdir))
+        (let ((parent (file-name-directory (directory-file-name workdir))))
+          (setq workdir (read-directory-name
+                         "Working directory no longer exists. New working directory: "
+                         (if (file-directory-p parent) parent default-directory)
+                         nil t)))
+        (unless (file-directory-p workdir)
+          (user-error "Selected directory does not exist: %s" workdir)))
       (let ((config (agent-transcript--find-agent-config agent-name)))
         (unless config
           (user-error "No agent-shell config found for agent: %s" agent-name))
