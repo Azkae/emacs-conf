@@ -191,11 +191,13 @@ current agent-shell buffer's transcript file."
 
 (defun conf--agent-shell-on-session-title-changed (event)
   "Handle `session-title-changed' EVENT by updating the transcript title."
-  (run-with-timer 0.1 nil
-                  (lambda ()
-                    (when-let* ((data (map-elt event :data))
-                                (title (map-elt data :title)))
-                      (conf--agent-shell-update-transcript-title title)))))
+  (let ((buffer (current-buffer)))
+    (run-with-timer 0.1 nil
+                    (lambda ()
+                      (when-let* ((data (map-elt event :data))
+                                  (title (map-elt data :title)))
+                        (with-current-buffer buffer
+                            (conf--agent-shell-update-transcript-title title)))))))
 
 (defun conf--agent-shell-subscribe-title-changed ()
   "Subscribe to `session-title-changed' to update transcript frontmatter."
