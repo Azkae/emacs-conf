@@ -84,16 +84,16 @@ With universal argument ARG, open in another window."
       (let ((msg (read-string "Migration message: ")))
         (if (string-blank-p msg)
             (user-error "Migration message must not be empty")
-          (my/command-run (format "alembic revision --autogenerate -m %S" msg))))))
+          (my/command-run (format "uv run alembic revision --autogenerate -m %S" msg))))))
    ("u" "upgrade head"
     (lambda ()
       (interactive)
-      (my/command-run "alembic upgrade head")))
+      (my/command-run "uv run alembic upgrade head")))
    ("d" "downgrade -1"
     (lambda ()
       (interactive)
       (when (yes-or-no-p "Downgrade the database by 1 revision? ")
-        (my/command-run "alembic downgrade -1"))))])
+        (my/command-run "uv run alembic downgrade -1"))))])
 
 (transient-define-prefix my/uv-menu ()
   "uv menu commands"
