@@ -108,16 +108,9 @@ Re-sending the key runs whatever it's bound to in the current context:
   (setq corfu-preselect 'valid)
   (completion-at-point))
 
-
 (advice-add 'corfu-quit :after (lambda (&rest _)
                                  (setq conf--corfu-engaged nil)
                                  (setq corfu-preselect 'prompt)))
-
-;; Reset engagement flag on every new completion session
-(add-hook 'completion-in-region-mode-hook
-          (lambda ()
-            (setq conf--corfu-engaged nil)
-            (setq corfu-preselect 'prompt)))
 
 (use-package corfu
   :bind
