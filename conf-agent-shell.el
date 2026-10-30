@@ -538,10 +538,13 @@ a string or symbol."
 
 (cl-defun my/agent-shell-start ()
   (interactive)
-  (agent-shell--start
-   :config (agent-shell-select-config :prompt "Start new agent: ")
-   :session-strategy 'new
-   :new-session t))
+  (let* ((text (agent-shell--context))
+         (buffer (agent-shell--start
+                  :config (agent-shell-select-config :prompt "Start new agent: ")
+                  :session-strategy 'new
+                  :new-session t)))
+    (when text
+      (agent-shell--insert-to-shell-buffer :text text :shell-buffer buffer))))
 
 ;;;###autoload
 (cl-defun my/agent-shell-make (&key prompt name (agent "claude") directory)
