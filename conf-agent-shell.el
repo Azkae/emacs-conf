@@ -349,6 +349,8 @@ to \\<agent-shell-mode-map>\\`C-u M-x agent-shell'."
          (worktree-path (expand-file-name (read-directory-name
                                            "Worktree directory: "
                                            default-path))))
+    ;; (unless (file-in-directory-p worktree-path (file-name-as-directory worktrees-dir))
+    ;;   (user-error "Worktree directory must be inside %s" worktrees-dir))
     (when (file-exists-p worktree-path)
       (user-error "Directory already exists: %s" worktree-path))
     (make-directory (file-name-directory worktree-path) t)
@@ -397,15 +399,26 @@ completion candidate.  Picking it forces a new shell, equivalent to
             (agent-shell--insert-to-shell-buffer :text text :shell-buffer buf)))
       (my/agent-shell-start))))
 
+(defun agent-shell--repo-worktree-paths ()
+  "Return the existing worktree paths of the current git repo.
+`magit-list-worktrees' also reports stale entries whose directories
+were deleted without `git worktree remove' (git marks them prunable
+but still lists them), so keep only paths that still exist and drop
+duplicates."
+  (seq-uniq
+   (seq-filter #'file-directory-p
+               (mapcar #'car (magit-list-worktrees)))))
+
 (defun agent-shell-repo-buffers ()
   "Return agent-shell buffers whose CWD is in the same git repo as the current buffer."
-  (let ((worktree-paths (mapcar #'car (magit-list-worktrees)))
+  (let ((worktree-paths (agent-shell--repo-worktree-paths))
         (buffers (agent-shell-buffers)))
     (seq-filter (lambda (buf)
                   (seq-some (lambda (wt)
                               (string-prefix-p
                                (expand-file-name wt)
-                               (buffer-local-value 'default-directory buf)))
+                               (expand-file-name
+                                (buffer-local-value 'default-directory buf))))
                             worktree-paths))
                 buffers)))
 
