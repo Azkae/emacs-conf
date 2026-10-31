@@ -33,8 +33,15 @@
 (load custom-file)
 
 (defun load-if-exists (f)
-  (if (file-exists-p (expand-file-name f))
-      (load-file (expand-file-name f))))
+  "Load file F from `conf--base-dir' if it exists.
+Use `load' rather than `require': straight.el only records the
+packages whose `use-package' forms actually run in the current
+session, and on a reload of the init file `require' would be a
+no-op for features already provided, so `straight-freeze-versions'
+would only see the packages declared in init.el itself."
+  (let ((path (expand-file-name f conf--base-dir)))
+    (when (file-exists-p path)
+      (load path nil 'nomessage))))
 
 (use-package gcmh
   :config
@@ -57,29 +64,29 @@
   (diminish 'eldoc-mode))
 (diminish 'subword-mode)
 
-(require 'conf-better-default)
-(require 'conf-editing)
-(require 'conf-meow)
+(load-if-exists "conf-better-default.el")
+(load-if-exists "conf-editing.el")
+(load-if-exists "conf-meow.el")
 
-(require 'conf-completion)
-(require 'conf-corfu)
-(require 'conf-eglot)
-(require 'conf-magit)
-(require 'conf-dape)
+(load-if-exists "conf-completion.el")
+(load-if-exists "conf-corfu.el")
+(load-if-exists "conf-eglot.el")
+(load-if-exists "conf-magit.el")
+(load-if-exists "conf-dape.el")
 
-(require 'conf-vterm)
-(require 'conf-ghostel)
+(load-if-exists "conf-vterm.el")
+(load-if-exists "conf-ghostel.el")
 
-(require 'conf-compile)
-(require 'conf-file-modes)
-(require 'conf-python)
+(load-if-exists "conf-compile.el")
+(load-if-exists "conf-file-modes.el")
+(load-if-exists "conf-python.el")
 
-(require 'conf-org)
+(load-if-exists "conf-org.el")
 
-(require 'conf-tools)
-(require 'conf-gptel)
-(require 'conf-agent-shell)
+(load-if-exists "conf-tools.el")
+(load-if-exists "conf-gptel.el")
+(load-if-exists "conf-agent-shell.el")
 
-(require 'package-review)
+(load-if-exists "package-review.el")
 
-(require 'graphics)
+(load-if-exists "graphics.el")
