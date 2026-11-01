@@ -1,6 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
 (use-package ghostel
+  :straight (:fork (:host github :repo "Azkae/ghostel" :branch "fix-cursor-change"))
   :hook
   (after-init . ghostel-shell-command-global-mode)
   (after-init . ghostel-compile-global-mode)
