@@ -182,8 +182,8 @@
 
 (defun my/markdown-appear-update ()
   "Reveal Markdown source in Meow insert state or while the region is active.
-Hide the markup again otherwise."
-  (if (or (bound-and-true-p meow-insert-mode) (region-active-p))
+An empty region (point = mark) does not count.  Hide the markup otherwise."
+  (if (or (bound-and-true-p meow-insert-mode) (use-region-p))
       (markdown-ts-appear-start)
     (markdown-ts-appear-stop)))
 
