@@ -55,27 +55,28 @@ the initial completion state.  PREFIX is the minimum prefix length."
 (defvar-local conf--corfu-engaged nil
   "Non-nil when user has engaged with Corfu (TAB or navigation).")
 
+(defun conf--corfu-set-engaged ()
+  (setq conf--corfu-engaged t)
+  (setq corfu-preselect 'valid))
+
 (defun conf--corfu-expand ()
   "Select first candidate, mark as engaged.
 Does not call `corfu-expand' to avoid exiting on exact match."
   (interactive)
-  (setq conf--corfu-engaged t)
-  (setq corfu-preselect 'valid)
+  (conf--corfu-set-engaged)
   (when (and completion-in-region-mode (< corfu--index 0))
     (corfu-next)))
 
 (defun conf--corfu-next ()
   "Go to next candidate, mark as engaged."
   (interactive)
-  (setq conf--corfu-engaged t)
-  (setq corfu-preselect 'valid)
+  (conf--corfu-set-engaged)
   (corfu-next))
 
 (defun conf--corfu-previous ()
   "Go to previous candidate, mark as engaged."
   (interactive)
-  (setq conf--corfu-engaged t)
-  (setq corfu-preselect 'valid)
+  (conf--corfu-set-engaged)
   (corfu-previous))
 
 (defun conf--corfu-ret ()
@@ -96,16 +97,14 @@ Re-sending the key runs whatever it's bound to in the current context:
 (defun conf--corfu-insert-first ()
   "Select first candidate if none selected, then insert it."
   (interactive)
-  (setq conf--corfu-engaged t)
-  (setq corfu-preselect 'valid)
+  (conf--corfu-set-engaged)
   (when (eq corfu--index -1)
     (conf--corfu-expand))
   (corfu-insert))
 
 (defun conf--completion-at-point ()
   (interactive)
-  (setq conf--corfu-engaged t)
-  (setq corfu-preselect 'valid)
+  (conf--corfu-set-engaged)
   (completion-at-point))
 
 (advice-add 'corfu-quit :after (lambda (&rest _)
@@ -169,6 +168,7 @@ Re-sending the key runs whatever it's bound to in the current context:
   (interactive)
   (when (not corfu-mode)
     (corfu-mode))
+  (conf--corfu-set-engaged)
   (call-interactively 'cape-dabbrev))
 
 (use-package cape
