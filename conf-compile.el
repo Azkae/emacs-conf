@@ -93,7 +93,11 @@ With universal argument ARG, open in another window."
     (lambda ()
       (interactive)
       (when (yes-or-no-p "Downgrade the database by 1 revision? ")
-        (my/command-run "uv run alembic downgrade -1"))))])
+        (my/command-run "uv run alembic downgrade -1"))))
+   ("h" "history"
+    (lambda ()
+      (interactive)
+      (my/command-run "uv run alembic current && uv run alembic history")))])
 
 (transient-define-prefix my/uv-menu ()
   "uv menu commands"
