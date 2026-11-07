@@ -171,6 +171,38 @@
   (add-to-list 'markdown-code-lang-modes '("go" . go-mode))
   (add-to-list 'markdown-code-lang-modes '("proto" . protobuf-mode)))
 
+(require 'markdown-ts-mode)
+
+(dolist (regexp '("\\.md\\'" "\\.markdown\\'" "\\.mkd\\'"
+                  "\\.mdown\\'" "\\.mkdn\\'" "\\.mdwn\\'" "\\.mdx\\'"))
+  (add-to-list 'auto-mode-alist (cons regexp 'markdown-ts-mode)))
+
+(use-package markdown-ts-appear
+  :hook (markdown-ts-mode . markdown-ts-appear-mode))
+
+(defun my/markdown-appear-update ()
+  "Reveal Markdown source in Meow insert state or while the region is active.
+Hide the markup again otherwise."
+  (if (or (bound-and-true-p meow-insert-mode) (region-active-p))
+      (markdown-ts-appear-start)
+    (markdown-ts-appear-stop)))
+
+(defun my/markdown-appear-meow ()
+  "Reveal Markdown source in Meow insert state or while the region is active."
+  (if markdown-ts-appear-mode
+      (progn
+        (add-hook 'meow-insert-enter-hook #'my/markdown-appear-update nil t)
+        (add-hook 'meow-insert-exit-hook #'my/markdown-appear-update nil t)
+        (add-hook 'activate-mark-hook #'my/markdown-appear-update nil t)
+        (add-hook 'deactivate-mark-hook #'my/markdown-appear-update nil t)
+        (my/markdown-appear-update))
+    (remove-hook 'meow-insert-enter-hook #'my/markdown-appear-update t)
+    (remove-hook 'meow-insert-exit-hook #'my/markdown-appear-update t)
+    (remove-hook 'activate-mark-hook #'my/markdown-appear-update t)
+    (remove-hook 'deactivate-mark-hook #'my/markdown-appear-update t)))
+
+(add-hook 'markdown-ts-appear-mode-hook #'my/markdown-appear-meow)
+
 (use-package protobuf-mode)
 
 (provide 'conf-file-modes)
