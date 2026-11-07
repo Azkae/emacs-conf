@@ -72,7 +72,7 @@
   :config
   (with-eval-after-load 'shell-maker
     (define-key agent-shell-mode-map (kbd "C-M-h") nil))
-  (setq agent-shell-anthropic-default-session-mode-id "plan")
+  (setq agent-shell-anthropic-default-session-mode-id "auto")
   (advice-add 'agent-shell--project-files :override #'conf--project-files-cached-current)
   (setq agent-shell-highlight-blocks t)
   (setq agent-shell-session-strategy 'prompt)
