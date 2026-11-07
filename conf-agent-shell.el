@@ -342,27 +342,27 @@ to \\<agent-shell-mode-map>\\`C-u M-x agent-shell'."
             (agent-shell--insert-to-shell-buffer :text text :shell-buffer buf))))))))
 
 (defun my/agent-shell-new-worktree-shell ()
+  "Create a new git worktree with magit and start an agent shell in it.
+
+Prompt for a base branch (default: current branch) and a name for
+the new branch checked out in the worktree, then for the worktree
+directory via `magit-read-worktree-directory-function' (magit's
+default is a sibling of the current worktree)."
   (interactive)
-  (let* ((worktrees-dir (agent-shell--dot-subdir "worktrees"))
-         (worktree-name (agent-shell-worktree--generate-name))
-         (default-path (file-name-concat worktrees-dir worktree-name))
-         (worktree-path (expand-file-name (read-directory-name
-                                           "Worktree directory: "
-                                           default-path))))
-    ;; (unless (file-in-directory-p worktree-path (file-name-as-directory worktrees-dir))
-    ;;   (user-error "Worktree directory must be inside %s" worktrees-dir))
-    (when (file-exists-p worktree-path)
-      (user-error "Directory already exists: %s" worktree-path))
-    (make-directory (file-name-directory worktree-path) t)
-    ;; Create the worktree
-    (let ((output (shell-command-to-string
-                   (format "git worktree add %s 2>&1"
-                           (shell-quote-argument worktree-path)))))
-      (unless (file-exists-p worktree-path)
-        (user-error "Failed to create worktree: %s" output))
-      (project-remember-project (project-current nil worktree-path))
-      (let ((default-directory (file-name-as-directory worktree-path)))
-        (my/agent-shell-start)))))
+  (let* ((default-directory (or (magit-toplevel)
+                                (user-error "Not in a git repository")))
+         (base (magit-read-branch-or-commit "Base branch: "))
+         (branch (read-string (format "New branch (from %s): " base))))
+    (when (magit-rev-verify branch)
+      (user-error "Branch already exists: %s" branch))
+    (let ((directory (magit--read-worktree-directory branch)))
+      (unless (magit-worktree-branch directory branch base)
+        (user-error "Failed to create worktree in %s (see the magit process buffer)"
+                    directory))
+      (let ((worktree-path (expand-file-name directory)))
+        (project-remember-project (project-current nil worktree-path))
+        (let ((default-directory (file-name-as-directory worktree-path)))
+          (my/agent-shell-start))))))
 
 (defun agent-shell-list-and-select ()
   "Select from all agent-shell buffers."
