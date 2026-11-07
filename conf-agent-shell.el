@@ -86,6 +86,7 @@
   (setq agent-shell-preferred-agent-config '(preselect . claude-code))
   (setopt agent-shell-opencode-default-model-id "openrouter/mistralai/mistral-large-4-0")
   (setopt agent-shell-header-style 'text)
+  (setopt agent-shell-session-strategy 'new)
 
   (setq agent-shell-openai-default-config-options '(("reasoning_effort" . "high")))
 
