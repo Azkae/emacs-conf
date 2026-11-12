@@ -173,9 +173,11 @@
 
 (require 'markdown-ts-mode)
 
-(dolist (regexp '("\\.md\\'" "\\.markdown\\'" "\\.mkd\\'"
-                  "\\.mdown\\'" "\\.mkdn\\'" "\\.mdwn\\'" "\\.mdx\\'"))
-  (add-to-list 'auto-mode-alist (cons regexp 'markdown-ts-mode)))
+;; (dolist (regexp '("\\.md\\'" "\\.markdown\\'" "\\.mkd\\'"
+;;                   "\\.mdown\\'" "\\.mkdn\\'" "\\.mdwn\\'" "\\.mdx\\'"))
+;;   (add-to-list 'auto-mode-alist (cons regexp 'markdown-ts-mode)))
+
+(define-key markdown-ts-code-block-in-context-mode-map (kbd "M-q") nil)
 
 (use-package markdown-ts-appear
   :hook (markdown-ts-mode . markdown-ts-appear-mode))
