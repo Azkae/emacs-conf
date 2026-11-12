@@ -31,6 +31,10 @@
   ;; help with perf:
   (eglot-events-buffer-size 0)
   (eglot-code-action-indicator "h")
+  ;; Never auto-restart a crashed server (e.g. "too many open files"):
+  ;; eglot's automatic reconnect loop keeps spawning servers and freezes
+  ;; Emacs.  Restart manually with M-x eglot-reconnect when needed.
+  (eglot-autoreconnect nil)
   :config
   (fset #'jsonrpc--log-event #'ignore)
 
